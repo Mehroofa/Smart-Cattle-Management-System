@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Worker Health Reporting</title>
+</head>
+<body>
+
+{% with lang=request.user.userprofile.language %}
+
+{% if lang == 'hi' %}
+  <h2>स्वास्थ्य समस्या बताएं</h2>
+  <p>बोलकर समस्या बताएं</p>
+
+{% elif lang == 'ta' %}
+  <h2>ஆரோக்கிய பிரச்சினையை தெரிவிக்கவும்</h2>
+  <p>பேசி பிரச்சினையை கூறுங்கள்</p>
+
+{% elif lang == 'ml' %}
+  <h2>ആരോഗ്യ പ്രശ്നം പറയുക</h2>
+  <p>സംസാരിച്ച് പ്രശ്നം പറയുക</p>
+
+{% elif lang == 'kn' %}
+  <h2>ಆರೋಗ್ಯ ಸಮಸ್ಯೆಯನ್ನು ಹೇಳಿ</h2>
+  <p>ಮಾತನಾಡಿ ಸಮಸ್ಯೆಯನ್ನು ತಿಳಿಸಿ</p>
+
+{% else %}
+  <h2>Report Health Issue</h2>
+  <p>Speak to report the problem</p>
+{% endif %}
+
+<form method="post">
+  {% csrf_token %}
+
+  <label>🐄 Cattle:</label><br>
+  <select name="cattle" required>
+    {% for cattle in cattle_list %}
+      <option value="{{ cattle.id }}">
+        {{ cattle.tag_id }} - {{ cattle.breed }}
+      </option>
+    {% endfor %}
+  </select>
+  <br><br>
+
+  <label>🎤 Symptoms (Voice → Text):</label><br>
+  <textarea id="symptoms" name="symptoms" rows="4" cols="40" required></textarea>
+  <br><br>
+
+  <button type="button" onclick="startVoice()">🎤 Speak</button>
+  <br><br>
+
+  <button type="submit">Submit</button>
+</form>
+
+{% endwith %}
+
+<script>
+function startVoice() {
+  if (!('webkitSpeechRecognition' in window)) {
+    alert("Voice recognition not supported in this browser");
+    return;
+  }
+
+  const recognition = new webkitSpeechRecognition();
+
+  // Language mapping
+  const langMap = {
+    'hi': 'hi-IN',
+    'ta': 'ta-IN',
+    'ml': 'ml-IN',
+    'kn': 'kn-IN'
+  };
+
+  const userLang = "{{ request.user.userprofile.language }}";
+  recognition.lang = langMap[userLang] || 'en-IN';
+
+  recognition.onresult = function(event) {
+    document.getElementById("symptoms").value =
+      event.results[0][0].transcript;
+  };
+
+  recognition.start();
+}
+</script>
+
+</body>
+</html>

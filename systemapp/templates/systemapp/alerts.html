@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Emergency Alert Monitoring | Cattle Farm Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#a1cf17",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#1d2111",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display min-h-screen flex">
+<!-- Left Sidebar -->
+<aside class="w-64 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col fixed h-full z-20">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded flex items-center justify-center">
+<span class="material-icons text-white text-xl">grass</span>
+</div>
+<span class="font-bold text-lg tracking-tight">CattleAI</span>
+</div>
+<nav class="flex-1 px-4 space-y-1 mt-4">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-xl">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-xl">inventory</span>
+<span class="font-medium">Cattle List</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary transition-colors border-l-4 border-primary rounded-l-none" href="#">
+<span class="material-icons text-xl">report_problem</span>
+<span class="font-medium">Emergency Alerts</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-xl">analytics</span>
+<span class="font-medium">Health Reports</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-icons text-xl">settings</span>
+<span class="font-medium">System Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 px-3 py-2">
+<div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Professional male user portrait profile photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnQI48pFubtPWbwAoi3TnEO-FJ3wbQ7sLNGevqBvu3sGpYc8uFTXg_upmgkymBhoaDDUpPQsEnjudG9F8FnnwcBvhfvY1ZpQPvGdKdwANreVR-q_OsuVIhmWdJJNjpNzXLS0A5dtQ35d2Zu7BzykaTWXlb6_5cYvdwdgOIApUSNocFzGirCjGHk7csDDQ3Z94FxFPbDJhzEzzAY3MaoQO5GhnBKDpnbMPLaJknPRD5JO44vkX16uN0gR_UwHQ05vHQubXypJJn14I"/>
+</div>
+<div>
+<p class="text-sm font-bold">Dr. James Wilson</p>
+<p class="text-xs text-slate-500">Chief Veterinarian</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-64 flex flex-col h-screen overflow-hidden">
+<!-- Top Navbar -->
+<header class="h-16 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 z-10">
+<h1 class="text-xl font-bold">Emergency Alert Monitoring</h1>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="bg-slate-100 dark:bg-slate-800 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-primary w-64" placeholder="Search alerts..." type="text"/>
+<span class="material-icons absolute left-3 top-2 text-slate-400 text-lg">search</span>
+</div>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-icons">notifications</span>
+</button>
+</div>
+</header>
+<!-- Content Area -->
+<div class="flex-1 p-8 overflow-y-auto">
+<!-- Table Header Utility -->
+<div class="flex justify-between items-center mb-6">
+<div>
+<h2 class="text-lg font-semibold text-slate-800 dark:text-slate-100">Active Health Alerts</h2>
+<p class="text-sm text-slate-500">Real-time monitoring of AI-detected abnormalities across all farm locations.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons text-sm">filter_list</span>
+                        Filter
+                    </button>
+<button class="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg flex items-center gap-2 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
+<span class="material-icons text-sm">download</span>
+                        Export CSV
+                    </button>
+</div>
+</div>
+<!-- Monitoring Table -->
+<div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-primary/5 dark:bg-primary/10 border-b border-slate-200 dark:border-slate-800">
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Cattle ID</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Farm Name</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Alert Type</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">AI Prediction</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">Priority</th>
+<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Alert Row 1 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-802</td>
+<td class="px-6 py-4 text-sm">Highland Dairy</td>
+<td class="px-6 py-4 text-sm font-medium">Fever Detected</td>
+<td class="px-6 py-4 text-sm italic">85% probability of infection</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">High</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 2 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-915</td>
+<td class="px-6 py-4 text-sm">Green Valley Pastures</td>
+<td class="px-6 py-4 text-sm font-medium">Abnormal Movement</td>
+<td class="px-6 py-4 text-sm italic">92% certain behavioral deviation</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">Medium</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 3 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-442</td>
+<td class="px-6 py-4 text-sm">Lakeside Ranch</td>
+<td class="px-6 py-4 text-sm font-medium">Respiratory Distress</td>
+<td class="px-6 py-4 text-sm italic">78% certainty index</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">High</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 4 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-110</td>
+<td class="px-6 py-4 text-sm">Highland Dairy</td>
+<td class="px-6 py-4 text-sm font-medium">Decreased Feeding</td>
+<td class="px-6 py-4 text-sm italic">65% predictive score</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400">Low</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 5 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-766</td>
+<td class="px-6 py-4 text-sm">Summit Peak Farm</td>
+<td class="px-6 py-4 text-sm font-medium">Lameness Detected</td>
+<td class="px-6 py-4 text-sm italic">81% probability gait shift</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400">Medium</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 6 -->
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-209</td>
+<td class="px-6 py-4 text-sm">Lakeside Ranch</td>
+<td class="px-6 py-4 text-sm font-medium">Mastitis Warning</td>
+<td class="px-6 py-4 text-sm italic">94% automated detection</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400">High</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-primary text-background-dark font-bold text-xs rounded-lg hover:brightness-95 transition-all">
+                                    Assign Vet
+                                </button>
+</td>
+</tr>
+<!-- Alert Row 7 (Resolved Example) -->
+<tr class="opacity-75 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+<td class="px-6 py-4 font-bold text-slate-900 dark:text-slate-100">#C-501</td>
+<td class="px-6 py-4 text-sm">Summit Peak Farm</td>
+<td class="px-6 py-4 text-sm font-medium">Mild Lethargy</td>
+<td class="px-6 py-4 text-sm italic">42% deviation</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 rounded-full text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">Resolved</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-400 font-bold text-xs rounded-lg cursor-not-allowed">
+                                    Handled
+                                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="mt-6 flex items-center justify-between">
+<span class="text-sm text-slate-500">Showing 7 of 24 active alerts</span>
+<div class="flex gap-1">
+<button class="w-8 h-8 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-icons text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-background-dark font-bold text-xs flex items-center justify-center">1</button>
+<button class="w-8 h-8 rounded border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800">2</button>
+<button class="w-8 h-8 rounded border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800">3</button>
+<button class="w-8 h-8 rounded border border-slate-200 dark:border-slate-800 flex items-center justify-center hover:bg-slate-50 dark:hover:bg-slate-800">
+<span class="material-icons text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Summary Bar (Optional Flat Decoration) -->
+<div class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 grid grid-cols-4 gap-4">
+<div class="flex flex-col border-r border-slate-100 dark:border-slate-800">
+<span class="text-[10px] uppercase font-bold text-slate-400 tracking-widest">Total Active</span>
+<span class="text-lg font-bold">24 Alerts</span>
+</div>
+<div class="flex flex-col border-r border-slate-100 dark:border-slate-800">
+<span class="text-[10px] uppercase font-bold text-red-500 tracking-widest">High Priority</span>
+<span class="text-lg font-bold">08 Cases</span>
+</div>
+<div class="flex flex-col border-r border-slate-100 dark:border-slate-800">
+<span class="text-[10px] uppercase font-bold text-amber-500 tracking-widest">Pending Vet</span>
+<span class="text-lg font-bold">12 Cases</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-bold text-primary tracking-widest">Resolved Today</span>
+<span class="text-lg font-bold">14 Cases</span>
+</div>
+</div>
+</main>
+</body></html>

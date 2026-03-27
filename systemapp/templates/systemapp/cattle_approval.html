@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cattle Approval Workflow | Farm Management</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#93C572",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+              "risk-orange": "#CC7E5C",
+              "neutral-beige": "#F5F5DC",
+            },
+            fontFamily: {
+              display: ["Manrope"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Manrope", sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background-light text-black">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Sidebar -->
+      <aside class="w-64 bg-white border-r border-primary/10 flex flex-col shrink-0">
+        <div class="p-6 flex items-center gap-3">
+          <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+            <span class="material-icons">agriculture</span>
+          </div>
+          <span class="font-display font-extrabold text-xl tracking-tight text-primary">AGRI-FLOW</span>
+        </div>
+        <nav class="flex-1 px-4 space-y-1 mt-4">
+          <a class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary/10 transition-colors" href="{% url 'admin_overview' %}">
+            <span class="material-icons text-primary/60">dashboard</span>
+            <span class="font-medium">Dashboard</span>
+          </a>
+          <a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary transition-colors" href="{% url 'cattle_approval' %}">
+            <span class="material-icons text-primary">assignment_turned_in</span>
+            <span class="font-bold">Approvals</span>
+          </a>
+        </nav>
+        <div class="p-4 mt-auto">
+          <div class="bg-primary/5 rounded-xl p-4 border border-primary/10">
+            <p class="text-xs font-semibold text-primary/80 uppercase mb-2">System Status</p>
+            <div class="flex items-center gap-2">
+              <div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+              <span class="text-sm font-medium">All Systems Nominal</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col overflow-hidden bg-neutral-beige">
+        <!-- Header -->
+        <header class="h-16 bg-white border-b border-primary/10 flex items-center justify-between px-8 shrink-0">
+          <div class="flex items-center gap-4">
+            <h1 class="text-xl font-extrabold font-display">Cattle Approval Workflow</h1>
+            <span class="bg-primary/20 text-primary px-3 py-1 rounded-full text-xs font-bold">{{ pending_count }} Pending</span>
+          </div>
+
+          <div class="flex items-center gap-6">
+            <div class="relative w-72">
+              <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-black/40 text-sm">search</span>
+              <form method="get" action="{% url 'cattle_approval' %}">
+                <input
+                  class="w-full pl-10 pr-4 py-2 bg-background-light border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/30"
+                  name="q"
+                  value="{{ q }}"
+                  placeholder="Search Tag ID..."
+                  type="text"
+                />
+              </form>
+            </div>
+            <div class="flex items-center gap-3 border-l border-primary/10 pl-6">
+              <div class="text-right">
+                <p class="text-xs font-bold">Admin</p>
+                <p class="text-[10px] text-black/60 uppercase">Farm Manager</p>
+              </div>
+              <div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <span class="material-icons text-primary text-base">person</span>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Messages -->
+        {% if messages %}
+        <div class="px-8 pt-6">
+          <div class="space-y-2">
+            {% for message in messages %}
+            <div class="rounded-xl px-4 py-3 text-sm {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-white text-black border border-primary/10{% endif %}">
+              {{ message }}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="px-8 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {% for cattle in pending_cattle %}
+              <div class="bg-white rounded-xl border border-primary/10 overflow-hidden flex flex-col">
+                <div class="h-36 bg-primary/5">
+                  {% if cattle.cattle_type == "BUFFALO" %}
+                  <img
+                    alt="{{ cattle.tag_id }}"
+                    class="w-full h-full object-cover"
+                    src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?q=80&w=1200&auto=format&fit=crop"
+                  />
+                  {% else %}
+                  <img
+                    alt="{{ cattle.tag_id }}"
+                    class="w-full h-full object-cover"
+                    src="https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=1200&auto=format&fit=crop"
+                  />
+                  {% endif %}
+                </div>
+
+                <div class="p-5 flex-1">
+                  <div class="flex items-start justify-between gap-3">
+                    <div>
+                      <p class="text-primary font-extrabold text-lg">#{{ cattle.tag_id }}</p>
+                      <p class="font-bold">{{ cattle.breed|default:"Unknown Breed" }}</p>
+                    </div>
+                    <span class="text-[11px] font-bold px-2 py-1 rounded-full bg-primary/10 text-primary">Pending</span>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 mt-4">
+                    <div class="bg-background-light p-3 rounded-lg">
+                      <p class="text-[10px] uppercase font-bold text-black/50 mb-1">Age</p>
+                      <p class="text-sm font-bold">
+                        {% if cattle.age_months %}{{ cattle.age_months }}{% else %}{{ cattle.age|default:0 }}{% endif %} Months
+                      </p>
+                    </div>
+                    <div class="bg-background-light p-3 rounded-lg">
+                      <p class="text-[10px] uppercase font-bold text-black/50 mb-1">Farm</p>
+                      <p class="text-sm font-bold truncate">{{ cattle.farm.farm_name|default:cattle.farm.name }}</p>
+                    </div>
+                  </div>
+
+                  {% if cattle.ai_alert %}
+                  <div class="mt-4 text-xs text-black/70 bg-primary/5 border border-primary/10 rounded-lg p-3">
+                    <span class="font-bold text-primary">AI Note:</span> {{ cattle.ai_alert }}
+                  </div>
+                  {% endif %}
+                </div>
+
+                <div class="p-4 bg-background-light/50 flex gap-3 border-t border-primary/5">
+                  <form class="flex-1" method="post" action="{% url 'approve_cattle' cattle.id %}">
+                    {% csrf_token %}
+                    <button class="w-full py-2.5 bg-primary text-white rounded-lg text-sm font-extrabold hover:bg-opacity-90 transition-all shadow-md shadow-primary/10">
+                      Approve
+                    </button>
+                  </form>
+                  <form class="flex-1" method="post" action="{% url 'reject_cattle' cattle.id %}">
+                    {% csrf_token %}
+                    <button class="w-full py-2.5 bg-white text-black/70 border border-slate-300 rounded-lg text-sm font-bold hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all">
+                      Reject
+                    </button>
+                  </form>
+                </div>
+              </div>
+              {% empty %}
+              <div class="col-span-full bg-white rounded-xl border border-primary/10 p-10 text-center">
+                <p class="text-lg font-extrabold">No pending cattle right now.</p>
+                <p class="text-sm text-black/60 mt-1">Run the seed script to add sample pending cattle with images.</p>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

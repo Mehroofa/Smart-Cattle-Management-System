@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Account Verified - Cattle Marketplace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b5b",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221015",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .bg-mesh {
+            background-color: #f8f6f6;
+            background-image:
+                radial-gradient(at 0% 0%, rgba(238, 43, 91, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(238, 43, 91, 0.05) 0px, transparent 50%);
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+    <!-- Top Navigation Bar -->
+    <header
+        class="w-full border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-2 rounded-lg text-white">
+                    <span class="material-symbols-outlined text-2xl">agriculture</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-xl font-extrabold tracking-tight">Cattle<span
+                        class="text-primary">Market</span></h2>
+            </div>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium"
+                    href="#">Marketplace</a>
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium"
+                    href="#">Live Auctions</a>
+                <a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors font-medium"
+                    href="#">Bids</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button class="p-2.5 rounded-full bg-primary/5 text-primary hover:bg-primary/10 transition-all">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <div class="h-10 w-10 rounded-full border-2 border-primary/20 p-0.5 overflow-hidden">
+                    <img alt="User Profile" class="h-full w-full object-cover rounded-full"
+                        data-alt="Close up portrait of a smiling male farmer"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvw_x7bG6n4xdW4FMYUSGQVhAhTkwKMN6I_CGxnp_igl5DM7n3RYazGI5ceukIvB9NeRAwee5d4BwW_20mClRFxAdDg0qOoN37NoOCRgO5uS9BoMARsHam4wNJKj6dfk8QmwyWB8JT45r9lb18XMUht2L5JSVtXME6oQrtMuqU5wK6GA4d1OTrkRGs1_R4snMEd2hFR8KsJyJbFOQpScBIyJta-ZIqZaad6aJwTDBGaHPeMLZ2G9dujNYiJ0Spp1DNsj36uOUW_MU" />
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content Area -->
+    <main class="flex-grow flex items-center justify-center p-6 bg-mesh">
+        <div
+            class="max-w-2xl w-full bg-white dark:bg-slate-900 rounded-xl shadow-2xl shadow-primary/5 border border-primary/5 overflow-hidden">
+            <!-- Success Visual Section -->
+            <div class="relative h-64 bg-primary/5 flex items-center justify-center overflow-hidden">
+                <!-- Abstract Decorative Shapes -->
+                <div
+                    class="absolute top-0 left-0 w-32 h-32 bg-primary/10 rounded-full -translate-x-1/2 -translate-y-1/2">
+                </div>
+                <div
+                    class="absolute bottom-0 right-0 w-48 h-48 bg-primary/10 rounded-full translate-x-1/3 translate-y-1/3">
+                </div>
+                <div class="relative z-10 flex flex-col items-center">
+                    <div
+                        class="w-24 h-24 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/30 mb-4">
+                        <span class="material-symbols-outlined text-white text-6xl">check_circle</span>
+                    </div>
+                    <span
+                        class="px-4 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-sm font-bold rounded-full border border-emerald-500/20">
+                        Admin Approved
+                    </span>
+                </div>
+            </div>
+            <!-- Text Content Section -->
+            <div class="p-8 md:p-12 text-center">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
+                    Account Verified Successfully!
+                </h1>
+                <p class="text-lg text-slate-600 dark:text-slate-400 leading-relaxed mb-10 max-w-lg mx-auto">
+                    Welcome to the herd! Your documentation has been reviewed and approved by our security team. You are
+                    now authorized to place bids and purchase livestock.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10 text-left">
+                    <div class="p-4 rounded-xl bg-background-light dark:bg-slate-800/50 border border-primary/5">
+                        <span class="material-symbols-outlined text-primary mb-2">shopping_cart_checkout</span>
+                        <h3 class="font-bold text-sm">Full Access</h3>
+                        <p class="text-xs text-slate-500">Buy &amp; bid instantly</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-background-light dark:bg-slate-800/50 border border-primary/5">
+                        <span class="material-symbols-outlined text-primary mb-2">verified_user</span>
+                        <h3 class="font-bold text-sm">Trusted Seller</h3>
+                        <p class="text-xs text-slate-500">Verified badge active</p>
+                    </div>
+                    <div class="p-4 rounded-xl bg-background-light dark:bg-slate-800/50 border border-primary/5">
+                        <span class="material-symbols-outlined text-primary mb-2">support_agent</span>
+                        <h3 class="font-bold text-sm">VIP Support</h3>
+                        <p class="text-xs text-slate-500">Priority assistance</p>
+                    </div>
+                </div>
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="{% url 'olx' %}"
+                        class="bg-primary hover:bg-primary/90 text-white font-bold py-4 px-8 rounded-full shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2 group">
+                        Start Browsing Marketplace
+                        <span
+                            class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+            </div>
+            <!-- Footer Note -->
+            <div
+                class="px-8 py-6 bg-slate-50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-sm">
+                    <span class="material-symbols-outlined text-lg">shield_lock</span>
+                    Your account is secure
+                </div>
+                <div class="flex gap-4">
+                    <a class="text-sm font-medium text-primary hover:underline" href="#">Get Started Guide</a>
+                    <a class="text-sm font-medium text-slate-500 hover:underline" href="#">Need help?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <!-- Success Celebration Elements (Visual only) -->
+    <div class="fixed top-20 left-10 text-primary/20 pointer-events-none">
+        <span class="material-symbols-outlined text-6xl">celebration</span>
+    </div>
+    <div class="fixed bottom-20 right-10 text-primary/20 pointer-events-none rotate-12">
+        <span class="material-symbols-outlined text-8xl">star</span>
+    </div>
+    <!-- Background Pattern -->
+    <div class="fixed inset-0 -z-10 opacity-5 dark:opacity-10 pointer-events-none">
+        <img class="w-full h-full object-cover grayscale"
+            data-alt="Wide landscape view of cattle grazing in a green field"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAW9P7qM2Drdhr6WK8emTaYd5njDaqHHX7kiL13kVfAs_fNjSwpWh2kpxZgmYGk-y5Ck1dmSoil9e-4eVa0wj1Legw9FCkPgqx0xWCaUL47TGEvA1f54L3AF6QTBCttQFQ8BxddV2JQnHSfU6uw7ksEm5nP3WRlm1eCO8GsgeaSXfB7e5Vo12Tv8Agi04O34mK-cvlegIhZzMFjhCWFfu8-T1r2_q2n1MYh_1VfSRvgVldqlLalQwqxGNZhpyLEU9i-h9jO2av7R4" />
+    </div>
+</body>
+
+</html>

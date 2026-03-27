@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cattle Marketplace</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400;700&display=swap" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: "#13ec5b",
+                backgroundLight: "#f6f8f6",
+                backgroundDark: "#102216",
+            }
+        }
+    }
+}
+</script>
+
+<style>
+body { font-family: Inter, sans-serif; }
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+}
+</style>
+</head>
+
+<body class="bg-backgroundLight text-[#0d1b12]">
+
+<!-- NAVBAR -->
+<header class="sticky top-0 z-50 bg-white border-b">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold">Cattle Marketplace</h1>
+    <span class="material-symbols-outlined">person</span>
+  </div>
+</header>
+
+<!-- MAIN -->
+<main class="max-w-7xl mx-auto px-6 pb-24">
+
+<!-- SEARCH -->
+<form method="GET" class="mt-6">
+  <div class="flex gap-4 items-center">
+    <input
+      type="text"
+      name="search"
+      value="{{ request.GET.search }}"
+      placeholder="Search by ID, breed, location"
+      class="w-full px-4 py-3 border rounded-lg"
+    />
+    <button class="bg-primary px-6 py-3 rounded-lg font-bold">
+      Search
+    </button>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="flex flex-wrap gap-4 mt-4">
+    <select name="breed" class="px-4 py-2 border rounded-lg">
+      <option value=" ">All Breeds</option>
+      {% for breed in breeds %}
+      <option value="{{ breed }}" {% if request.GET.breed == breed %}selected{% endif %}>
+        {{ breed }}
+      </option>
+      {% endfor %}
+    </select>
+
+    <select name="location" class="px-4 py-2 border rounded-lg">
+      <option value=" ">All Locations</option>
+      {% for loc in locations %}
+      <option value="{{ loc }}" {% if request.GET.location == loc %}selected{% endif %}>
+        {{ loc }}
+      </option>
+      {% endfor %}
+    </select>
+
+    <select name="min_price" class="px-4 py-2 border rounded-lg">
+      <option value="">Min Price</option>
+      <option value="1000">₹1,000</option>
+      <option value="5000">₹5,000</option>
+      <option value="10000">₹10,000</option>
+    </select>
+
+    <select name="max_price" class="px-4 py-2 border rounded-lg">
+      <option value="">Max Price</option>
+      <option value="5000">₹5,000</option>
+      <option value="10000">₹10,000</option>
+      <option value="20000">₹20,000</option>
+    </select>
+
+    <button class="bg-primary px-6 py-2 rounded-lg font-bold">
+      Apply Filters
+    </button>
+  </div>
+</form>
+
+<!-- HEADING -->
+<div class="mt-8 flex justify-between items-center">
+  <h2 class="text-2xl font-bold">
+    {{ total_count }} Cattles Available in the Market
+  </h2>
+</div>
+
+<!-- CATTLE GRID -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+
+{% for cow in cattle_list %}
+<div class="bg-white rounded-xl shadow border overflow-hidden">
+
+  <div class="h-48 bg-cover bg-center"
+       style="background-image:url('{{ cow.image.url }}')"></div>
+
+  <div class="p-4 space-y-2">
+    <h3 class="text-lg font-bold">{{ cow.breed }} #{{ cow.tag_id }}</h3>
+
+    <div class="flex gap-2 text-xs text-gray-600">
+      <span>{{ cow.age_months }} months</span>
+      <span>{{ cow.weight }} lbs</span>
+    </div>
+
+    <p class="text-sm text-gray-500">{{ cow.location }}</p>
+
+    <p class="text-xl font-black text-primary">
+      ₹{{ cow.price }}
+    </p>
+
+    <a href="#"
+       class="block mt-3 bg-primary text-center py-2 rounded-lg font-bold">
+       View Details
+    </a>
+  </div>
+
+</div>
+{% empty %}
+<p>No cattle found.</p>
+{% endfor %}
+
+</div>
+</main>
+
+</body>
+</html>

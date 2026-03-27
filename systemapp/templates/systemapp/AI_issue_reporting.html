@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="page_title">AI Issue Reporting</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#8B4513",
+            danger: "#DED1B7",
+            "background-light": "#FAF5EF",
+            "panel-light": "#FFFFFF",
+            "text-soft": "#5f5a4f"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: "Inter", sans-serif; }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+  </style>
+</head>
+<body class="bg-background-light text-slate-900 min-h-screen">
+  <div class="min-h-screen flex flex-col">
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-danger/60">
+      <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 flex items-center justify-between gap-3">
+        <div>
+          <h1 class="text-lg md:text-xl font-extrabold">Cattle Farm System</h1>
+          <p class="text-xs text-text-soft" data-i18n="subhead">Smart health and farm operations</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="languageSelectorHeader" class="rounded-lg border-danger bg-white text-sm font-semibold px-3 py-2">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ml">മലയാളം</option>
+            <option value="ur">اردو</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+          <a href="{% url 'worker_dashboard' %}" class="rounded-lg bg-danger px-3 py-2 text-sm font-semibold" data-i18n="back_dashboard">Back</a>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full px-4 md:px-8 py-6 md:py-8 space-y-6">
+      {% if form_error %}
+      <div class="rounded-xl border border-primary/30 bg-primary/5 px-4 py-3 text-sm">{{ form_error }}</div>
+      {% endif %}
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-2 bg-panel-light rounded-2xl border border-danger/60 p-5 md:p-6 space-y-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-black" data-i18n="title">Worker Issue Reporting</h2>
+            <p class="text-text-soft" data-i18n="subtitle">Report cattle health issues using voice or manual text.</p>
+          </div>
+
+          <form id="issueForm" method="post" action="{% url 'AI_issue_reporting' %}" class="space-y-5">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <label class="block">
+                <span class="text-sm font-semibold" data-i18n="cattle">Select Cattle</span>
+                <select name="cattle_id" required class="mt-1 w-full rounded-xl border-danger bg-white">
+                  <option value="" data-i18n="select_cattle">Select cattle...</option>
+                  {% for cattle in cattle_list %}
+                  <option value="{{ cattle.tag_id }}">{{ cattle.tag_id }} - {{ cattle.breed }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+
+              <label class="block">
+                <span class="text-sm font-semibold" data-i18n="issue_type">Issue Type</span>
+                <select id="issueTypeSelect" name="issue_type" required class="mt-1 w-full rounded-xl border-danger bg-white">
+                  <option value="injury" data-i18n="injury">Physical Injury / Trauma</option>
+                  <option value="illness" data-i18n="illness">Behavioral Illness / Fever</option>
+                  <option value="infrastructure" data-i18n="infrastructure">Fence or Water Break</option>
+                  <option value="calving" data-i18n="calving">Emergency Calving</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="rounded-2xl border border-danger bg-danger/25 p-5 text-center space-y-4">
+              <p class="text-sm font-semibold text-text-soft" id="micStatus" data-i18n="ready">Ready to listen...</p>
+              <button id="micToggleButton" type="button" class="mx-auto h-36 w-36 rounded-full bg-danger text-slate-800 flex items-center justify-center shadow-lg">
+                <span class="material-symbols-outlined text-6xl">mic</span>
+              </button>
+              <div class="flex items-center justify-center gap-3">
+                <button id="startBtn" type="button" class="px-4 py-2 rounded-lg bg-white border border-danger text-sm font-bold" data-i18n="start_recording">Start Recording</button>
+                <button id="stopBtn" type="button" class="px-4 py-2 rounded-lg bg-white border border-danger text-sm font-bold" data-i18n="stop_recording">Stop</button>
+                <span id="timerChip" class="px-3 py-2 rounded-lg bg-white border border-danger text-xs font-bold">00:00</span>
+              </div>
+            </div>
+
+            <label class="block">
+              <span class="text-sm font-semibold" data-i18n="symptoms">Symptoms (Voice to Text)</span>
+              <textarea id="voiceTranscription" name="voice_transcription" required rows="5" class="mt-1 w-full rounded-xl border-danger bg-white" data-i18n-placeholder="symptoms_ph" placeholder="Describe the condition, behavior, and symptoms."></textarea>
+            </label>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button type="submit" class="px-6 py-3 rounded-xl bg-primary text-white font-bold" data-i18n="submit_report">Submit Health Report</button>
+              <button type="reset" id="resetBtn" class="px-6 py-3 rounded-xl border border-danger bg-white font-semibold" data-i18n="reset">Reset</button>
+              <a href="{% url 'alert_page' %}" class="px-6 py-3 rounded-xl border border-danger bg-white font-semibold" data-i18n="emergency">Emergency Contacts</a>
+            </div>
+          </form>
+        </section>
+
+        <aside class="bg-panel-light rounded-2xl border border-danger/60 p-5 md:p-6 space-y-5">
+          <h3 class="text-lg font-black" data-i18n="ai_panel">AI Decision Panel</h3>
+          <div class="rounded-xl border border-danger bg-danger/25 p-4">
+            <p class="text-xs uppercase tracking-widest text-text-soft font-bold" data-i18n="severity">Severity</p>
+            <p class="text-2xl font-black text-slate-800">{{ analysis.severity|default:"not generated"|upper }}</p>
+            {% if analysis %}
+            <p class="text-xs text-text-soft mt-1">{{ analysis.confidence_score|floatformat:2 }}</p>
+            {% endif %}
+          </div>
+
+          <div class="rounded-xl border border-danger/80 p-4 bg-white">
+            <p class="text-sm font-bold mb-2" data-i18n="auto_actions">Automatic Actions</p>
+            <ul class="text-sm text-text-soft space-y-1">
+              {% if dispatch %}
+              <li data-i18n="vet_assigned">Nearest vet assigned</li>
+              <li data-i18n="admin_notified">Admin notified</li>
+              <li>Dispatch: {{ dispatch.dispatch_id }}</li>
+              <li>ETA: {{ dispatch.eta_minutes }} min</li>
+              {% elif analysis %}
+              <li data-i18n="analysis_done">Analysis completed.</li>
+              {% else %}
+              <li data-i18n="no_actions">Submit report to view AI actions.</li>
+              {% endif %}
+            </ul>
+          </div>
+
+          <a href="{% url 'worker_dashboard' %}" class="block text-center px-4 py-2 rounded-lg bg-danger font-semibold" data-i18n="go_dashboard">Go Dashboard</a>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+<script>
+const csrfToken = "{{ csrf_token }}";
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return "";
+}
+
+const i18n = {
+  en: {
+    page_title: "AI Issue Reporting",
+    subhead: "Smart health and farm operations",
+    back_dashboard: "Back",
+    title: "Worker Issue Reporting",
+    subtitle: "Report cattle health issues using voice or manual text.",
+    cattle: "Select Cattle",
+    select_cattle: "Select cattle...",
+    issue_type: "Issue Type",
+    injury: "Physical Injury / Trauma",
+    illness: "Behavioral Illness / Fever",
+    infrastructure: "Fence or Water Break",
+    calving: "Emergency Calving",
+    ready: "Ready to listen...",
+    start_recording: "Start Recording",
+    stop_recording: "Stop",
+    symptoms: "Symptoms (Voice to Text)",
+    symptoms_ph: "Describe the condition, behavior, and symptoms.",
+    submit_report: "Submit Health Report",
+    reset: "Reset",
+    emergency: "Emergency Contacts",
+    ai_panel: "AI Decision Panel",
+    severity: "Severity",
+    auto_actions: "Automatic Actions",
+    vet_assigned: "Nearest vet assigned",
+    admin_notified: "Admin notified",
+    analysis_done: "Analysis completed.",
+    no_actions: "Submit report to view AI actions.",
+    go_dashboard: "Go Dashboard"
+  },
+  hi: {
+    page_title: "AI समस्या रिपोर्टिंग",
+    subhead: "स्मार्ट स्वास्थ्य और फार्म संचालन",
+    back_dashboard: "वापस",
+    title: "वर्कर समस्या रिपोर्टिंग",
+    subtitle: "आवाज़ या टेक्स्ट से पशु स्वास्थ्य समस्या दर्ज करें।",
+    cattle: "पशु चुनें",
+    select_cattle: "पशु चुनें...",
+    issue_type: "समस्या प्रकार",
+    injury: "शारीरिक चोट / ट्रॉमा",
+    illness: "व्यवहारिक बीमारी / बुखार",
+    infrastructure: "बाड़ या पानी की समस्या",
+    calving: "आपात बछड़ा जन्म",
+    ready: "सुनने के लिए तैयार...",
+    start_recording: "रिकॉर्डिंग शुरू करें",
+    stop_recording: "रोकें",
+    symptoms: "लक्षण (वॉइस टू टेक्स्ट)",
+    symptoms_ph: "स्थिति, व्यवहार और लक्षण लिखें।",
+    submit_report: "हेल्थ रिपोर्ट जमा करें",
+    reset: "रीसेट",
+    emergency: "आपात संपर्क",
+    ai_panel: "AI निर्णय पैनल",
+    severity: "गंभीरता",
+    auto_actions: "स्वचालित कार्रवाई",
+    vet_assigned: "निकटतम पशुचिकित्सक नियुक्त",
+    admin_notified: "एडमिन को सूचना",
+    analysis_done: "विश्लेषण पूरा हुआ।",
+    no_actions: "AI कार्रवाई देखने के लिए रिपोर्ट जमा करें।",
+    go_dashboard: "डैशबोर्ड जाएँ"
+  },
+  ml: {
+    page_title: "AI പ്രശ്ന റിപ്പോർട്ടിംഗ്",
+    subhead: "സ്മാർട്ട് ഹെൽത്ത് & ഫാം ഓപ്പറേഷൻസ്",
+    back_dashboard: "തിരികെ",
+    title: "വർക്കർ പ്രശ്ന റിപ്പോർട്ടിംഗ്",
+    subtitle: "ശബ്ദമോ ടെക്സ്റ്റോ ഉപയോഗിച്ച് ആരോഗ്യ പ്രശ്നം രേഖപ്പെടുത്തുക.",
+    cattle: "കന്നുകാലി തിരഞ്ഞെടുക്കുക",
+    select_cattle: "കന്നുകാലി തിരഞ്ഞെടുക്കുക...",
+    issue_type: "പ്രശ്ന തരം",
+    injury: "ശാരീരിക പരിക്ക് / ട്രോമ",
+    illness: "പ്രവർത്തന അസുഖം / പനി",
+    infrastructure: "വേലി അല്ലെങ്കിൽ വെള്ള പ്രശ്നം",
+    calving: "അടിയന്തര കന്നുകുട്ടി ജനനം",
+    ready: "കേൾക്കാൻ തയ്യാറാണ്...",
+    start_recording: "റെക്കോർഡിംഗ് ആരംഭിക്കുക",
+    stop_recording: "നിർത്തുക",
+    symptoms: "ലക്ഷണങ്ങൾ (വോയ്സ് ടു ടെക്സ്റ്റ്)",
+    symptoms_ph: "അവസ്ഥ, പെരുമാറ്റം, ലക്ഷണങ്ങൾ എഴുതുക.",
+    submit_report: "ഹെൽത്ത് റിപ്പോർട്ട് സമർപ്പിക്കുക",
+    reset: "റീസെറ്റ്",
+    emergency: "അടിയന്തര ബന്ധങ്ങൾ",
+    ai_panel: "AI തീരുമാന പാനൽ",
+    severity: "ഗുരുതരം",
+    auto_actions: "സ്വയമേവ നടപടികൾ",
+    vet_assigned: "അടുത്ത വെറ്റ് നിയോഗിച്ചു",
+    admin_notified: "അഡ്മിനെ അറിയിച്ചു",
+    analysis_done: "വിശകലനം പൂർത്തിയായി.",
+    no_actions: "AI നടപടികൾ കാണാൻ റിപ്പോർട്ട് സമർപ്പിക്കുക.",
+    go_dashboard: "ഡാഷ്ബോർഡിലേക്ക്"
+  },
+  ur: {
+    page_title: "AI مسئلہ رپورٹنگ",
+    subhead: "سمارٹ صحت اور فارم آپریشنز",
+    back_dashboard: "واپس",
+    title: "ورکر مسئلہ رپورٹنگ",
+    subtitle: "آواز یا متن سے مویشی صحت مسئلہ درج کریں۔",
+    cattle: "مویشی منتخب کریں",
+    select_cattle: "مویشی منتخب کریں...",
+    issue_type: "مسئلہ کی قسم",
+    injury: "جسمانی چوٹ / ٹراما",
+    illness: "رویے کی بیماری / بخار",
+    infrastructure: "باڑ یا پانی کی خرابی",
+    calving: "ہنگامی بچے کی پیدائش",
+    ready: "سننے کے لیے تیار...",
+    start_recording: "ریکارڈنگ شروع کریں",
+    stop_recording: "روکیں",
+    symptoms: "علامات (آواز سے متن)",
+    symptoms_ph: "حالت، رویہ اور علامات لکھیں۔",
+    submit_report: "ہیلتھ رپورٹ جمع کریں",
+    reset: "ری سیٹ",
+    emergency: "ایمرجنسی رابطے",
+    ai_panel: "AI فیصلہ پینل",
+    severity: "شدت",
+    auto_actions: "خودکار اقدامات",
+    vet_assigned: "قریب ترین ویٹ مقرر",
+    admin_notified: "ایڈمن کو اطلاع",
+    analysis_done: "تجزیہ مکمل ہوا۔",
+    no_actions: "AI اقدامات دیکھنے کیلئے رپورٹ جمع کریں۔",
+    go_dashboard: "ڈیش بورڈ"
+  },
+  ta: {
+    page_title: "AI பிரச்சனை அறிக்கை",
+    subhead: "ஸ்மார்ட் சுகாதாரம் மற்றும் பண்ணை செயல்பாடுகள்",
+    back_dashboard: "பின்செல்",
+    title: "பணியாளர் பிரச்சனை அறிக்கை",
+    subtitle: "குரல் அல்லது உரை மூலம் கால்நடை சுகாதார பிரச்சனையை பதிவு செய்யவும்.",
+    cattle: "கால்நடை தேர்வு",
+    select_cattle: "கால்நடை தேர்வு...",
+    issue_type: "பிரச்சனை வகை",
+    injury: "உடல் காயம் / டிராமா",
+    illness: "நடத்தை நோய் / காய்ச்சல்",
+    infrastructure: "வேலி அல்லது நீர் பிரச்சனை",
+    calving: "அவசர கன்று பிறப்பு",
+    ready: "கேட்க தயார்...",
+    start_recording: "பதிவை தொடங்கு",
+    stop_recording: "நிறுத்து",
+    symptoms: "அறிகுறிகள் (குரல்-உரை)",
+    symptoms_ph: "நிலை, நடத்தை மற்றும் அறிகுறிகளை எழுதவும்.",
+    submit_report: "சுகாதார அறிக்கையை சமர்ப்பிக்கவும்",
+    reset: "ரீசெட்",
+    emergency: "அவசர தொடர்புகள்",
+    ai_panel: "AI முடிவு பலகை",
+    severity: "தீவிரம்",
+    auto_actions: "தானியங்கி நடவடிக்கைகள்",
+    vet_assigned: "அருகிலுள்ள வெட் நியமிக்கப்பட்டார்",
+    admin_notified: "நிர்வாகிக்கு தகவல்",
+    analysis_done: "பகுப்பாய்வு முடிந்தது.",
+    no_actions: "AI நடவடிக்கைகள் பார்க்க அறிக்கை சமர்ப்பிக்கவும்.",
+    go_dashboard: "டாஷ்போர்டு"
+  }
+};
+
+function applyLanguage(code) {
+  const lang = i18n[code] ? code : "en";
+  const dict = i18n[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+  localStorage.setItem("workerPreferredLanguage", lang);
+
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (dict[key]) el.setAttribute("placeholder", dict[key]);
+  });
+
+  const selector = document.getElementById("languageSelectorHeader");
+  if (selector) selector.value = lang;
+
+  const issueType = document.getElementById("issueTypeSelect");
+  if (issueType) {
+    Array.from(issueType.options).forEach((opt) => {
+      const key = opt.getAttribute("data-i18n");
+      if (key && dict[key]) opt.textContent = dict[key];
+    });
+  }
+}
+
+async function saveLanguageToServer(lang) {
+  const payload = new URLSearchParams();
+  payload.append("language", lang);
+  await fetch("{% url 'set_worker_language' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+    },
+    body: payload.toString()
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const supported = ["en", "hi", "ml", "ur", "ta"];
+  const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+  const savedLang = localStorage.getItem("workerPreferredLanguage");
+  const initialLang = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+  applyLanguage(initialLang);
+
+  const selector = document.getElementById("languageSelectorHeader");
+  if (selector) {
+    selector.addEventListener("change", async (e) => {
+      const lang = e.target.value;
+      applyLanguage(lang);
+      try { await saveLanguageToServer(lang); } catch (error) { console.error(error); }
+    });
+  }
+
+  const textarea = document.getElementById("voiceTranscription");
+  const micToggleButton = document.getElementById("micToggleButton");
+  const startBtn = document.getElementById("startBtn");
+  const stopBtn = document.getElementById("stopBtn");
+  const micStatus = document.getElementById("micStatus");
+  const timerChip = document.getElementById("timerChip");
+
+  let recognition = null;
+  let recognizing = false;
+  let startTime = null;
+  let timer = null;
+
+  function tickTimer() {
+    if (!startTime) return;
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const mm = String(Math.floor(elapsed / 60)).padStart(2, "0");
+    const ss = String(elapsed % 60).padStart(2, "0");
+    timerChip.textContent = `${mm}:${ss}`;
+  }
+
+  function startListening() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      micStatus.textContent = "Speech recognition not supported in this browser.";
+      return;
+    }
+    if (!recognition) {
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.onresult = (event) => {
+        let text = "";
+        for (let i = 0; i < event.results.length; i += 1) {
+          text += event.results[i][0].transcript + " ";
+        }
+        textarea.value = text.trim();
+      };
+      recognition.onend = () => {
+        recognizing = false;
+        clearInterval(timer);
+      };
+    }
+    if (recognizing) return;
+    startTime = Date.now();
+    timerChip.textContent = "00:00";
+    timer = setInterval(tickTimer, 1000);
+    recognition.start();
+    recognizing = true;
+    micStatus.textContent = "Listening...";
+  }
+
+  function stopListening() {
+    if (!recognizing || !recognition) return;
+    recognition.stop();
+    recognizing = false;
+    clearInterval(timer);
+    micStatus.textContent = "Captured. You can edit before submit.";
+  }
+
+  if (startBtn) startBtn.addEventListener("click", startListening);
+  if (stopBtn) stopBtn.addEventListener("click", stopListening);
+  if (micToggleButton) {
+    micToggleButton.addEventListener("click", () => {
+      if (recognizing) stopListening(); else startListening();
+    });
+  }
+
+  const resetBtn = document.getElementById("resetBtn");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        textarea.value = "";
+        timerChip.textContent = "00:00";
+        micStatus.textContent = i18n[document.documentElement.lang]?.ready || "Ready to listen...";
+      }, 0);
+    });
+  }
+});
+</script>
+</body>
+</html>

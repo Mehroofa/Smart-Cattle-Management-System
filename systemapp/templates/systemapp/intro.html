@@ -1,0 +1,30 @@
+{% extends 'systemapp/base.html' %}
+
+{% block title %}Welcome | Cattle Farm System{% endblock %}
+{% block body_class %}intro-page{% endblock %}
+
+{% block content %}
+<section class="intro-hero">
+  <div class="intro-copy">
+    <p class="eyebrow">Cattle Farm System</p>
+    <h1>Smart care for every herd.</h1>
+    <p class="lead">
+      Manage farms, track cattle health, and enable voice-first reporting for workers.
+      Veterinarians receive AI-assisted triage so no case is missed.
+    </p>
+    <div class="intro-actions">
+      <a class="btn primary" href="{% url 'login' %}">Login</a>
+      <a class="btn ghost" href="{% url 'marketplace' %}">View Cattle</a>
+    </div>
+  </div>
+  <div class="intro-card">
+    <h3>What you can do</h3>
+    <ul class="intro-list">
+      <li>Voice reporting in local languages</li>
+      <li>AI disease detection suggestions</li>
+      <li>Vet dashboards with pending cases</li>
+      <li>Admin insights for every farm</li>
+    </ul>
+  </div>
+</section>
+{% endblock %}

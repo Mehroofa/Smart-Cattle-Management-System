@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VetFarm Secure Login Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#A0522D",
+            "background-light": "#F2EFE1",
+            "background-dark": "#102210"
+          },
+          fontFamily: {
+            display: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light font-display text-slate-900 min-h-screen flex flex-col">
+  <header class="w-full px-6 lg:px-20 py-4 flex items-center justify-between bg-white border-b border-slate-200">
+    <div class="flex items-center gap-3">
+      <div class="bg-primary p-1.5 rounded-lg flex items-center justify-center text-slate-900">
+        <span class="material-symbols-outlined text-2xl">agriculture</span>
+      </div>
+      <h1 class="text-xl font-bold tracking-tight">VetFarm</h1>
+    </div>
+    <div class="hidden md:flex items-center gap-6">
+      <a class="text-sm font-medium hover:text-primary transition-colors" href="{% url 'olx' %}">Marketplace</a>
+      <a class="text-sm font-medium hover:text-primary transition-colors" href="{% url 'home' %}">About Us</a>
+      <a class="text-sm font-medium px-4 py-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors"
+        href="{% url 'home' %}">Support</a>
+    </div>
+  </header>
+
+  <main class="flex-grow flex items-center justify-center p-6 bg-slate-50">
+    <div class="max-w-[1100px] w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="hidden lg:flex flex-col gap-8">
+        <div class="relative w-full aspect-video rounded-xl overflow-hidden shadow-2xl">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+          <img alt="Cattle in green pasture" class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxtuMMa7g9mbL6egTk2PLgbtpL82dHxaLGso4r9FkyqEyDn--ZX6p8q2ZXaw1DWqAu23hBSDPAeSP4gmAE_2OUEfMpHMCtmjq5i5Y60BpIMkPEz1n2SScNQcV95JGia-s1-uzYUOORmRnYal_GZJ-MBvJTMBXdGQvkO2ptBOMUDscqSCi6eV4oppe9E6JgPp9sFEkjdhe1UWsXwJ0-PKld3DkSzNED2mjsXGnb1iLsmxslXkHQYq3Gz2pxtvQ1bpXxrbG_2N2XKWFc" />
+          <div class="absolute bottom-6 left-6 z-20 text-white">
+            <p class="text-sm font-semibold uppercase tracking-widest text-primary mb-2">Verified Security</p>
+            <h2 class="text-3xl font-bold">The Future of Cattle Trading</h2>
+            <p class="text-slate-200 mt-2 max-w-md">Access premium livestock deals backed by AI-driven insights and
+              rigorous admin verification.</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 bg-white rounded-xl border border-slate-200">
+            <span class="material-symbols-outlined text-primary mb-2">verified_user</span>
+            <p class="font-bold text-sm">Secure Portal</p>
+            <p class="text-xs text-slate-500">Encrypted data protection for every transaction.</p>
+          </div>
+          <div class="p-4 bg-white rounded-xl border border-slate-200">
+            <span class="material-symbols-outlined text-primary mb-2">psychology</span>
+            <p class="font-bold text-sm">AI Powered</p>
+            <p class="text-xs text-slate-500">Recommendations tailored to your farm's needs.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center lg:justify-end">
+        <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
+          <div class="mb-8">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="material-symbols-outlined text-primary">lock</span>
+              <h2 class="text-2xl font-bold">Secure Login</h2>
+            </div>
+            <p class="text-slate-500 text-sm">Welcome back to the VetFarm administrative ecosystem.</p>
+          </div>
+
+          {% if messages %}
+          <div class="mb-6 space-y-2">
+            {% for message in messages %}
+            <div
+              class="rounded-lg px-4 py-3 text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% elif message.tags == 'warning' %}bg-amber-50 text-amber-700 border border-amber-200{% else %}bg-green-50 text-green-700 border border-green-200{% endif %}">
+              {{ message }}
+            </div>
+            {% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl" id="quickLoginBox">
+            <p class="text-sm font-bold text-green-800 mb-2">⚡ One-Click Login — just click below!</p>
+            <div class="flex gap-2 items-center flex-wrap">
+              <button type="button" id="roseLoginBtn"
+                class="bg-green-600 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-green-700 transition-colors shadow">
+                ▶ Login as rose@gmail.com
+              </button>
+              <button type="button" id="testLoginBtn"
+                class="bg-slate-700 text-white text-sm font-bold px-4 py-2 rounded-lg hover:bg-slate-800 transition-colors shadow">
+                ▶ Login as testbuyer
+              </button>
+            </div>
+          </div>
+
+          <form class="space-y-6" method="post"
+            action="{% url 'customer_login' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+            <div class="space-y-2">
+              <label class="text-sm font-semibold text-slate-700 ml-1">Email Address</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">mail</span>
+                <input name="email" value="{{ form_data.email|default:'' }}" required
+                  class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-slate-900"
+                  placeholder="yourname@farm.com" type="email" />
+              </div>
+            </div>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center px-1">
+                <label class="text-sm font-semibold text-slate-700">Password</label>
+                <a class="text-xs font-semibold text-primary hover:underline"
+                  href="{% url 'customer_register' %}">Forgot Password?</a>
+              </div>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-xl">lock_open</span>
+                <input name="password" required
+                  class="w-full pl-12 pr-4 py-3.5 bg-slate-50 border-slate-200 rounded-xl focus:ring-2 focus:ring-primary/50 focus:border-primary outline-none transition-all text-slate-900"
+                  placeholder="••••••••" type="password" />
+              </div>
+            </div>
+            <button
+              class="w-full py-4 bg-primary hover:bg-primary/90 text-slate-900 font-bold rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2"
+              type="submit">
+              <span>Login to Portal</span>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </form>
+
+          <div class="mt-8 pt-6 border-t border-slate-100 text-center">
+            <p class="text-sm text-slate-500">
+              Don't have an approved account?
+              <a class="text-primary font-bold hover:underline ml-1" href="{% url 'customer_register' %}">Register for
+                Access</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="w-full px-6 py-8 bg-white border-t border-slate-100">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary text-sm">agriculture</span>
+        <p class="text-xs text-slate-400">&copy; 2026 VetFarm Inc. Powered by AI Recommendations.</p>
+      </div>
+      <div class="flex gap-6">
+        <a class="text-xs text-slate-400 hover:text-primary transition-colors" href="{% url 'home' %}">Terms of
+          Service</a>
+        <a class="text-xs text-slate-400 hover:text-primary transition-colors" href="{% url 'home' %}">Privacy
+          Policy</a>
+        <a class="text-xs text-slate-400 hover:text-primary transition-colors" href="{% url 'home' %}">Security
+          Standards</a>
+      </div>
+    </div>
+  </footer>
+</body>
+
+<script>
+  // ── One-Click Login: fill credentials AND submit the form immediately ──────
+  function quickLogin(email, password) {
+    var form = document.querySelector('form');
+    form.querySelector('[name=email]').value = email;
+    form.querySelector('[name=password]').value = password;
+    form.submit();
+  }
+  document.getElementById('roseLoginBtn').addEventListener('click', function () {
+    quickLogin('rose@gmail.com', 'rose1234');
+  });
+  document.getElementById('testLoginBtn').addEventListener('click', function () {
+    quickLogin('testbuyer@test.com', 'test1234');
+  });
+</script>
+
+</html>

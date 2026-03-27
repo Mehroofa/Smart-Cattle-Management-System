@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="dark" lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">Worker Dashboard | CattlePro Management</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#800080",
+            "background-light": "#f7f8f6",
+            "background-dark": "#D0748B",
+            "surface-dark": "#FFC1CC",
+            "accent-yellow": "#facc15",
+            "accent-orange": "#f97316"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex">
+  <aside
+    class="w-64 border-r border-slate-200 dark:border-white/10 hidden lg:flex flex-col bg-background-light dark:bg-background-dark sticky top-0 h-screen">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+        <span class="material-symbols-outlined text-2xl">agriculture</span>
+      </div>
+      <div>
+        <h1 class="font-bold text-sm">CattlePro</h1>
+        <p class="text-[10px] uppercase font-semibold tracking-widest text-slate-500 dark:text-primary/70"
+          data-i18n="management_system">Management System</p>
+      </div>
+    </div>
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="{% url 'worker_dashboard' %}"
+        class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg font-medium"><span
+          class="material-symbols-outlined">dashboard</span><span data-i18n="dashboard">Dashboard</span></a>
+
+      <a href="{% url 'language_translation' %}"
+        class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"><span
+          class="material-symbols-outlined">calendar_month</span><span data-i18n="schedules">Schedules</span></a>
+      <a href="{% url 'olx' %}"
+        class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"><span
+          class="material-symbols-outlined">inventory_2</span><span data-i18n="inventory">Inventory</span></a>
+      <a href="{% url 'AI_issue_reporting' %}"
+        class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"><span
+          class="material-symbols-outlined">analytics</span><span data-i18n="reports">Reports</span></a>
+      <a href="{% url 'worker_copilot' %}"
+        class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"><span
+          class="material-symbols-outlined">support_agent</span><span>AI Copilot</span></a>
+      <a href="{% url 'nearby_vets' %}"
+        class="flex items-center gap-3 px-3 py-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 rounded-lg"><span
+          class="material-symbols-outlined">local_hospital</span><span>Nearby Vets</span></a>
+    </nav>
+    <div class="p-4 border-t border-slate-200 dark:border-white/10">
+      <label for="languageSelectorSidebar" class="block text-xs font-semibold mb-2 text-slate-600 dark:text-slate-300"
+        data-i18n="preferred_language">Preferred Language</label>
+      <select id="languageSelectorSidebar"
+        class="w-full rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 text-sm py-2 px-3">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="ml">മലയാളം</option>
+        <option value="ur">اردو</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+    </div>
+    <div class="p-4 border-t border-slate-200 dark:border-white/10">
+      <a href="{% url 'worker_logout' %}"
+        class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-red-500/10 text-red-500 font-bold hover:bg-red-500/20 transition-colors">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span data-i18n="logout">Log Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+    <header
+      class="h-16 border-b border-slate-200 dark:border-white/10 bg-white/50 dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-4 flex-1">
+        <button type="button" onclick="returnToPrevious()"
+          class="hidden md:inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5">
+          <span class="material-symbols-outlined text-base">arrow_back</span><span data-i18n="return">Return</span>
+        </button>
+        <div class="relative max-w-md w-full hidden md:block">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+          <input
+            class="w-full bg-slate-100 dark:bg-surface-dark border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary/50 text-slate-200"
+            type="text" data-i18n-placeholder="search_placeholder" placeholder="Search cattle ID, pens, or tasks..." />
+        </div>
+      </div>
+      <div class="flex items-center gap-2 lg:gap-4">
+        <select id="languageSelectorHeader"
+          class="hidden md:block rounded-lg bg-white dark:bg-surface-dark border border-slate-200 dark:border-white/10 text-sm py-1.5 px-2.5">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="ml">മലയാളം</option>
+          <option value="ur">اردو</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+        <a class="relative p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full"
+          href="{% url 'alert_page' %}"><span class="material-symbols-outlined">notifications</span><span
+            class="absolute top-2 right-2 w-2 h-2 bg-accent-orange rounded-full border-2 border-background-dark"></span></a>
+        <a class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 rounded-full"
+          href="{% url 'language_translation' %}"><span class="material-symbols-outlined">settings</span></a>
+      </div>
+    </header>
+
+    <div class="p-4 lg:p-8 max-w-7xl mx-auto w-full space-y-8">
+      <section>
+        <h2 class="text-3xl font-black tracking-tight mb-2" data-i18n="morning_john">Morning, John.</h2>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-600 dark:text-slate-400 text-sm">
+          <span class="flex items-center gap-1"><span
+              class="material-symbols-outlined text-sm text-primary">cloud</span><span data-i18n="barn_temp">24°C Barn
+              Temp</span></span>
+          <span class="h-1 w-1 bg-slate-400 rounded-full"></span>
+          <span class="flex items-center gap-1"><span
+              class="material-symbols-outlined text-sm text-accent-orange">warning</span><span
+              data-i18n="priority_alerts">2 Priority Alerts</span></span>
+          <span class="h-1 w-1 bg-slate-400 rounded-full"></span>
+          <span class="flex items-center gap-1"><span
+              class="material-symbols-outlined text-sm text-primary">check_circle</span><span data-i18n="tasks_done">85%
+              Tasks Done</span></span>
+        </div>
+      </section>
+
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{% url 'feeding_status' %}"
+          class="group bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-white/5 shadow-sm p-6">
+          <p class="text-[10px] uppercase text-slate-500 font-bold mb-2" data-i18n="log_now">Log Now</p>
+          <h3 class="text-xl font-bold mb-1" data-i18n="update_feeding_status">Update Feeding Status</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-4" data-i18n="feeding_desc">Log feed types &
+            quantities for Pen A-G</p>
+          <p class="font-bold text-primary text-sm" data-i18n="start_feeding_task">Start Feeding Task</p>
+        </a>
+        <a href="{% url 'cleaning_status' %}"
+          class="group bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-white/5 shadow-sm p-6">
+          <p class="text-[10px] uppercase text-slate-500 font-bold mb-2" data-i18n="pending">Pending</p>
+          <h3 class="text-xl font-bold mb-1" data-i18n="update_cleaning_status">Update Cleaning Status</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-4" data-i18n="cleaning_desc">Confirm hygiene &
+            sterilization for stalls</p>
+          <p class="font-bold text-accent-yellow text-sm" data-i18n="open_log">Open Log</p>
+        </a>
+        <a href="{% url 'AI_issue_reporting' %}"
+          class="group bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-white/5 shadow-sm p-6">
+          <p class="text-[10px] uppercase text-slate-500 font-bold mb-2" data-i18n="urgent">Urgent</p>
+          <h3 class="text-xl font-bold mb-1" data-i18n="report_cattle_issue">Report Cattle Issue</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mb-4" data-i18n="issue_desc">Behavioral changes, injuries
+            or sickness</p>
+          <p class="font-bold text-accent-orange text-sm" data-i18n="log_emergency">Log Emergency</p>
+        </a>
+      </section>
+
+      <section class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xl font-bold" data-i18n="task_summary">Task Summary</h2>
+            <a href="{% url 'language_translation' %}" class="text-sm text-primary hover:underline font-medium"
+              data-i18n="view_all_tasks">View All Tasks</a>
+          </div>
+          <div
+            class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-white/5 shadow-sm overflow-hidden">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-slate-50 dark:bg-white/[0.02]">
+                <tr>
+                  <th class="px-6 py-4 font-semibold" data-i18n="task_name">Task Name</th>
+                  <th class="px-6 py-4 font-semibold" data-i18n="location">Location</th>
+                  <th class="px-6 py-4 font-semibold" data-i18n="due">Due</th>
+                  <th class="px-6 py-4 font-semibold" data-i18n="status">Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 dark:divide-white/5">
+                <tr>
+                  <td class="px-6 py-4" data-i18n="watering_station_check">Watering Station Check</td>
+                  <td class="px-6 py-4" data-i18n="pen_alpha">Pen Alpha</td>
+                  <td class="px-6 py-4">10:30 AM</td>
+                  <td class="px-6 py-4"><span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary/20 text-primary uppercase"
+                      data-i18n="completed">Completed</span></td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4" data-i18n="vaccination_herd_4">Vaccination Herd #4</td>
+                  <td class="px-6 py-4" data-i18n="main_barn">Main Barn</td>
+                  <td class="px-6 py-4">11:45 AM</td>
+                  <td class="px-6 py-4"><span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-white/5 text-slate-500 uppercase"
+                      data-i18n="pending">Pending</span></td>
+                </tr>
+                <tr>
+                  <td class="px-6 py-4" data-i18n="weight_measurement">Weight Measurement</td>
+                  <td class="px-6 py-4" data-i18n="scale_2">Scale 2</td>
+                  <td class="px-6 py-4">01:00 PM</td>
+                  <td class="px-6 py-4"><span
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-100 dark:bg-white/5 text-slate-500 uppercase"
+                      data-i18n="pending">Pending</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="space-y-4">
+          <h2 class="text-xl font-bold" data-i18n="ai_insights">AI Insights</h2>
+          <div
+            class="bg-white dark:bg-surface-dark rounded-xl border border-slate-200 dark:border-white/5 p-5 shadow-sm space-y-4">
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest" data-i18n="milk_yield_forecast">Milk
+              Yield Forecast</h3>
+            <p class="text-primary text-xs font-bold" data-i18n="plus_5_today">+5.2% Today</p>
+            <p class="text-[10px] text-slate-500" data-i18n="predicted_yield">Predicted yield based on feed optimization
+            </p>
+            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest" data-i18n="health_risk_alerts">Health
+              Risk Alerts</h3>
+            <p class="text-sm font-bold text-accent-orange" data-i18n="cow_402_mastitis">Cow #402 - Mastitis Risk</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="cow_402_desc">Temperature spike detected.
+              Immediate observation required in Pen B.</p>
+            <p class="text-sm font-bold text-slate-200" data-i18n="pen_delta_efficiency">Pen Delta - Feed Efficiency</p>
+            <p class="text-xs text-slate-500 dark:text-slate-400" data-i18n="pen_delta_desc">Slight decline in
+              ruminating activity for 3 cows. Check feed consistency.</p>
+            <a href="{% url 'language_translation' %}"
+              class="block w-full text-center py-2 bg-slate-100 dark:bg-white/5 rounded-lg text-xs font-bold uppercase tracking-widest"
+              data-i18n="full_analytics_report">Full Analytics Report</a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <nav
+      class="lg:hidden sticky bottom-0 z-50 bg-white dark:bg-background-dark border-t border-slate-200 dark:border-white/10 flex items-center justify-around p-3">
+      <a class="flex flex-col items-center gap-1 text-primary" href="{% url 'worker_dashboard' %}"><span
+          class="material-symbols-outlined">dashboard</span><span class="text-[10px] font-bold"
+          data-i18n="home">Home</span></a>
+      <a class="flex flex-col items-center gap-1 text-slate-500" href="{% url 'marketplaces' %}"><span
+          class="material-symbols-outlined">pets</span><span class="text-[10px] font-bold"
+          data-i18n="cattle">Cattle</span></a>
+      <a class="flex flex-col items-center gap-1 text-slate-500" href="{% url 'feeding_status' %}"><span
+          class="material-symbols-outlined">add_circle</span><span class="text-[10px] font-bold"
+          data-i18n="log">Log</span></a>
+      <a class="flex flex-col items-center gap-1 text-slate-500" href="{% url 'AI_issue_reporting' %}"><span
+          class="material-symbols-outlined">analytics</span><span class="text-[10px] font-bold"
+          data-i18n="insights">Insights</span></a>
+    </nav>
+  </main>
+
+  <script>
+    function returnToPrevious() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = "{% url 'portal' %}";
+      }
+    }
+
+    const csrfToken = "{{ csrf_token }}";
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return "";
+    }
+
+    const i18n = {
+      en: { page_title: "Worker Dashboard | CattlePro Management", management_system: "Management System", dashboard: "Dashboard", cattle_directory: "Cattle Directory", schedules: "Schedules", inventory: "Inventory", reports: "Reports", preferred_language: "Preferred Language", return: "Return", search_placeholder: "Search cattle ID, pens, or tasks...", morning_john: "Morning, John.", barn_temp: "24°C Barn Temp", priority_alerts: "2 Priority Alerts", tasks_done: "85% Tasks Done", log_now: "Log Now", update_feeding_status: "Update Feeding Status", feeding_desc: "Log feed types & quantities for Pen A-G", start_feeding_task: "Start Feeding Task", pending: "Pending", update_cleaning_status: "Update Cleaning Status", cleaning_desc: "Confirm hygiene & sterilization for stalls", open_log: "Open Log", urgent: "Urgent", report_cattle_issue: "Report Cattle Issue", issue_desc: "Behavioral changes, injuries or sickness", log_emergency: "Log Emergency", task_summary: "Task Summary", view_all_tasks: "View All Tasks", task_name: "Task Name", location: "Location", due: "Due", status: "Status", watering_station_check: "Watering Station Check", pen_alpha: "Pen Alpha", completed: "Completed", vaccination_herd_4: "Vaccination Herd #4", main_barn: "Main Barn", weight_measurement: "Weight Measurement", scale_2: "Scale 2", ai_insights: "AI Insights", milk_yield_forecast: "Milk Yield Forecast", plus_5_today: "+5.2% Today", predicted_yield: "Predicted yield based on feed optimization", health_risk_alerts: "Health Risk Alerts", cow_402_mastitis: "Cow #402 - Mastitis Risk", cow_402_desc: "Temperature spike detected. Immediate observation required in Pen B.", pen_delta_efficiency: "Pen Delta - Feed Efficiency", pen_delta_desc: "Slight decline in ruminating activity for 3 cows. Check feed consistency.", full_analytics_report: "Full Analytics Report", home: "Home", cattle: "Cattle", log: "Log", insights: "Insights" },
+      hi: { page_title: "वर्कर डैशबोर्ड | कैटलप्रो मैनेजमेंट", management_system: "मैनेजमेंट सिस्टम", dashboard: "डैशबोर्ड", cattle_directory: "पशु निर्देशिका", schedules: "शेड्यूल", inventory: "इन्वेंट्री", reports: "रिपोर्ट्स", preferred_language: "पसंदीदा भाषा", return: "वापस", search_placeholder: "पशु आईडी, पेन या कार्य खोजें...", morning_john: "सुप्रभात, जॉन।", barn_temp: "24°C बाड़ा तापमान", priority_alerts: "2 प्राथमिक अलर्ट", tasks_done: "85% कार्य पूरे", log_now: "अभी दर्ज करें", update_feeding_status: "फीडिंग स्थिति अपडेट करें", feeding_desc: "पेन A-G के लिए फ़ीड प्रकार और मात्रा दर्ज करें", start_feeding_task: "फीडिंग कार्य शुरू करें", pending: "लंबित", update_cleaning_status: "सफाई स्थिति अपडेट करें", cleaning_desc: "स्टॉल के लिए स्वच्छता और स्टरलाइजेशन की पुष्टि करें", open_log: "लॉग खोलें", urgent: "अति आवश्यक", report_cattle_issue: "पशु समस्या रिपोर्ट करें", issue_desc: "व्यवहार में बदलाव, चोट या बीमारी", log_emergency: "आपात दर्ज करें", task_summary: "कार्य सारांश", view_all_tasks: "सभी कार्य देखें", task_name: "कार्य नाम", location: "स्थान", due: "समय सीमा", status: "स्थिति", watering_station_check: "पानी स्टेशन जांच", pen_alpha: "पेन अल्फा", completed: "पूर्ण", vaccination_herd_4: "टीकाकरण झुंड #4", main_barn: "मुख्य बाड़ा", weight_measurement: "वजन मापन", scale_2: "स्केल 2", ai_insights: "एआई इनसाइट्स", milk_yield_forecast: "दूध उत्पादन पूर्वानुमान", plus_5_today: "+5.2% आज", predicted_yield: "फीड अनुकूलन के आधार पर अनुमानित उत्पादन", health_risk_alerts: "स्वास्थ्य जोखिम अलर्ट", cow_402_mastitis: "गाय #402 - मैस्टाइटिस जोखिम", cow_402_desc: "तापमान बढ़ा हुआ मिला। पेन B में तुरंत निगरानी जरूरी है।", pen_delta_efficiency: "पेन डेल्टा - फ़ीड दक्षता", pen_delta_desc: "3 गायों में जुगाली गतिविधि में हल्की कमी। फ़ीड की स्थिरता जांचें।", full_analytics_report: "पूर्ण एनालिटिक्स रिपोर्ट", home: "होम", cattle: "पशु", log: "लॉग", insights: "इनसाइट्स" },
+      ml: { page_title: "വർക്കർ ഡാഷ്ബോർഡ് | കാറ്റിൽപ്രോ മാനേജ്മെന്റ്", management_system: "മാനേജ്മെന്റ് സിസ്റ്റം", dashboard: "ഡാഷ്ബോർഡ്", cattle_directory: "കന്നുകാലി ഡയറക്ടറി", schedules: "ഷെഡ്യൂളുകൾ", inventory: "ഇൻവെന്ററി", reports: "റിപ്പോർട്ടുകൾ", preferred_language: "ഇഷ്ടഭാഷ", return: "തിരികെ", search_placeholder: "കന്നുകാലി ഐഡി, പേൻ, അല്ലെങ്കിൽ ജോലികൾ തിരയുക...", morning_john: "ശുഭോദയം, ജോൺ.", barn_temp: "24°C ബാർൺ താപനില", priority_alerts: "2 പ്രധാന അലർട്ടുകൾ", tasks_done: "85% ജോലികൾ പൂർത്തിയായി", log_now: "ഇപ്പോൾ രേഖപ്പെടുത്തുക", update_feeding_status: "തീറ്റ നില അപ്ഡേറ്റ് ചെയ്യുക", feeding_desc: "പേൻ A-G ന് തീറ്റയുടെ തരംയും അളവും രേഖപ്പെടുത്തുക", start_feeding_task: "തീറ്റ ജോലി തുടങ്ങുക", pending: "ബാക്കിയുണ്ട്", update_cleaning_status: "ശുചീകരണ നില അപ്ഡേറ്റ് ചെയ്യുക", cleaning_desc: "സ്റ്റാളുകളുടെ ശുചിത്വവും സ്റ്റീരലൈസേഷനും സ്ഥിരീകരിക്കുക", open_log: "ലോഗ് തുറക്കുക", urgent: "അടിയന്തരം", report_cattle_issue: "കന്നുകാലി പ്രശ്നം റിപ്പോർട്ട് ചെയ്യുക", issue_desc: "പെരുമാറ്റ മാറ്റങ്ങൾ, പരിക്ക്, അല്ലെങ്കിൽ രോഗം", log_emergency: "അടിയന്തരാവസ്ഥ രേഖപ്പെടുത്തുക", task_summary: "ജോലി സംഗ്രഹം", view_all_tasks: "എല്ലാ ജോലികളും കാണുക", task_name: "ജോലി പേര്", location: "സ്ഥലം", due: "സമയം", status: "നില", watering_station_check: "വെള്ള സ്റ്റേഷൻ പരിശോധന", pen_alpha: "പേൻ ആൽഫ", completed: "പൂർത്തിയായി", vaccination_herd_4: "വാക്സിനേഷൻ കൂട്ടം #4", main_barn: "പ്രധാന ബാർൺ", weight_measurement: "ഭാരം അളക്കൽ", scale_2: "സ്കേൽ 2", ai_insights: "AI ഇൻസൈറ്റുകൾ", milk_yield_forecast: "പാൽ ഉൽപ്പാദന പ്രവചനം", plus_5_today: "+5.2% ഇന്ന്", predicted_yield: "തീറ്റ മെച്ചപ്പെടുത്തലിനെ അടിസ്ഥാനമാക്കിയുള്ള പ്രവചന ഉൽപ്പാദനം", health_risk_alerts: "ആരോഗ്യ അപകട അലർട്ടുകൾ", cow_402_mastitis: "പശു #402 - മാസ്റ്റൈറ്റിസ് അപകടം", cow_402_desc: "താപനില വർധിച്ചു. പേൻ Bയിൽ ഉടൻ നിരീക്ഷണം ആവശ്യമാണ്.", pen_delta_efficiency: "പേൻ ഡെൽറ്റ - തീറ്റ കാര്യക്ഷമത", pen_delta_desc: "3 പശുക്കളിൽ ജീർണന പ്രവർത്തനം അല്പം കുറഞ്ഞു. തീറ്റ ഗുണനിലവാരം പരിശോധിക്കുക.", full_analytics_report: "പൂർണ്ണ അനലിറ്റിക്സ് റിപ്പോർട്ട്", home: "ഹോം", cattle: "കന്നുകാലി", log: "ലോഗ്", insights: "ഇൻസൈറ്റ്സ്" },
+      ur: { page_title: "ورکر ڈیش بورڈ | کیٹل پرو مینجمنٹ", management_system: "مینجمنٹ سسٹم", dashboard: "ڈیش بورڈ", cattle_directory: "مویشی ڈائریکٹری", schedules: "شیڈولز", inventory: "انوینٹری", reports: "رپورٹس", preferred_language: "پسندیدہ زبان", return: "واپس", search_placeholder: "مویشی آئی ڈی، پین یا کام تلاش کریں...", morning_john: "صبح بخیر، جان۔", barn_temp: "24°C باڑے کا درجہ حرارت", priority_alerts: "2 ترجیحی الرٹس", tasks_done: "85% کام مکمل", log_now: "ابھی لاگ کریں", update_feeding_status: "فیڈنگ اسٹیٹس اپڈیٹ کریں", feeding_desc: "پین A-G کے لیے فیڈ کی قسم اور مقدار درج کریں", start_feeding_task: "فیڈنگ ٹاسک شروع کریں", pending: "زیر التوا", update_cleaning_status: "صفائی اسٹیٹس اپڈیٹ کریں", cleaning_desc: "اسٹالز کی صفائی اور جراثیم کشی کی تصدیق کریں", open_log: "لاگ کھولیں", urgent: "فوری", report_cattle_issue: "مویشی مسئلہ رپورٹ کریں", issue_desc: "رویے میں تبدیلی، چوٹ یا بیماری", log_emergency: "ایمرجنسی لاگ کریں", task_summary: "کام کا خلاصہ", view_all_tasks: "تمام کام دیکھیں", task_name: "کام کا نام", location: "مقام", due: "وقت", status: "حالت", watering_station_check: "واٹرنگ اسٹیشن چیک", pen_alpha: "پین الفا", completed: "مکمل", vaccination_herd_4: "ویکسینیشن ہرڈ #4", main_barn: "مین بارن", weight_measurement: "وزن کی پیمائش", scale_2: "اسکیل 2", ai_insights: "AI بصیرتیں", milk_yield_forecast: "دودھ پیداوار کی پیش گوئی", plus_5_today: "+5.2% آج", predicted_yield: "فیڈ آپٹیمائزیشن کی بنیاد پر متوقع پیداوار", health_risk_alerts: "صحت کے خطرے کے الرٹس", cow_402_mastitis: "گائے #402 - ماسٹائٹس کا خطرہ", cow_402_desc: "درجہ حرارت میں اضافہ۔ پین B میں فوری نگرانی ضروری ہے۔", pen_delta_efficiency: "پین ڈیلٹا - فیڈ کارکردگی", pen_delta_desc: "3 گائیوں میں جگالی میں کمی۔ فیڈ کی یکسانیت چیک کریں۔", full_analytics_report: "مکمل اینالیٹکس رپورٹ", home: "ہوم", cattle: "مویشی", log: "لاگ", insights: "بصیرتیں" },
+      ta: { page_title: "பணியாளர் டாஷ்போர்டு | கேட்டில் புரோ மேலாண்மை", management_system: "மேலாண்மை அமைப்பு", dashboard: "டாஷ்போர்டு", cattle_directory: "கால்நடை அடைவுப்பட்டி", schedules: "அட்டவணைகள்", inventory: "சரக்கு", reports: "அறிக்கைகள்", preferred_language: "விருப்ப மொழி", return: "திரும்பு", search_placeholder: "கால்நடை ஐடி, பென், அல்லது பணிகளைத் தேடுங்கள்...", morning_john: "காலை வணக்கம், ஜான்.", barn_temp: "24°C களஞ்சிய வெப்பநிலை", priority_alerts: "2 முன்னுரிமை எச்சரிக்கைகள்", tasks_done: "85% பணிகள் முடிந்தது", log_now: "இப்போது பதிவு செய்", update_feeding_status: "உணவு நிலையை புதுப்பிக்கவும்", feeding_desc: "பென் A-G க்கான உணவு வகை மற்றும் அளவை பதிவு செய்க", start_feeding_task: "உணவு பணியைத் தொடங்கு", pending: "நிலுவை", update_cleaning_status: "சுத்தம் நிலையை புதுப்பிக்கவும்", cleaning_desc: "ஸ்டால்களின் சுத்தம் மற்றும் கிருமிநாசினி உறுதிப்படுத்தவும்", open_log: "பதிவைத் திற", urgent: "அவசரம்", report_cattle_issue: "கால்நடை பிரச்சனையை அறிவிக்கவும்", issue_desc: "நடத்தை மாற்றம், காயம் அல்லது நோய்", log_emergency: "அவசரத்தை பதிவு செய்", task_summary: "பணி சுருக்கம்", view_all_tasks: "அனைத்து பணிகளையும் காண்க", task_name: "பணி பெயர்", location: "இடம்", due: "நேரம்", status: "நிலை", watering_station_check: "தண்ணீர் நிலையம் பரிசோதனை", pen_alpha: "பென் அல்பா", completed: "முடிந்தது", vaccination_herd_4: "தடுப்பூசி கூட்டம் #4", main_barn: "முக்கிய களஞ்சியம்", weight_measurement: "எடை அளவீடு", scale_2: "ஸ்கேல் 2", ai_insights: "AI பார்வைகள்", milk_yield_forecast: "பால் உற்பத்தி கணிப்பு", plus_5_today: "+5.2% இன்று", predicted_yield: "உணவு மேம்பாட்டின் அடிப்படையில் கணிக்கப்பட்ட உற்பத்தி", health_risk_alerts: "சுகாதார அபாய எச்சரிக்கைகள்", cow_402_mastitis: "பசு #402 - மாஸ்டைடிஸ் அபாயம்", cow_402_desc: "வெப்பநிலை உயர்வு கண்டறியப்பட்டது. பென் Bல் உடனடி கண்காணிப்பு தேவை.", pen_delta_efficiency: "பென் டெல்டா - உணவு திறன்", pen_delta_desc: "3 பசுக்களில் மென்று ஜீரணிக்கும் செயல்பாடு குறைந்துள்ளது. உணவு தரம் சரிபார்க்கவும்.", full_analytics_report: "முழு பகுப்பாய்வு அறிக்கை", home: "முகப்பு", cattle: "கால்நடை", log: "பதிவு", insights: "பார்வைகள்" }
+    };
+
+    function applyLanguage(code) {
+      const lang = i18n[code] ? code : "en";
+      const dict = i18n[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+      localStorage.setItem("workerPreferredLanguage", lang);
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (dict[key]) el.setAttribute("placeholder", dict[key]);
+      });
+      const headerSel = document.getElementById("languageSelectorHeader");
+      const sidebarSel = document.getElementById("languageSelectorSidebar");
+      if (headerSel) headerSel.value = lang;
+      if (sidebarSel) sidebarSel.value = lang;
+    }
+
+    async function saveLanguageToServer(lang) {
+      const payload = new URLSearchParams();
+      payload.append("language", lang);
+      await fetch("{% url 'set_worker_language' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+        },
+        body: payload.toString()
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const supported = ["en", "hi", "ml", "ur", "ta"];
+      const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+      const savedLang = localStorage.getItem("workerPreferredLanguage");
+      const initial = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+      applyLanguage(initial);
+
+      const onChange = async (event) => {
+        const lang = event.target.value;
+        applyLanguage(lang);
+        try {
+          await saveLanguageToServer(lang);
+        } catch (e) {
+          console.error("Language save failed", e);
+        }
+      };
+
+      const headerSel = document.getElementById("languageSelectorHeader");
+      const sidebarSel = document.getElementById("languageSelectorSidebar");
+      if (headerSel) headerSel.addEventListener("change", onChange);
+      if (sidebarSel) sidebarSel.addEventListener("change", onChange);
+    });
+  </script>
+</body>
+
+</html>

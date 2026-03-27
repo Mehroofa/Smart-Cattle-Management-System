@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">Nearby Vets | Worker</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "worker-bg": "#FFCC99",
+            "worker-panel": "#FF9966",
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-worker-bg text-black min-h-screen flex">
+  <aside class="w-64 border-r border-black/10 hidden lg:flex flex-col bg-worker-panel sticky top-0 h-screen">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white">
+        <span class="material-symbols-outlined text-2xl">agriculture</span>
+      </div>
+      <div>
+        <h1 class="font-bold text-sm">CattlePro</h1>
+        <p class="text-[10px] uppercase font-semibold tracking-widest text-black/70" data-i18n="worker_tools">Worker Tools</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="{% url 'worker_dashboard' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span data-i18n="dashboard">Dashboard</span>
+      </a>
+
+      <a href="{% url 'nearby_vets' %}"
+        class="flex items-center gap-3 px-3 py-2 bg-black/10 text-black rounded-lg font-extrabold">
+        <span class="material-symbols-outlined">local_hospital</span>
+        <span data-i18n="nearby_vets">Nearby Vets</span>
+      </a>
+
+      <a href="{% url 'worker_copilot' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">support_agent</span>
+        <span data-i18n="ai_copilot">AI Copilot</span>
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-black/10">
+      <a href="{% url 'worker_logout' %}"
+        class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-black/10 text-black font-extrabold hover:bg-black/15 transition-colors">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span data-i18n="logout">Log Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col min-w-0">
+    <header class="h-16 border-b border-black/10 bg-worker-panel sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-black">local_hospital</span>
+        <div>
+          <div class="font-extrabold leading-tight" data-i18n="title">Nearby Vets</div>
+          <div class="text-xs text-black/70" data-i18n="subtitle">Find registered vets close to your farm</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <label for="languageSelector" class="text-xs font-semibold text-black" data-i18n="language">Language</label>
+          <select id="languageSelector" class="rounded-lg bg-worker-bg border border-black/15 text-sm py-2 px-3">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ml">Malayalam</option>
+            <option value="ta">Tamil</option>
+            <option value="ur">Urdu</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-1 px-4 lg:px-8 py-6 max-w-6xl w-full mx-auto space-y-6">
+      <section class="bg-worker-panel rounded-2xl border border-black/10 shadow-sm p-5">
+        <form method="get" class="flex flex-col md:flex-row md:items-end gap-3">
+          <div class="flex-1">
+            <label class="block text-xs font-semibold mb-2" data-i18n="select_farm">Select Farm</label>
+            <select name="farm_id" class="w-full rounded-xl bg-worker-bg border border-black/15 px-4 py-3 text-sm">
+              <option value="">{% if selected_farm %}{{ selected_farm.farm_name }} ({{ selected_farm.location }}){% else %}All farms{% endif %}</option>
+              {% for farm in farms %}
+              <option value="{{ farm.id }}" {% if selected_farm and selected_farm.id == farm.id %}selected{% endif %}>
+                {{ farm.farm_name }} ({{ farm.location }})
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+          <button class="h-11 px-6 rounded-xl bg-black text-white font-extrabold text-sm hover:opacity-95 active:opacity-90" data-i18n="filter">
+            Filter
+          </button>
+        </form>
+        <p class="mt-3 text-xs text-black/70" data-i18n="note">
+          Nearby is matched by location text (city/area). Add vet location during vet registration for better results.
+        </p>
+      </section>
+
+      <section class="bg-worker-panel rounded-2xl border border-black/10 shadow-sm overflow-hidden">
+        <div class="px-5 py-4 border-b border-black/10 flex items-center justify-between">
+          <div class="text-sm font-extrabold" data-i18n="approved_vets">Approved Vets</div>
+          <div class="text-xs text-black/70"><span data-i18n="count">Count</span>: {{ vets|length }}</div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-black/5 text-xs uppercase tracking-wider text-black/70">
+              <tr>
+                <th class="px-5 py-3 font-semibold" data-i18n="vet_name">Vet</th>
+                <th class="px-5 py-3 font-semibold" data-i18n="location">Location</th>
+                <th class="px-5 py-3 font-semibold" data-i18n="license">License</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-black/10">
+              {% for vet in vets %}
+              <tr class="hover:bg-black/5 transition-colors">
+                <td class="px-5 py-4 font-semibold">{{ vet.user.username }}</td>
+                <td class="px-5 py-4 text-black/70">{{ vet.location|default:"—" }}</td>
+                <td class="px-5 py-4 text-black/70 font-mono">{{ vet.license_number }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="3" class="px-5 py-6 text-center text-black/70" data-i18n="empty">No approved vets found.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const csrfToken = "{{ csrf_token }}";
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return "";
+    }
+
+    const i18n = {
+      en: { page_title: "Nearby Vets | Worker", worker_tools: "Worker Tools", dashboard: "Dashboard", nearby_vets: "Nearby Vets", ai_copilot: "AI Copilot", logout: "Log Out", title: "Nearby Vets", subtitle: "Find registered vets close to your farm", language: "Language", select_farm: "Select Farm", filter: "Filter", note: "Nearby is matched by location text (city/area). Add vet location during vet registration for better results.", approved_vets: "Approved Vets", count: "Count", vet_name: "Vet", location: "Location", license: "License", empty: "No approved vets found." },
+      hi: { page_title: "पास के वेट | वर्कर", worker_tools: "वर्कर टूल्स", dashboard: "डैशबोर्ड", nearby_vets: "पास के वेट", ai_copilot: "AI कोपायलट", logout: "लॉग आउट", title: "पास के वेट", subtitle: "अपने फ़ार्म के नज़दीक पंजीकृत वेट देखें", language: "भाषा", select_farm: "फ़ार्म चुनें", filter: "फ़िल्टर", note: "Nearby लोकेशन टेक्स्ट (शहर/इलाका) से मैच होता है। बेहतर परिणाम के लिए वेट रजिस्ट्रेशन में लोकेशन जोड़ें।", approved_vets: "स्वीकृत वेट", count: "गिनती", vet_name: "वेट", location: "लोकेशन", license: "लाइसेंस", empty: "कोई स्वीकृत वेट नहीं मिला।" },
+      ml: { page_title: "അടുത്തുള്ള വെറ്റുകൾ | വർകാർ", worker_tools: "വർകാർ ടൂളുകൾ", dashboard: "ഡാഷ്ബോർഡ്", nearby_vets: "അടുത്തുള്ള വെറ്റുകൾ", ai_copilot: "AI കോപൈലറ്റ്", logout: "ലോഗ് ഔട്ട്", title: "അടുത്തുള്ള വെറ്റുകൾ", subtitle: "നിങ്ങളുടെ ഫാമിന് അടുത്തുള്ള രജിസ്റ്റർ ചെയ്ത വെറ്റുകളെ കാണുക", language: "ഭാഷ", select_farm: "ഫാം തിരഞ്ഞെടുക്കുക", filter: "ഫിൽറ്റർ", note: "Nearby നഗര/പ്രദേശം ടെക്സ്റ്റ് ഉപയോഗിച്ചാണ് കണ്ടെത്തുന്നത്. മികച്ച ഫലത്തിന് വെറ്റ് രജിസ്ട്രേഷനിൽ ലൊക്കേഷൻ ചേർക്കുക.", approved_vets: "അംഗീകരിച്ച വെറ്റുകൾ", count: "എണ്ണം", vet_name: "വെറ്റ്", location: "ലൊക്കേഷൻ", license: "ലൈസൻസ്", empty: "അംഗീകരിച്ച വെറ്റുകൾ ഇല്ല." },
+      ta: { page_title: "அருகிலுள்ள மருத்துவர் | வொர்கர்", worker_tools: "வொர்கர் கருவிகள்", dashboard: "டாஷ்போர்டு", nearby_vets: "அருகிலுள்ள மருத்துவர்", ai_copilot: "AI கோபைலட்", logout: "வெளியேறு", title: "அருகிலுள்ள மருத்துவர்", subtitle: "உங்கள் பண்ணை அருகிலுள்ள பதிவு செய்யப்பட்ட மருத்துவரை காண்க", language: "மொழி", select_farm: "பண்ணையை தேர்வு செய்க", filter: "வடிகட்டி", note: "Nearby நகரம்/பகுதி உரை (location text) மூலம் பொருத்தப்படுகிறது. நல்ல முடிவுக்கு மருத்துவர் பதிவு போது location சேர்க்கவும்.", approved_vets: "அங்கீகரிக்கப்பட்ட மருத்துவர்", count: "எண்ணிக்கை", vet_name: "மருத்துவர்", location: "இடம்", license: "லைசென்ஸ்", empty: "அங்கீகரிக்கப்பட்ட மருத்துவர் இல்லை." },
+      ur: { page_title: "قریبی ویٹس | ورکر", worker_tools: "ورکر ٹولز", dashboard: "ڈیش بورڈ", nearby_vets: "قریبی ویٹس", ai_copilot: "AI کوپائلٹ", logout: "لاگ آؤٹ", title: "قریبی ویٹس", subtitle: "اپنے فارم کے قریب رجسٹرڈ ویٹس دیکھیں", language: "زبان", select_farm: "فارم منتخب کریں", filter: "فلٹر", note: "Nearby شہر/علاقہ کے متن (لوکیشن ٹیکسٹ) سے میچ ہوتا ہے۔ بہتر نتائج کے لیے ویٹ رجسٹریشن میں لوکیشن شامل کریں۔", approved_vets: "منظور شدہ ویٹس", count: "تعداد", vet_name: "ویٹ", location: "لوکیشن", license: "لائسنس", empty: "کوئی منظور شدہ ویٹ نہیں ملا۔" },
+    };
+
+    function applyLanguage(code) {
+      const lang = i18n[code] ? code : "en";
+      const dict = i18n[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+      localStorage.setItem("workerPreferredLanguage", lang);
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      const selector = document.getElementById("languageSelector");
+      if (selector) selector.value = lang;
+    }
+
+    async function saveLanguageToServer(lang) {
+      const payload = new URLSearchParams();
+      payload.append("language", lang);
+      await fetch("{% url 'set_worker_language' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+        },
+        body: payload.toString()
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const supported = ["en", "hi", "ml", "ur", "ta"];
+      const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+      const savedLang = localStorage.getItem("workerPreferredLanguage");
+      const initial = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+      applyLanguage(initial);
+
+      const selector = document.getElementById("languageSelector");
+      if (selector) {
+        selector.addEventListener("change", async (event) => {
+          const lang = event.target.value;
+          applyLanguage(lang);
+          try { await saveLanguageToServer(lang); } catch (e) { console.error(e); }
+        });
+      }
+    });
+  </script>
+</body>
+
+</html>
+

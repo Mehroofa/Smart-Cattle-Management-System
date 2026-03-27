@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Select Cattle for Report - VetCare AI</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#93C572",
+            "background-light": "#EBF5F0",
+            "background-dark": "#1a2111",
+            "olive-subtle": "#000000",
+            "beige-muted": "#f3f4f0"
+          },
+          fontFamily: { display: ["Manrope", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+</head>
+<body class="bg-background-light font-display text-black min-h-screen">
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-beige-muted px-6 py-3">
+  <div class="max-w-[1440px] mx-auto flex items-center justify-between">
+    <div class="flex items-center gap-8">
+      <div class="flex items-center gap-3">
+        <div class="bg-primary p-1.5 rounded-lg flex items-center justify-center"><span class="material-symbols-outlined text-white" style="font-variation-settings:'FILL' 1">database</span></div>
+        <h2 class="text-xl font-extrabold tracking-tight">VetCare AI</h2>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-sm font-semibold hover:text-primary" href="{% url 'vet_dashboard' %}">Dashboard</a>
+        <a class="text-sm font-semibold text-primary" href="{% url 'select_farms' %}">Farm Reports</a>
+        <a class="text-sm font-semibold hover:text-primary" href="{% url 'vet_cases' %}">Coordination</a>
+        <a class="text-sm font-semibold hover:text-primary" href="{% url 'admin_overview' %}">Settings</a>
+      </nav>
+    </div>
+    <div class="text-right hidden sm:block">
+      <p class="text-xs font-bold leading-none">{{ request.user.get_full_name|default:request.user.username }}</p>
+      <p class="text-[10px] text-black/60 font-medium">Veterinarian</p>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-[1440px] mx-auto p-6 lg:p-10">
+  <div class="mb-10 max-w-3xl">
+    <div class="flex items-center justify-between mb-4">
+      <span class="text-sm font-bold text-primary">STEP 2 OF 4</span>
+      <span class="text-sm font-medium text-black/60">Selection Progress: 45%</span>
+    </div>
+    <div class="h-2 w-full bg-beige-muted rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width:45%"></div></div>
+  </div>
+
+  <div class="flex flex-col lg:flex-row gap-10">
+    <div class="flex-1">
+      <div class="mb-8">
+        <h1 class="text-4xl font-black mb-2 leading-tight">Select Cattle for Report</h1>
+        <p class="text-black/60 text-lg">Currently viewing: <span class="font-semibold text-black">{{ farm.farm_name }}</span></p>
+      </div>
+
+      <form method="get" class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-white p-4 rounded-xl border border-beige-muted">
+        <input type="hidden" name="selected" value="{{ selected_id }}"/>
+        <div class="flex flex-wrap gap-3">
+          <input name="q" value="{{ q }}" class="bg-beige-muted border-none rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-primary min-w-[220px]" placeholder="Search tag, breed or health"/>
+          <select name="species" class="bg-beige-muted border-none rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-primary min-w-[140px]">
+            <option value="">All Species</option>
+            {% for item in species_options %}
+            <option value="{{ item }}" {% if species == item %}selected{% endif %}>{{ item }}</option>
+            {% endfor %}
+          </select>
+          <select name="health" class="bg-beige-muted border-none rounded-lg text-sm px-4 py-2 focus:ring-2 focus:ring-primary min-w-[140px]">
+            <option value="">All Groups</option>
+            <option value="HEALTHY" {% if health == 'HEALTHY' %}selected{% endif %}>Healthy</option>
+            <option value="SICK" {% if health == 'SICK' %}selected{% endif %}>Sick</option>
+            <option value="QUARANTINE" {% if health == 'QUARANTINE' %}selected{% endif %}>Quarantine</option>
+          </select>
+          <button type="submit" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-black/70 hover:bg-beige-muted rounded-lg border border-dashed border-black/20">
+            <span class="material-symbols-outlined text-lg">filter_alt</span> Apply Filters
+          </button>
+        </div>
+        <button name="select_all" value="1" class="px-5 py-2.5 bg-beige-muted hover:bg-primary/20 hover:text-primary text-slate-700 text-sm font-bold rounded-lg">Select All ({{ cattles|length }})</button>
+      </form>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        {% for cattle in cattles %}
+        <div class="relative bg-white rounded-xl border {% if selected_id == cattle.id|stringformat:'s' %}border-2 border-primary{% else %}border-beige-muted{% endif %} overflow-hidden shadow-sm group">
+          <div class="absolute top-3 right-3 z-10">
+            <a href="?q={{ q|urlencode }}&species={{ species }}&health={{ health }}&selected={{ cattle.id }}" class="bg-{% if selected_id == cattle.id|stringformat:'s' %}primary text-white{% else %}beige-muted text-slate-500{% endif %} p-1 rounded-full flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg" {% if selected_id == cattle.id|stringformat:'s' %}style="font-variation-settings:'FILL' 1"{% endif %}>{% if selected_id == cattle.id|stringformat:'s' %}check_circle{% else %}radio_button_unchecked{% endif %}</span>
+            </a>
+          </div>
+          <div class="flex p-4 gap-4">
+            <div class="w-24 h-24 rounded-lg overflow-hidden flex-shrink-0 bg-slate-100 border border-beige-muted">
+              {% if cattle.image %}
+              <img src="{{ cattle.image.url }}" alt="{{ cattle.tag_id }}" class="w-full h-full object-cover" />
+              {% else %}
+                {% if cattle.cattle_type == "BUFFALO" %}
+                <img alt="{{ cattle.tag_id }}" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?q=80&w=600&auto=format&fit=crop" />
+                {% else %}
+                <img alt="{{ cattle.tag_id }}" class="w-full h-full object-cover" src="https://images.unsplash.com/photo-1545468800-85cc9bc6ecf7?q=80&w=600&auto=format&fit=crop" />
+                {% endif %}
+              {% endif %}
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase tracking-wider">{{ cattle.breed }}</span>
+                <span class="text-xs font-medium text-black/60">ID: {{ cattle.tag_id }}</span>
+              </div>
+              <h3 class="text-lg font-bold mb-2 leading-none">Tag #{{ cattle.tag_id }}</h3>
+              <div class="space-y-1">
+                <div class="flex items-center gap-1.5 text-xs text-black/60"><span class="material-symbols-outlined text-sm">health_and_safety</span><span>Status: {{ cattle.health_status }}</span></div>
+                <div class="flex items-center gap-1.5 text-xs text-black/60"><span class="material-symbols-outlined text-sm">schedule</span><span>Age: {{ cattle.age }} years</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-beige-muted px-4 py-2 border-t border-beige-muted flex items-center justify-between gap-2">
+            <p class="text-[11px] italic text-black/60 truncate">{{ cattle.cattle_type }} • {{ cattle.breed }}</p>
+            <a href="{% url 'create_report' farm.id cattle.id %}" class="text-xs font-bold text-primary hover:underline">Create Report</a>
+          </div>
+        </div>
+        {% empty %}
+        <div class="col-span-full bg-white rounded-xl border border-beige-muted p-10 text-center">
+          <p class="font-bold text-lg">No cattle found</p>
+          <p class="text-black/60">Try changing search or filters.</p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-beige-muted flex items-center justify-between">
+        <a href="{% url 'select_farms' %}" class="flex items-center gap-2 px-6 py-3 text-black/70 font-bold hover:text-black"><span class="material-symbols-outlined">arrow_back</span>Back to Farm Selection</a>
+        {% if selected_cattle %}
+        <a href="{% url 'create_report' farm.id selected_cattle.id %}" class="px-8 py-3 bg-primary text-slate-900 font-black rounded-lg hover:shadow-lg hover:scale-[1.02] transition-all flex items-center gap-3">Next: Record Findings <span class="material-symbols-outlined">arrow_forward</span></a>
+        {% else %}
+        <button disabled class="px-8 py-3 bg-slate-200 text-slate-400 font-black rounded-lg cursor-not-allowed flex items-center gap-3">Next: Record Findings <span class="material-symbols-outlined">arrow_forward</span></button>
+        {% endif %}
+      </div>
+    </div>
+
+    <aside class="w-full lg:w-[360px]">
+      <div class="sticky top-28 space-y-6">
+        <div class="bg-white rounded-2xl border border-beige-muted shadow-xl overflow-hidden" style="border-color:#93C57233">
+          <div class="px-6 py-5" style="background-color:#93C572">
+            <h2 class="text-black font-black text-xl flex items-center gap-2">
+              <span class="material-symbols-outlined">fact_check</span>Selection Summary
+            </h2>
+          </div>
+          <div class="p-6">
+            <p class="text-sm font-bold text-black/60 uppercase tracking-wider mb-4">Cattle to be Inspected</p>
+            {% if selected_cattle %}
+            <div class="flex items-center justify-between group mb-4">
+              <div>
+                <p class="text-sm font-bold leading-none">Tag #{{ selected_cattle.tag_id }}</p>
+                <p class="text-[10px] text-black/60">{{ selected_cattle.breed }} • {{ selected_cattle.health_status }}</p>
+              </div>
+              <a href="?q={{ q|urlencode }}&species={{ species }}&health={{ health }}" class="text-slate-300 hover:text-red-500"><span class="material-symbols-outlined text-xl">close</span></a>
+            </div>
+            {% else %}
+            <p class="text-sm text-black/60 mb-4">No cattle selected yet.</p>
+            {% endif %}
+            <div class="py-4 border-t border-dashed border-beige-muted">
+              <a href="{% url 'vet_cases' %}" class="w-full text-center text-xs font-bold text-primary hover:underline block">View recent coordination alerts</a>
+            </div>
+            <div class="p-4 bg-beige-muted rounded-xl space-y-3">
+              <div class="flex justify-between text-sm"><span class="text-black/60">Total Selected</span><span class="font-bold">{% if selected_cattle %}1 animal{% else %}0 animals{% endif %}</span></div>
+              <div class="flex justify-between text-sm"><span class="text-black/60">Estimated Time</span><span class="font-bold">{% if selected_cattle %}~10 mins{% else %}-{% endif %}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-beige-muted overflow-hidden shadow-sm" style="border-color:#93C57233">
+          <div class="p-5 flex items-center gap-3" style="background-color:#93C572">
+            <span class="material-symbols-outlined text-black" style="font-variation-settings:'FILL' 1">bolt</span>
+            <h3 class="text-sm font-black uppercase tracking-widest text-black">VetCare AI Verification</h3>
+          </div>
+          <div class="p-6">
+          <p class="text-sm text-black/60 leading-relaxed mb-4">Filtered cattle in this farm: <span class="font-bold text-black">{{ cattles|length }}</span>.</p>
+          <a href="{% url 'vet_cases' %}" class="w-full py-2 text-xs font-black rounded-lg uppercase block text-center hover:opacity-95" style="background-color:#93C572; color:#000000">Prioritize AI-Flagged Cattle</a>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<a href="https://www.google.com/maps/search/{{ farm.location|urlencode }}" target="_blank" rel="noreferrer" class="fixed bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-full shadow-2xl hover:scale-110 transition-transform z-40">
+  <span class="material-symbols-outlined">map</span><span class="font-bold">Switch to Map View</span>
+</a>
+</body>
+</html>

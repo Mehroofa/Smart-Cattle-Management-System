@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Customer Approval Brown Theme Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                        "surface-dark": "#2d2621",
+                        "neutral-brown": "#3d342d",
+                        "approve-green": "#2d5a27",
+                        "block-red": "#a33b20",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #221910;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3d342d;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ec7f13;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-stone-200 font-display">
+<div class="flex h-screen overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 bg-surface-dark border-r border-primary/10 flex flex-col">
+<div class="p-6 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center">
+<span class="material-icons text-white">agriculture</span>
+</div>
+<span class="text-xl font-bold tracking-tight text-white">Bovine<span class="text-primary">Verify</span></span>
+</div>
+<nav class="flex-1 px-4 py-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:bg-primary/10 hover:text-primary rounded-lg transition-all group" href="#">
+<span class="material-icons text-sm">dashboard</span>
+<span class="font-medium">Dashboard Overview</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/20 text-primary rounded-lg transition-all" href="#">
+<span class="material-icons text-sm">verified_user</span>
+<span class="font-medium">Customer Approval</span>
+<span class="ml-auto bg-primary text-white text-[10px] px-2 py-0.5 rounded-full">12</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:bg-primary/10 hover:text-primary rounded-lg transition-all" href="#">
+<span class="material-icons text-sm">analytics</span>
+<span class="font-medium">Fraud Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:bg-primary/10 hover:text-primary rounded-lg transition-all" href="#">
+<span class="material-icons text-sm">groups</span>
+<span class="font-medium">Validated Farms</span>
+</a>
+<div class="pt-6 pb-2 px-4 uppercase text-[10px] font-bold text-stone-500 tracking-widest">System</div>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:bg-primary/10 hover:text-primary rounded-lg transition-all" href="#">
+<span class="material-icons text-sm">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-primary/10">
+<div class="bg-neutral-brown/50 rounded-xl p-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30">
+<img class="w-full h-full object-cover" data-alt="Portrait of an administrator" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgUROt0kNFH5Dd05rK14m8SWQGWz3EyhvIa0VJMU1FCjqB8UUug9J4LhI7XpocrM0hvs40wNM8M1bg1RajhRea-_gybdTj-St4qEslmsPXX5Geblj1-L1iVm81zS8DVrUn8uV4ruty53bO9J73E-bcLnY6FlW6RPUJbv_XbrU4cgYD8vte5gCwwkCmHkSk20Gb_xB5Ch6IdIDTT67F4rutN7nUfw2fGg_yHM7sasiRFKmvLoucjcfOcK9-yf1UteDKv50OVLu9iUE"/>
+</div>
+<div>
+<div class="text-sm font-bold text-stone-100">Marcus Thorne</div>
+<div class="text-xs text-stone-500 uppercase tracking-tighter">Chief Inspector</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-10 bg-background-dark/80 backdrop-blur-md px-8 py-6 border-b border-primary/10 flex justify-between items-center">
+<div>
+<h1 class="text-2xl font-bold text-white">Customer Approval Queue</h1>
+<p class="text-stone-400 text-sm">Reviewing 12 pending farm applications with AI risk assessment.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-stone-500 text-sm">search</span>
+<input class="bg-surface-dark border-none rounded-lg pl-10 pr-4 py-2 text-sm text-stone-300 focus:ring-1 focus:ring-primary w-64" placeholder="Search applications..." type="text"/>
+</div>
+<button class="bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-sm">file_download</span>
+                        Export Report
+                    </button>
+</div>
+</header>
+<div class="p-8">
+<!-- Stats Grid -->
+<div class="grid grid-cols-4 gap-6 mb-8">
+<div class="bg-surface-dark p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+<span class="material-icons text-primary">pending_actions</span>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">PENDING</span>
+</div>
+<div class="text-3xl font-extrabold text-white mb-1">12</div>
+<div class="text-stone-400 text-xs">Applications awaiting review</div>
+</div>
+<div class="bg-surface-dark p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 bg-block-red/10 rounded-lg flex items-center justify-center">
+<span class="material-icons text-block-red">report_problem</span>
+</div>
+<span class="text-xs font-bold text-block-red bg-block-red/10 px-2 py-1 rounded">FLAGGED</span>
+</div>
+<div class="text-3xl font-extrabold text-white mb-1">04</div>
+<div class="text-stone-400 text-xs">High risk AI detections</div>
+</div>
+<div class="bg-surface-dark p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 bg-approve-green/10 rounded-lg flex items-center justify-center">
+<span class="material-icons text-approve-green">check_circle</span>
+</div>
+<span class="text-xs font-bold text-approve-green bg-approve-green/10 px-2 py-1 rounded">APPROVED</span>
+</div>
+<div class="text-3xl font-extrabold text-white mb-1">1,248</div>
+<div class="text-stone-400 text-xs">Total validated customers</div>
+</div>
+<div class="bg-surface-dark p-6 rounded-xl border border-primary/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+<span class="material-icons text-primary">analytics</span>
+</div>
+<span class="text-xs font-bold text-stone-400 bg-stone-700/30 px-2 py-1 rounded">ACCURACY</span>
+</div>
+<div class="text-3xl font-extrabold text-white mb-1">99.8%</div>
+<div class="text-stone-400 text-xs">AI fraud detection precision</div>
+</div>
+</div>
+<!-- Table Container -->
+<div class="bg-surface-dark rounded-xl border border-primary/5 overflow-hidden shadow-2xl">
+<div class="p-6 border-b border-primary/5 flex justify-between items-center bg-surface-dark/50">
+<h2 class="text-lg font-bold text-white">Active Queue</h2>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 text-xs font-bold rounded bg-primary/20 text-primary border border-primary/20">All</button>
+<button class="px-3 py-1.5 text-xs font-bold rounded bg-neutral-brown text-stone-400 border border-transparent hover:border-primary/20">High Risk</button>
+<button class="px-3 py-1.5 text-xs font-bold rounded bg-neutral-brown text-stone-400 border border-transparent hover:border-primary/20">Dairy</button>
+<button class="px-3 py-1.5 text-xs font-bold rounded bg-neutral-brown text-stone-400 border border-transparent hover:border-primary/20">Breeding</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-stone-500 uppercase text-[11px] font-bold tracking-widest bg-background-dark/50">
+<th class="px-6 py-4">Customer Details</th>
+<th class="px-6 py-4">Verification</th>
+<th class="px-6 py-4">Purpose</th>
+<th class="px-6 py-4">AI Insights &amp; Risk Score</th>
+<th class="px-6 py-4 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-primary/5">
+<!-- Row 1 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">AJ</div>
+<div>
+<div class="text-sm font-bold text-white">Arthur Jenkins</div>
+<div class="text-xs text-stone-500">+44 7700 900077</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="flex items-center gap-2 text-stone-300 hover:text-primary transition-colors">
+<span class="material-icons text-sm">description</span>
+<span class="text-xs underline underline-offset-4">ID_Proof_AJ.pdf</span>
+</button>
+<div class="text-[10px] text-stone-500 mt-1 uppercase tracking-tighter italic">Validated by OCR</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs bg-stone-700/50 text-stone-300 px-2 py-1 rounded-full border border-stone-600">Dairy Expansion</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col gap-2 max-w-[240px]">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-stone-400">Risk Score</span>
+<span class="font-bold text-approve-green">Low (12/100)</span>
+</div>
+<div class="h-1.5 w-full bg-background-dark rounded-full overflow-hidden">
+<div class="h-full bg-approve-green" style="width: 12%"></div>
+</div>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-approve-green/20 text-approve-green border border-approve-green/30">Unique IP</span>
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-approve-green/20 text-approve-green border border-approve-green/30">No Fraud History</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-80 group-hover:opacity-100">
+<button class="bg-approve-green hover:bg-approve-green/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Approve</button>
+<button class="bg-block-red hover:bg-block-red/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Block</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 (Flagged) -->
+<tr class="hover:bg-primary/5 transition-colors group bg-block-red/[0.03]">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-block-red/10 flex items-center justify-center text-block-red font-bold">SM</div>
+<div>
+<div class="text-sm font-bold text-white">Samuel Miller</div>
+<div class="text-xs text-stone-500">+44 7820 123456</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="flex items-center gap-2 text-stone-300 hover:text-primary transition-colors">
+<span class="material-icons text-sm">description</span>
+<span class="text-xs underline underline-offset-4">Identity_Doc_44.jpg</span>
+</button>
+<div class="text-[10px] text-block-red mt-1 uppercase tracking-tighter font-bold">Blur detected</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs bg-stone-700/50 text-stone-300 px-2 py-1 rounded-full border border-stone-600">Pedigree Breeding</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col gap-2 max-w-[240px]">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-stone-400">Risk Score</span>
+<span class="font-bold text-block-red">High (82/100)</span>
+</div>
+<div class="h-1.5 w-full bg-background-dark rounded-full overflow-hidden">
+<div class="h-full bg-block-red" style="width: 82%"></div>
+</div>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-block-red/20 text-block-red border border-block-red/30">IP Mismatch</span>
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-block-red/20 text-block-red border border-block-red/30">Duplicate Account</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="bg-approve-green hover:bg-approve-green/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Approve</button>
+<button class="bg-block-red hover:bg-block-red/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-lg shadow-block-red/20">Block</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">EK</div>
+<div>
+<div class="text-sm font-bold text-white">Elena Kowalski</div>
+<div class="text-xs text-stone-500">+48 501 234 567</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="flex items-center gap-2 text-stone-300 hover:text-primary transition-colors">
+<span class="material-icons text-sm">description</span>
+<span class="text-xs underline underline-offset-4">EK_Passport.pdf</span>
+</button>
+<div class="text-[10px] text-stone-500 mt-1 uppercase tracking-tighter italic">Verified by Face-Match</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs bg-stone-700/50 text-stone-300 px-2 py-1 rounded-full border border-stone-600">Dairy Expansion</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col gap-2 max-w-[240px]">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-stone-400">Risk Score</span>
+<span class="font-bold text-primary">Med (34/100)</span>
+</div>
+<div class="h-1.5 w-full bg-background-dark rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 34%"></div>
+</div>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-primary/20 text-primary border border-primary/30">New Region</span>
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-approve-green/20 text-approve-green border border-approve-green/30">Valid ID</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-80 group-hover:opacity-100">
+<button class="bg-approve-green hover:bg-approve-green/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Approve</button>
+<button class="bg-block-red hover:bg-block-red/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Block</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-primary/5 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">DR</div>
+<div>
+<div class="text-sm font-bold text-white">David Ross</div>
+<div class="text-xs text-stone-500">+1 (555) 098-7654</div>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<button class="flex items-center gap-2 text-stone-300 hover:text-primary transition-colors">
+<span class="material-icons text-sm">description</span>
+<span class="text-xs underline underline-offset-4">license_scan.png</span>
+</button>
+<div class="text-[10px] text-stone-500 mt-1 uppercase tracking-tighter italic">Manual Check Required</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-xs bg-stone-700/50 text-stone-300 px-2 py-1 rounded-full border border-stone-600">Breeding</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex flex-col gap-2 max-w-[240px]">
+<div class="flex justify-between items-center text-[10px]">
+<span class="text-stone-400">Risk Score</span>
+<span class="font-bold text-approve-green">Low (08/100)</span>
+</div>
+<div class="h-1.5 w-full bg-background-dark rounded-full overflow-hidden">
+<div class="h-full bg-approve-green" style="width: 8%"></div>
+</div>
+<div class="flex flex-wrap gap-1 mt-1">
+<span class="text-[9px] px-1.5 py-0.5 rounded bg-approve-green/20 text-approve-green border border-approve-green/30">Legacy Member</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-80 group-hover:opacity-100">
+<button class="bg-approve-green hover:bg-approve-green/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Approve</button>
+<button class="bg-block-red hover:bg-block-red/80 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all">Block</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 bg-surface-dark border-t border-primary/5 flex justify-between items-center">
+<div class="text-xs text-stone-500">Showing <span class="text-stone-300 font-bold">1 - 4</span> of <span class="text-stone-300 font-bold">12</span> pending applications</div>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded border border-primary/10 flex items-center justify-center text-stone-500 hover:text-primary hover:border-primary/30 transition-all">
+<span class="material-icons text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-white flex items-center justify-center text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded border border-primary/10 flex items-center justify-center text-stone-400 hover:text-primary hover:border-primary/30 text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded border border-primary/10 flex items-center justify-center text-stone-400 hover:text-primary hover:border-primary/30 text-xs font-bold">3</button>
+<button class="w-8 h-8 rounded border border-primary/10 flex items-center justify-center text-stone-500 hover:text-primary hover:border-primary/30 transition-all">
+<span class="material-icons text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Footer Summary -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface-dark/50 border border-primary/5 p-6 rounded-xl flex items-center gap-6">
+<div class="w-16 h-16 rounded-full border-4 border-approve-green/20 border-t-approve-green flex items-center justify-center">
+<span class="text-lg font-bold text-approve-green">88%</span>
+</div>
+<div>
+<h3 class="font-bold text-white">Daily Quota Progress</h3>
+<p class="text-stone-500 text-sm">42 of 48 applications processed today. Great pace!</p>
+</div>
+</div>
+<div class="bg-surface-dark/50 border border-primary/5 p-6 rounded-xl flex items-center gap-6">
+<div class="flex -space-x-3">
+<img class="w-10 h-10 rounded-full border-2 border-surface-dark" data-alt="Reviewer avatar 1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnd33E4TdY1bguvDJXfPpzjutQE-GwOakvc80nW1Mc4CsWJ-f-LKapgJv_AMsaZNHirle8UqEDBuhz3QagzfYBVoKy2wOLCwXiioie4iPVIWdKa05y1auVYueWjGObuRTKKBjmDDJhhmv6JHXPk0Cdrvc4lLvRGWBG0I1J_f9ePqMb4A1RmNOCSkFP5ePl_KaMu_AeUdSwPIDjC2y8hKPR9uIXHJvJqcAx79ABIrkGfRKOTk4LrFTofPkWi0Dv105LtnZiKUSfDLA"/>
+<img class="w-10 h-10 rounded-full border-2 border-surface-dark" data-alt="Reviewer avatar 2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_Ji3W6D-1hUTqN_FSWXl3W0gnqQAxc-zNC4hUVPx3MFC8b0NPTX_v6W9ECeOsxYdU4s_I-IScuwPU7zpUx0g4dMDyPziiRFzylpClTM7gRa3T6iZ2gShDx-7y5TmUpfxGPXmIlWpa4talSK2Wq6EmExucQmbf6_WpSnst6dmx75UAb7ZDtYWXAhXN7GoJG8Lc-W0K_gzdGv6xaRhyAtZaOt4X5lJqtzlDENtGdsgCkwZUozuIrzf0yuQ4ncfO_SqiiePtLe1uklQ"/>
+<div class="w-10 h-10 rounded-full border-2 border-surface-dark bg-primary flex items-center justify-center text-[10px] font-bold">+2</div>
+</div>
+<div>
+<h3 class="font-bold text-white">Online Reviewers</h3>
+<p class="text-stone-500 text-sm">Support staff available for high-risk escalation.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- ID Preview Modal (Hidden by Default/Mockup) -->
+<div class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center hidden">
+<div class="bg-surface-dark w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl relative">
+<button class="absolute top-4 right-4 text-stone-400 hover:text-white">
+<span class="material-icons">close</span>
+</button>
+<div class="p-8">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 bg-primary/20 rounded-xl flex items-center justify-center">
+<span class="material-icons text-primary">contact_page</span>
+</div>
+<div>
+<h3 class="text-xl font-bold text-white">Identification Verification</h3>
+<p class="text-stone-400 text-sm">Arthur Jenkins | Submitted Dec 18, 2023</p>
+</div>
+</div>
+<div class="aspect-video bg-background-dark rounded-xl overflow-hidden mb-6">
+<img class="w-full h-full object-cover" data-alt="Mockup of a driver's license identification document" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsS2jomry5EC0gAL5uGHazU6h96J21OEcMw9RPWmwXXqqK9RLKcFmJOQUSf95UWlE0XfB1XsIgajmOEdbigGMvsTimNOc5NAyHg7fVqRI0AVYhwSU0Wu5O33ZSO6uBmkxq3ibPu6uFHJ1YdQ6Db9g8DOx_yuchIMgBMAmpjkgcTTYkIs8iFDib0-X20r7ta4FuJ-8dFfkzAaWlqemG24gUxGsrLNl3cqCTWr5BI53v1NgW1iYJxUZTHYUzbZbcBAC5Go4twoOEcpc"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="bg-background-dark p-4 rounded-lg">
+<div class="text-[10px] uppercase font-bold text-stone-500 mb-1">Extracted Name</div>
+<div class="text-sm font-semibold text-white">ARTHUR JENKINS</div>
+</div>
+<div class="bg-background-dark p-4 rounded-lg">
+<div class="text-[10px] uppercase font-bold text-stone-500 mb-1">Document Type</div>
+<div class="text-sm font-semibold text-white">PASSPORT / UK</div>
+</div>
+</div>
+<div class="mt-8 flex gap-3">
+<button class="flex-1 bg-approve-green text-white font-bold py-3 rounded-xl">Confirm Authenticity</button>
+<button class="px-6 bg-neutral-brown text-stone-300 font-bold py-3 rounded-xl">Report Issue</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

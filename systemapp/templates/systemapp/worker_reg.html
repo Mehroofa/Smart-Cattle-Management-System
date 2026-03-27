@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Worker Registration Portal</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: "#CF1020",
+                background: "#CF1020",
+            },
+            fontFamily: {
+                display: ["Lexend"]
+            }
+        }
+    }
+}
+</script>
+
+<style>
+body { font-family: 'Lexend', sans-serif; }
+</style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- Top Navbar -->
+<nav class="bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+        <span class="material-icons text-primary text-3xl">agriculture</span>
+        <h1 class="text-xl font-bold">FarmAdmin - Worker Registry</h1>
+    </div>
+</nav>
+
+<!-- Main Desktop Layout -->
+<main class="max-w-7xl mx-auto p-10 grid grid-cols-2 gap-10">
+
+    <!-- LEFT: Registration Form -->
+    <section class="bg-white p-8 rounded-2xl shadow-lg space-y-6">
+
+        <h2 class="text-2xl font-bold">Register Worker</h2>
+        <p class="text-gray-500 text-sm">
+            Add a new worker and define their preferred language for system access.
+        </p>
+
+        {% if messages %}
+        <div class="space-y-2">
+            {% for message in messages %}
+            <div class="rounded-xl px-4 py-3 text-sm {% if message.tags == 'success' %}bg-green-50 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-800 border border-red-200{% else %}bg-gray-50 text-gray-800 border border-gray-200{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Profile Upload -->
+        <form class="space-y-5" method="post" enctype="multipart/form-data" action="{% url 'worker_reg' %}">
+            {% csrf_token %}
+            {{ form.is_active }}
+
+            <div class="flex items-center gap-6">
+                <div id="avatarPreview" class="w-24 h-24 bg-primary/10 rounded-full flex items-center justify-center overflow-hidden">
+                    <span id="avatarIcon" class="material-icons text-4xl text-primary">person</span>
+                    <img id="avatarImg" alt="Worker photo preview" class="hidden w-full h-full object-cover" />
+                </div>
+                <div class="flex flex-col gap-1">
+                    {{ form.photo }}
+                    <button type="button" id="photoBtn" class="bg-primary text-white px-4 py-2 rounded-lg text-sm w-fit">
+                        Upload Photo
+                    </button>
+                    {% if form.photo.errors %}
+                    <p class="text-xs text-red-600">{{ form.photo.errors|striptags }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-2">Worker Name</label>
+                {{ form.full_name }}
+                {% if form.full_name.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ form.full_name.errors|striptags }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-2">Phone Number (Unique ID)</label>
+                {{ form.phone_number }}
+                {% if form.phone_number.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ form.phone_number.errors|striptags }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-sm font-semibold mb-2">Worker Preferred Language</label>
+                {{ form.preferred_language }}
+                {% if form.preferred_language.errors %}
+                <p class="text-xs text-red-600 mt-1">{{ form.preferred_language.errors|striptags }}</p>
+                {% endif %}
+                <p class="text-xs text-gray-400 mt-1">
+                    The system interface will automatically load in this language when the worker logs in.
+                </p>
+            </div>
+
+            <button type="submit" class="w-full bg-primary text-white py-4 rounded-xl font-semibold text-lg hover:bg-red-700 transition">
+                Register Worker
+            </button>
+        </form>
+    </section>
+
+    <!-- RIGHT: Recently Registered Workers -->
+    <section class="bg-white p-8 rounded-2xl shadow-lg space-y-6">
+
+        <div class="flex justify-between items-center">
+            <h3 class="text-xl font-bold">Recently Registered</h3>
+            <a href="{% url 'worker_registry' %}" class="text-primary text-sm font-semibold">View All</a>
+        </div>
+
+        <!-- Table Style -->
+        <div class="overflow-hidden rounded-xl border border-gray-200">
+            <table class="w-full text-sm">
+                <thead class="bg-primary/10 text-left">
+                    <tr>
+                        <th class="p-3">Name</th>
+                        <th class="p-3">Phone</th>
+                        <th class="p-3">Language</th>
+                        <th class="p-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for w in recent_workers %}
+                    <tr class="border-t">
+                        <td class="p-3 font-semibold">
+                            <div class="flex items-center gap-3">
+                                {% if w.photo %}
+                                <img src="{{ w.photo.url }}" alt="{{ w.full_name }}" class="w-8 h-8 rounded-full object-cover border border-gray-200" />
+                                {% else %}
+                                <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-gray-200">
+                                    <span class="material-icons text-primary text-base">person</span>
+                                </div>
+                                {% endif %}
+                                <span>{{ w.full_name }}</span>
+                            </div>
+                        </td>
+                        <td class="p-3">{{ w.phone_number }}</td>
+                        <td class="p-3">{{ w.get_preferred_language_display }}</td>
+                        <td class="p-3 {% if w.is_active %}text-green-600{% else %}text-amber-600{% endif %} font-bold">
+                            {% if w.is_active %}Active{% else %}Pending{% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr class="border-t">
+                        <td colspan="4" class="p-6 text-center text-gray-500">No workers registered yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+</main>
+
+<script>
+  (function () {
+    var photoBtn = document.getElementById("photoBtn");
+    var photoInput = document.getElementById("id_photo");
+    var avatarImg = document.getElementById("avatarImg");
+    var avatarIcon = document.getElementById("avatarIcon");
+
+    if (photoBtn && photoInput) {
+      photoBtn.addEventListener("click", function () {
+        photoInput.click();
+      });
+    }
+
+    if (photoInput) {
+      photoInput.addEventListener("change", function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var url = URL.createObjectURL(file);
+        avatarImg.src = url;
+        avatarImg.classList.remove("hidden");
+        avatarIcon.classList.add("hidden");
+      });
+    }
+  })();
+</script>
+
+</body>
+</html>

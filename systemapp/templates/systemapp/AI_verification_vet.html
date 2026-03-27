@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin AI Verification Detail - VetAdmin AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#BC8F8F",
+            "background-light": "#F5F5DC",
+            "background-dark": "#1a2111",
+            "olive-tag": "#5e7d32"
+          },
+          fontFamily: { display: ["Manrope", "sans-serif"] }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Manrope", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+  <div class="layout-container flex h-full flex-col">
+    <header
+      class="flex items-center justify-between border-b border-primary/10 bg-white dark:bg-background-dark/50 px-8 py-3 sticky top-0 z-50">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-3 text-primary">
+          <span class="material-symbols-outlined text-3xl font-bold">clinical_notes</span>
+          <h2 class="text-slate-900 dark:text-slate-100 text-xl font-extrabold tracking-tight">VetAdmin <span
+              class="text-primary">AI</span></h2>
+        </div>
+        <nav class="hidden md:flex items-center gap-6">
+          <a class="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary"
+            href="{% url 'admin_workplace' %}">Dashboard</a>
+          <a class="text-primary text-sm font-bold border-b-2 border-primary pb-1"
+            href="{% url 'vet_approval' %}">Practitioners</a>
+          <a class="text-slate-600 dark:text-slate-400 text-sm font-semibold hover:text-primary"
+            href="{% url 'vet_cases' %}">Emergency</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto w-full p-6 space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <nav class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            <a class="hover:text-primary" href="{% url 'admin_workplace' %}">Dashboard</a>
+            <span class="material-symbols-outlined text-xs">chevron_right</span>
+            <a class="hover:text-primary" href="{% url 'vet_approval' %}">Pending Verifications</a>
+            <span class="material-symbols-outlined text-xs">chevron_right</span>
+            <span class="text-primary">{{ practitioner.full_name }}</span>
+          </nav>
+          <h1 class="text-3xl font-extrabold text-slate-900 dark:text-slate-100">AI Verification Detail</h1>
+        </div>
+        <div class="flex items-center gap-3">
+          <form method="post" action="{% url 'reject_practitioner' practitioner.id %}">
+            {% csrf_token %}
+            <button type="submit"
+              class="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50">
+              <span class="material-symbols-outlined text-lg text-red-500">block</span>
+              Reject
+            </button>
+          </form>
+          <form method="post" action="{% url 'clarify_practitioner' practitioner.id %}">
+            {% csrf_token %}
+            <button type="submit"
+              class="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50">
+              <span class="material-symbols-outlined text-lg">chat_bubble</span>
+              Clarify
+            </button>
+          </form>
+          <form method="post" action="{% url 'approve_practitioner' practitioner.id %}">
+            {% csrf_token %}
+            <button type="submit"
+              class="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-white font-bold text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+              <span class="material-symbols-outlined text-lg">verified</span>
+              Approve Registration
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div
+          class="lg:col-span-8 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-primary/10 overflow-hidden flex flex-col md:flex-row">
+          <div class="p-6 flex items-center gap-6 border-r border-primary/5">
+            <div class="space-y-1">
+              <p class="text-xs font-bold text-primary uppercase">Application {{ practitioner.application_id }}</p>
+              <h3 class="text-2xl font-extrabold">{{ practitioner.full_name }}</h3>
+              <p class="text-slate-500 font-medium">{{ practitioner.specialty }}</p>
+              <div class="flex gap-2 mt-2">
+                <span
+                  class="px-2 py-0.5 bg-primary/10 text-primary text-[10px] font-bold rounded uppercase tracking-tighter">{{
+                  practitioner.specialty|truncatechars:12 }}</span>
+                <span
+                  class="px-2 py-0.5 bg-blue-100 text-blue-600 text-[10px] font-bold rounded uppercase tracking-tighter">{{
+                  practitioner.state }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 p-6 grid grid-cols-2 md:grid-cols-3 gap-4 items-center bg-primary/[0.02]">
+            <div class="text-center">
+              <p class="text-xs font-bold text-slate-400 uppercase">Documents</p>
+              <p class="text-xl font-extrabold text-slate-700 dark:text-slate-300">04 / 04</p>
+            </div>
+            <div class="text-center">
+              <p class="text-xs font-bold text-slate-400 uppercase">Risk Level</p>
+              <span
+                class="inline-block px-3 py-0.5 bg-primary/20 text-slate-900 rounded-full text-[10px] font-black uppercase">{{
+                practitioner.risk_level }}</span>
+            </div>
+            <div class="text-center col-span-2 md:col-span-1">
+              <span class="text-sm font-black text-slate-900 dark:text-white">{{
+                practitioner.ai_confidence|floatformat:0 }}%</span>
+              <p class="text-[10px] font-bold text-slate-400 uppercase mt-1">AI Confidence</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-4 bg-primary text-white rounded-xl p-6 shadow-lg shadow-primary/20 space-y-4">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined">auto_awesome</span>
+            <h4 class="font-bold">AI Verification Summary</h4>
+          </div>
+          <ul class="space-y-3">
+            <li class="flex items-center justify-between text-sm"><span class="opacity-80">OCR Accuracy</span><span
+                class="font-bold">{{ ai_data.ocr_accuracy|default:0 }}%</span></li>
+            <li class="flex items-center justify-between text-sm"><span class="opacity-80">Security Check</span><span
+                class="font-bold">{% if ai_data.security_check_passed %}Passed{% else %}Failed{% endif %}</span></li>
+            <li class="flex items-center justify-between text-sm"><span class="opacity-80">Database Match</span><span
+                class="font-bold">{% if ai_data.database_match %}Confirmed{% else %}Not Matched{% endif %}</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div
+          class="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+          <h3 class="font-bold mb-4 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">edit_note</span>
+            Admin Notes &amp; Audit Log
+          </h3>
+          <div class="space-y-4">
+            {% for note in notes %}
+            <div class="bg-slate-50 dark:bg-slate-800/50 p-3 rounded-lg border border-slate-100 dark:border-slate-800">
+              <p class="text-sm text-slate-700 dark:text-slate-300 italic">{{ note.note }}</p>
+              <p class="text-[10px] text-slate-400 mt-1 font-bold">{{ note.admin.username }} â€¢ {{ note.created_at }}
+              </p>
+            </div>
+            {% empty %}
+            <p class="text-sm text-slate-500">No admin notes yet.</p>
+            {% endfor %}
+            <form method="post" action="{% url 'add_admin_note' practitioner.id %}" class="relative">
+              {% csrf_token %}
+              <textarea name="note"
+                class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:ring-primary focus:border-primary"
+                placeholder="Add an internal note..." rows="2"></textarea>
+              <button type="submit" class="absolute bottom-2 right-2 p-1.5 bg-primary text-white rounded-md">
+                <span class="material-symbols-outlined text-sm">send</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 p-6">
+          <h3 class="font-bold mb-4 flex items-center gap-2 text-slate-900 dark:text-white">
+            <span class="material-symbols-outlined text-primary">history</span>
+            Action History
+          </h3>
+          <div class="space-y-4">
+            {% for item in history %}
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-primary text-sm mt-0.5">task_alt</span>
+              <div>
+                <p class="text-xs font-bold">{{ item.action }}</p>
+                <p class="text-[10px] text-slate-400">{{ item.timestamp }}</p>
+              </div>
+            </div>
+            {% empty %}
+            <p class="text-sm text-slate-500">No action history yet.</p>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+﻿{% extends 'systemapp/base.html' %}
+
+{% block title %}Diagnose Case | Cattle Farm System{% endblock %}
+
+{% block content %}
+<section class="page-header">
+  <div>
+    <p class="eyebrow">Health Review</p>
+    <h1>Reported problem</h1>
+  </div>
+  <a class="btn ghost" href="{% url 'vet_dashboard' %}">Back</a>
+</section>
+
+<section class="panel wide case-overview">
+  <div>
+    <p class="alert-badge">Critical alert</p>
+    <h2>{{ case.cattle.tag_id }} · {{ case.cattle.breed }}</h2>
+    <p class="muted">Reported by {{ case.reported_by.username }} ({{ case.created_at|date:"M d, Y" }})</p>
+  </div>
+  <div class="cattle-avatar"></div>
+</section>
+
+<section class="panel ai-panel">
+  <h3>AI Diagnostic Suggestion</h3>
+  <p class="lead">{{ case.ai_suggestion|default:"No AI suggestion available yet." }}</p>
+</section>
+
+<section class="panel wide">
+  <h3>Veterinary Input</h3>
+  <form method="post" class="form">
+    {% csrf_token %}
+    <label class="field">
+      <span>Vet Diagnosis</span>
+      <div class="input-with-icon">
+        <textarea name="diagnosis" rows="3" placeholder="Enter diagnosis or use voice..." required></textarea>
+        <span class="mic-inline"></span>
+      </div>
+    </label>
+    <label class="field">
+      <span>Treatment Plan</span>
+      <div class="input-with-icon">
+        <textarea name="treatment" rows="3" placeholder="Prescribe medicine or action..." required></textarea>
+        <span class="mic-inline"></span>
+      </div>
+    </label>
+    <div class="form-actions">
+      <button type="submit" class="btn primary">Save Health Record</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

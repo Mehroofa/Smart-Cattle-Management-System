@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html class="dark" lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">Cleaning Status Update &amp; AI Prediction</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#DC143C",
+            "background-light": "#E3DFD2",
+            "background-dark": "#E3DFD2",
+            "panel-dark": "#B8860B"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+
+
+    /* Force high-contrast text for this page */
+    body,
+    body * {
+      color: #000000 !important;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #000000 !important;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <header
+      class="flex items-center justify-between border-b border-primary/20 bg-background-light dark:bg-background-dark px-6 py-3 lg:px-10 sticky top-0 z-50">
+      <div class="flex items-center gap-8">
+        <div class="flex items-center gap-4 text-primary">
+          <div class="size-8 bg-primary/20 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">agriculture</span>
+          </div>
+          <h2 class="text-slate-900 dark:text-white text-lg font-bold">CattleFarm AI</h2>
+        </div>
+        <nav class="hidden md:flex items-center gap-6">
+          <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary"
+            href="{% url 'worker_dashboard' %}" data-i18n="dashboard">Dashboard</a>
+          <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary"
+            href="{% url 'marketplaces' %}" data-i18n="cattle">Cattle</a>
+          <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary"
+            href="{% url 'feeding_status' %}" data-i18n="feeding">Feeding</a>
+          <a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="{% url 'cleaning_status' %}"
+            data-i18n="sanitation">Sanitation</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="hidden lg:flex items-center bg-primary/10 rounded-lg px-3 py-1.5 border border-primary/20">
+          <span class="material-symbols-outlined text-primary text-sm mr-2">translate</span>
+          <select id="languageSelectorHeader"
+            class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 cursor-pointer p-0">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ml">മലയാളം</option>
+            <option value="ur">اردو</option>
+            <option value="ta">தமிழ்</option>
+          </select>
+        </div>
+        <a href="{% url 'alert_page' %}" class="p-2 hover:bg-primary/20 rounded-lg text-slate-400"><span
+            class="material-symbols-outlined">notifications</span></a>
+        <div class="w-8 h-8 rounded-full bg-primary/30 border border-primary/50"></div>
+      </div>
+    </header>
+
+    <main class="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 lg:px-10 py-6">
+      {% if form_error %}
+      <div class="mb-4 rounded-lg border border-red-400/40 bg-red-500/10 text-red-200 px-4 py-3 text-sm">{{ form_error
+        }}</div>
+      {% endif %}
+      {% if saved %}
+      <div class="mb-4 rounded-lg border border-primary/40 bg-primary/10 text-primary px-4 py-3 text-sm"
+        data-i18n="saved_success">Cleaning status saved successfully.</div>
+      {% endif %}
+
+      <div class="flex items-center gap-2 mb-6 text-sm">
+        <a class="text-slate-500 hover:text-primary" href="{% url 'worker_dashboard' %}"
+          data-i18n="management">Management</a>
+        <span class="material-symbols-outlined text-xs text-slate-500">chevron_right</span>
+        <a class="text-slate-500 hover:text-primary" href="{% url 'cleaning_status' %}"
+          data-i18n="sanitation">Sanitation</a>
+        <span class="material-symbols-outlined text-xs text-slate-500">chevron_right</span>
+        <span class="text-primary font-semibold" data-i18n="cleaning_status_update">Cleaning Status Update</span>
+      </div>
+
+      <div class="mb-8">
+        <h1 class="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+          data-i18n="cleaning_status_update">Cleaning Status Update</h1>
+        <p class="text-slate-500 dark:text-slate-400 mt-1 italic" data-i18n="subtitle">Log sanitation activities and
+          monitor disease prevention metrics with AI.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div class="lg:col-span-8 space-y-6">
+          <form id="cleaningForm" method="post" action="{% url 'cleaning_status' %}" class="space-y-6">
+            {% csrf_token %}
+            <div
+              class="bg-white dark:bg-panel-dark rounded-xl p-6 shadow-sm border border-slate-200 dark:border-primary/10">
+              <div class="flex items-center gap-3 mb-6">
+                <span class="material-symbols-outlined text-primary">badge</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="general_information">General
+                  Information</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-slate-600 dark:text-slate-300" data-i18n="cattle_id">Cattle
+                    ID / RFID</label>
+                  <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span
+                        class="material-symbols-outlined text-slate-400 text-sm">search</span></span>
+                    <select id="cattleSelect" name="cattle_id" required
+                      class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg pl-10 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                      <option value="" data-i18n="select_cattle">Select cattle...</option>
+                      {% for cattle in cattle_list %}
+                      <option value="{{ cattle.tag_id }}" data-breed="{{ cattle.breed }}" data-age="{{ cattle.age }}"
+                        data-health="{{ cattle.health_status }}">{{ cattle.tag_id }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                    <span id="healthStatusText"
+                      class="text-[10px] uppercase font-bold text-primary tracking-wider">Status: Healthy</span>
+                  </div>
+                </div>
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-slate-600 dark:text-slate-300"
+                    data-i18n="cleaning_time">Cleaning Time</label>
+                  <div class="relative">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span
+                        class="material-symbols-outlined text-slate-400 text-sm">schedule</span></span>
+                    <input name="cleaning_time" required
+                      class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg pl-10 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                      type="time" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="bg-white dark:bg-panel-dark rounded-xl p-6 shadow-sm border border-slate-200 dark:border-primary/10">
+              <div class="flex items-center gap-3 mb-6">
+                <span class="material-symbols-outlined text-primary">cleaning_services</span>
+                <h3 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="cleaning_details">Cleaning
+                  Details</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-slate-600 dark:text-slate-300"
+                    data-i18n="cleaning_area">Cleaning Area</label>
+                  <select name="cleaning_area" required
+                    class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg px-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                    <option value="Stall">Stall/Cubicle</option>
+                    <option value="Milking">Milking Parlor</option>
+                    <option value="Feeding">Feeding Trough</option>
+                    <option value="Watering">Watering System</option>
+                    <option value="Quarantine">Quarantine Zone</option>
+                  </select>
+                </div>
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-slate-600 dark:text-slate-300"
+                    data-i18n="method">Method</label>
+                  <select name="method" required
+                    class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg px-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                    <option value="Dry">Dry Scrape</option>
+                    <option value="Pressure">Pressure Wash</option>
+                    <option value="Steam">Steam Clean</option>
+                    <option value="Chemical">Chemical Sanitize</option>
+                  </select>
+                </div>
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-slate-600 dark:text-slate-300"
+                    data-i18n="disinfectant">Disinfectant Used</label>
+                  <select name="disinfectant" required
+                    class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg px-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                    <option value="Chlorine">Chlorine Based</option>
+                    <option value="Iodine">Iodine Based</option>
+                    <option value="Peracetic">Peracetic Acid</option>
+                    <option value="Quaternary">Quaternary Ammonium</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="bg-orange-50/50 dark:bg-orange-500/10 rounded-xl p-6 border-2 border-orange-200 dark:border-orange-500/30">
+              <div class="flex items-center gap-3 mb-4">
+                <span class="material-symbols-outlined text-orange-500 font-bold">biotech</span>
+                <h3 class="text-lg font-bold text-orange-800 dark:text-orange-400" data-i18n="disease_protocols">Disease
+                  Prevention Protocols (Quarantined)</h3>
+              </div>
+              <div class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <label
+                    class="flex items-center gap-3 cursor-pointer group bg-white/50 dark:bg-background-dark p-3 rounded-lg border border-orange-100 dark:border-orange-500/10">
+                    <input name="cross_check"
+                      class="w-5 h-5 rounded text-orange-500 border-orange-300 focus:ring-orange-500" type="checkbox" />
+                    <span
+                      class="text-sm font-medium text-orange-900 dark:text-orange-200 group-hover:text-orange-600 transition-colors"
+                      data-i18n="cross_check">Cross-Contamination Barrier Check</span>
+                  </label>
+                  <label
+                    class="flex items-center gap-3 cursor-pointer group bg-white/50 dark:bg-background-dark p-3 rounded-lg border border-orange-100 dark:border-orange-500/10">
+                    <input name="deep_cycle"
+                      class="w-5 h-5 rounded text-orange-500 border-orange-300 focus:ring-orange-500" type="checkbox" />
+                    <span
+                      class="text-sm font-medium text-orange-900 dark:text-orange-200 group-hover:text-orange-600 transition-colors"
+                      data-i18n="deep_cycle">Deep Disinfection Cycle</span>
+                  </label>
+                </div>
+                <div class="space-y-2">
+                  <label class="text-sm font-semibold text-orange-800 dark:text-orange-300"
+                    data-i18n="sanitation_notes">Sanitation Notes &amp; Observations</label>
+                  <textarea name="notes"
+                    class="w-full bg-white dark:bg-background-dark border border-orange-200 dark:border-orange-500/20 rounded-lg px-4 py-2.5 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all"
+                    data-i18n-placeholder="notes_placeholder"
+                    placeholder="Note any unusual drainage, pest presence, or equipment issues..." rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end gap-4 py-4">
+              <a href="{% url 'worker_dashboard' %}"
+                class="px-6 py-3 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+                data-i18n="discard_changes">Discard Changes</a>
+              <button type="submit"
+                class="px-10 py-3 bg-primary hover:bg-primary/90 text-background-dark rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm font-bold">verified</span>
+                <span data-i18n="save_cleaning_log">Save Cleaning Log</span>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <div class="lg:col-span-4">
+          <div class="sticky top-24 space-y-6">
+            <div
+              class="bg-gradient-to-br from-[#B8860B] to-[#DAA520] rounded-2xl p-6 border border-primary/30 shadow-2xl overflow-hidden relative">
+              <div class="flex items-center justify-between mb-8">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-primary">analytics</span>
+                  <span class="text-xs font-black uppercase tracking-widest text-primary/80"
+                    data-i18n="sanitation_forecast">Sanitation Forecast</span>
+                </div>
+                <span class="bg-primary/20 text-primary px-2 py-0.5 rounded text-[10px] font-bold"
+                  data-i18n="analyzing">ANALYZING</span>
+              </div>
+              <div class="grid grid-cols-1 gap-6 mb-8">
+                <div class="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+                  <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider mb-1"
+                    data-i18n="health_risk_index">Health Risk Index</p>
+                  <div class="flex items-baseline justify-center gap-1"><span
+                      class="text-2xl font-black tracking-tighter" id="hriVal">12</span><span
+                      class="text-sm font-bold">/ 100</span></div>
+                </div>
+                <div class="text-center p-4 bg-white/5 rounded-xl border border-white/10">
+                  <p class="text-slate-400 text-[10px] font-black uppercase tracking-wider mb-1"
+                    data-i18n="prevention_score">Prevention Score</p>
+                  <div class="flex items-baseline justify-center gap-1"><span
+                      class="text-2xl font-black tracking-tighter" id="psVal">96.4</span><span
+                      class="text-sm font-bold">%</span></div>
+                </div>
+              </div>
+              <div class="space-y-4 mb-8">
+                <div class="space-y-1">
+                  <div class="flex justify-between text-xs font-medium mb-1">
+                    <span class="text-slate-400" data-i18n="pathogen_suppression">Pathogen Suppression</span>
+                    <span class="text-white">{{ prediction.pathogen_suppression|default:98 }}%</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div id="pathogenBar" class="h-full bg-primary rounded-full"
+                      data-width="{{ prediction.pathogen_suppression|default:98 }}"></div>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <div class="flex justify-between text-xs font-medium mb-1">
+                    <span class="text-slate-400" data-i18n="hygiene_longevity">Hygiene Longevity</span>
+                    <span class="text-white">{{ prediction.hygiene_longevity_hours|default:72 }}h</span>
+                  </div>
+                  <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div id="hygieneBar" class="h-full bg-primary rounded-full"
+                      data-width="{{ prediction.hygiene_longevity_hours|default:72 }}"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-4 bg-primary/5 rounded-xl border border-primary/20 border-dashed">
+                <div class="flex items-start gap-3">
+                  <span class="material-symbols-outlined text-primary text-lg">psychology</span>
+                  <p class="text-xs text-slate-300 leading-relaxed italic" id="suggestionText">Current disinfection
+                    method is optimal for this cattle area. Increasing humidity control could reduce mastitis risk by
+                    3%.</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="bg-white dark:bg-panel-dark rounded-xl p-4 shadow-sm border border-slate-200 dark:border-primary/10">
+              <h4 class="text-sm font-bold dark:text-white mb-1" id="selectedCattleTitle">Cattle</h4>
+              <p class="text-xs text-slate-500" id="selectedCattleBreed">-</p>
+              <div class="flex items-center gap-3 mt-1">
+                <div class="flex items-center gap-1"><span
+                    class="material-symbols-outlined text-[12px] text-slate-400">water_drop</span><span
+                    id="selectedCattleLastWash" class="text-[10px] text-slate-400 font-bold">Last Wash: -</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div
+      class="lg:hidden fixed bottom-0 left-0 right-0 bg-background-dark border-t border-primary/20 p-4 flex items-center justify-between z-40">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">health_and_safety</span>
+        <span class="text-sm font-bold text-white" data-i18n="risk_low">Risk: Low</span>
+      </div>
+      <button form="cleaningForm" type="submit"
+        class="bg-primary px-4 py-2 rounded-lg text-background-dark text-sm font-bold"
+        data-i18n="save_cleaning_log">Save Cleaning Log</button>
+    </div>
+  </div>
+
+  <script>
+    const csrfToken = "{{ csrf_token }}";
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return "";
+    }
+
+    const i18n = {
+      en: { page_title: "Cleaning Status Update & AI Prediction", dashboard: "Dashboard", cattle: "Cattle", feeding: "Feeding", sanitation: "Sanitation", management: "Management", cleaning_status_update: "Cleaning Status Update", subtitle: "Log sanitation activities and monitor disease prevention metrics with AI.", general_information: "General Information", cattle_id: "Cattle ID / RFID", select_cattle: "Select cattle...", cleaning_time: "Cleaning Time", cleaning_details: "Cleaning Details", cleaning_area: "Cleaning Area", method: "Method", disinfectant: "Disinfectant Used", disease_protocols: "Disease Prevention Protocols (Quarantined)", cross_check: "Cross-Contamination Barrier Check", deep_cycle: "Deep Disinfection Cycle", sanitation_notes: "Sanitation Notes & Observations", notes_placeholder: "Note any unusual drainage, pest presence, or equipment issues...", discard_changes: "Discard Changes", save_cleaning_log: "Save Cleaning Log", sanitation_forecast: "Sanitation Forecast", analyzing: "ANALYZING", health_risk_index: "Health Risk Index", prevention_score: "Prevention Score", pathogen_suppression: "Pathogen Suppression", hygiene_longevity: "Hygiene Longevity", risk_low: "Risk: Low", saved_success: "Cleaning status saved successfully.", status_prefix: "Status", last_wash: "Last Wash" },
+      hi: { page_title: "क्लीनिंग स्थिति अपडेट और AI पूर्वानुमान", dashboard: "डैशबोर्ड", cattle: "पशु", feeding: "फीडिंग", sanitation: "स्वच्छता", management: "प्रबंधन", cleaning_status_update: "क्लीनिंग स्थिति अपडेट", subtitle: "स्वच्छता गतिविधियाँ दर्ज करें और AI से रोग-निवारण मेट्रिक्स देखें।", general_information: "सामान्य जानकारी", cattle_id: "पशु आईडी / RFID", select_cattle: "पशु चुनें...", cleaning_time: "सफाई समय", cleaning_details: "सफाई विवरण", cleaning_area: "सफाई क्षेत्र", method: "विधि", disinfectant: "उपयोग किया गया कीटाणुनाशक", disease_protocols: "रोग निवारण प्रोटोकॉल (क्वारंटीन)", cross_check: "क्रॉस-कंटैमिनेशन बैरियर जांच", deep_cycle: "डीप डिसइन्फेक्शन साइकिल", sanitation_notes: "स्वच्छता नोट्स और अवलोकन", notes_placeholder: "असामान्य जल निकासी, कीट या उपकरण समस्या लिखें...", discard_changes: "परिवर्तन त्यागें", save_cleaning_log: "क्लीनिंग लॉग सहेजें", sanitation_forecast: "स्वच्छता पूर्वानुमान", analyzing: "विश्लेषण जारी", health_risk_index: "स्वास्थ्य जोखिम सूचकांक", prevention_score: "रोकथाम स्कोर", pathogen_suppression: "रोगजनक दमन", hygiene_longevity: "स्वच्छता अवधि", risk_low: "जोखिम: कम", saved_success: "क्लीनिंग स्थिति सफलतापूर्वक सहेजी गई।", status_prefix: "स्थिति", last_wash: "पिछली धुलाई" },
+      ml: { page_title: "ശുചീകരണ നില അപ്ഡേറ്റ് & AI പ്രവചനം", dashboard: "ഡാഷ്ബോർഡ്", cattle: "കന്നുകാലി", feeding: "തീറ്റ", sanitation: "ശുചിത്വം", management: "മാനേജ്മെന്റ്", cleaning_status_update: "ശുചീകരണ നില അപ്ഡേറ്റ്", subtitle: "ശുചീകരണ പ്രവർത്തനങ്ങൾ രേഖപ്പെടുത്തി AI വഴി രോഗ പ്രതിരോധ സൂചികകൾ കാണുക.", general_information: "പൊതു വിവരം", cattle_id: "കന്നുകാലി ഐഡി / RFID", select_cattle: "കന്നുകാലി തിരഞ്ഞെടുക്കുക...", cleaning_time: "ശുചീകരണ സമയം", cleaning_details: "ശുചീകരണ വിശദാംശങ്ങൾ", cleaning_area: "ശുചീകരണ മേഖല", method: "രീതി", disinfectant: "ഉപയോഗിച്ച ഡിസിൻഫെക്ടന്റ്", disease_protocols: "രോഗ പ്രതിരോധ പ്രോട്ടോക്കോളുകൾ (ക്വാറന്റൈൻ)", cross_check: "ക്രോസ്-കണ്ടാമിനേഷൻ ബാരിയർ പരിശോധന", deep_cycle: "ഡീപ് ഡിസിൻഫെക്ഷൻ സൈക്കിൾ", sanitation_notes: "ശുചിത്വ കുറിപ്പുകളും നിരീക്ഷണങ്ങളും", notes_placeholder: "അസാധാരണ ഡ്രൈനേജ്, കീട സാന്നിധ്യം, ഉപകരണ പ്രശ്നങ്ങൾ എഴുതുക...", discard_changes: "മാറ്റങ്ങൾ ഉപേക്ഷിക്കുക", save_cleaning_log: "ക്ലീനിംഗ് ലോഗ് സേവ് ചെയ്യുക", sanitation_forecast: "ശുചിത്വ പ്രവചനം", analyzing: "വിശകലനം നടക്കുന്നു", health_risk_index: "ആരോഗ്യ അപകട സൂചിക", prevention_score: "പ്രിവെൻഷൻ സ്കോർ", pathogen_suppression: "രോഗാണു നിയന്ത്രണം", hygiene_longevity: "ശുചിത്വ ദൈർഘ്യം", risk_low: "അപകടം: കുറവ്", saved_success: "ശുചീകരണ നില വിജയകരമായി സേവ് ചെയ്തു.", status_prefix: "സ്ഥിതി", last_wash: "അവസാന വാഷ്" },
+      ur: { page_title: "کلیننگ اسٹیٹس اپڈیٹ اور AI پیش گوئی", dashboard: "ڈیش بورڈ", cattle: "مویشی", feeding: "فیڈنگ", sanitation: "صفائی", management: "مینجمنٹ", cleaning_status_update: "کلیننگ اسٹیٹس اپڈیٹ", subtitle: "صفائی سرگرمیاں درج کریں اور AI سے بیماری سے بچاؤ کے میٹرکس دیکھیں۔", general_information: "عمومی معلومات", cattle_id: "مویشی آئی ڈی / RFID", select_cattle: "مویشی منتخب کریں...", cleaning_time: "صفائی کا وقت", cleaning_details: "صفائی کی تفصیلات", cleaning_area: "صفائی کا علاقہ", method: "طریقہ", disinfectant: "استعمال شدہ جراثیم کش", disease_protocols: "بیماری سے بچاؤ پروٹوکول (قرنطینہ)", cross_check: "کراس کنٹیمنیشن بیریئر چیک", deep_cycle: "ڈیپ ڈس انفیکشن سائیکل", sanitation_notes: "صفائی نوٹس اور مشاہدات", notes_placeholder: "غیر معمولی نکاسی، کیڑوں یا آلات کے مسائل درج کریں...", discard_changes: "تبدیلیاں منسوخ کریں", save_cleaning_log: "کلیننگ لاگ محفوظ کریں", sanitation_forecast: "صفائی کی پیش گوئی", analyzing: "تجزیہ جاری", health_risk_index: "صحت خطرہ اشاریہ", prevention_score: "روک تھام اسکور", pathogen_suppression: "جراثیم دباؤ", hygiene_longevity: "صفائی کی مدت", risk_low: "خطرہ: کم", saved_success: "کلیننگ اسٹیٹس کامیابی سے محفوظ ہو گیا۔", status_prefix: "حالت", last_wash: "آخری دھلائی" },
+      ta: { page_title: "சுத்தம் நிலை புதுப்பிப்பு & AI கணிப்பு", dashboard: "டாஷ்போர்டு", cattle: "கால்நடை", feeding: "உணவு", sanitation: "சுத்தம்", management: "மேலாண்மை", cleaning_status_update: "சுத்தம் நிலை புதுப்பிப்பு", subtitle: "சுத்தம் செயல்பாடுகளை பதிவு செய்து AI மூலம் நோய் தடுப்பு அளவுகோல்களை கண்காணிக்கவும்.", general_information: "பொது தகவல்", cattle_id: "கால்நடை ஐடி / RFID", select_cattle: "கால்நடை தேர்வு செய்யவும்...", cleaning_time: "சுத்தம் நேரம்", cleaning_details: "சுத்தம் விவரங்கள்", cleaning_area: "சுத்தம் பகுதி", method: "முறை", disinfectant: "பயன்பட்ட கிருமிநாசினி", disease_protocols: "நோய் தடுப்பு நடைமுறைகள் (தனிமைப்படுத்தல்)", cross_check: "குறுக்கு தொற்று தடுப்பு சரிபார்ப்பு", deep_cycle: "ஆழ்ந்த கிருமிநாசினி சுழற்சி", sanitation_notes: "சுத்தம் குறிப்புகள் & கண்காணிப்புகள்", notes_placeholder: "அசாதாரண வடிகால், பூச்சி இருப்பு அல்லது கருவி சிக்கல்களை எழுதவும்...", discard_changes: "மாற்றங்களை நீக்கு", save_cleaning_log: "சுத்தம் பதிவை சேமி", sanitation_forecast: "சுத்தம் கணிப்பு", analyzing: "பகுப்பாய்வு செய்கிறது", health_risk_index: "ஆரோக்கிய அபாய குறியீடு", prevention_score: "தடுப்பு மதிப்பெண்", pathogen_suppression: "நோய்க்கிருமி கட்டுப்பாடு", hygiene_longevity: "சுத்தம் நீடிப்பு", risk_low: "அபாயம்: குறைவு", saved_success: "சுத்தம் நிலை வெற்றிகரமாக சேமிக்கப்பட்டது.", status_prefix: "நிலை", last_wash: "கடைசி கழுவல்" }
+    };
+
+    function applyLanguage(code) {
+      const lang = i18n[code] ? code : "en";
+      const dict = i18n[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+      localStorage.setItem("workerPreferredLanguage", lang);
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (dict[key]) el.setAttribute("placeholder", dict[key]);
+      });
+      const selector = document.getElementById("languageSelectorHeader");
+      if (selector) selector.value = lang;
+      syncCattleCard();
+    }
+
+    async function saveLanguageToServer(lang) {
+      const payload = new URLSearchParams();
+      payload.append("language", lang);
+      await fetch("{% url 'set_worker_language' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+        },
+        body: payload.toString()
+      });
+    }
+
+    function syncCattleCard() {
+      const select = document.getElementById("cattleSelect");
+      if (!select || select.selectedIndex < 0) return;
+      const option = select.options[select.selectedIndex];
+      const tag = option.value || "-";
+      const breed = option.getAttribute("data-breed") || "-";
+      const health = option.getAttribute("data-health") || "Healthy";
+      const lang = i18n[document.documentElement.lang] ? document.documentElement.lang : "en";
+      const prefix = i18n[lang].status_prefix || "Status";
+      const washLabel = i18n[lang].last_wash || "Last Wash";
+
+      document.getElementById("selectedCattleTitle").textContent = tag === "-" ? "Cattle" : `Cattle #${tag}`;
+      document.getElementById("selectedCattleBreed").textContent = breed;
+      document.getElementById("selectedCattleLastWash").textContent = `${washLabel}: 12h`;
+      document.getElementById("healthStatusText").textContent = `${prefix}: ${health}`;
+    }
+
+    function applyPredictionBars() {
+      const pathogenBar = document.getElementById("pathogenBar");
+      const hygieneBar = document.getElementById("hygieneBar");
+      if (pathogenBar) {
+        const v = Number(pathogenBar.getAttribute("data-width") || 0);
+        pathogenBar.style.width = `${Math.max(0, Math.min(100, v))}%`;
+      }
+      if (hygieneBar) {
+        const v = Number(hygieneBar.getAttribute("data-width") || 0);
+        hygieneBar.style.width = `${Math.max(0, Math.min(100, v))}%`;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const supported = ["en", "hi", "ml", "ur", "ta"];
+      const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+      const savedLang = localStorage.getItem("workerPreferredLanguage");
+      const initialLang = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+      applyLanguage(initialLang);
+
+      const selector = document.getElementById("languageSelectorHeader");
+      if (selector) {
+        selector.addEventListener("change", async (event) => {
+          const lang = event.target.value;
+          applyLanguage(lang);
+          try {
+            await saveLanguageToServer(lang);
+          } catch (error) {
+            console.error("Language save failed", error);
+          }
+        });
+      }
+
+      const cattleSelect = document.getElementById("cattleSelect");
+      if (cattleSelect) {
+        cattleSelect.addEventListener("change", syncCattleCard);
+        if (cattleSelect.options.length > 1 && cattleSelect.value === "") {
+          cattleSelect.selectedIndex = 1;
+        }
+        syncCattleCard();
+      }
+
+      // Populate prediction values from Django context
+      {% if prediction %}
+      document.getElementById("hriVal").textContent = "{{ prediction.health_risk_index }}";
+      document.getElementById("psVal").textContent = "{{ prediction.prevention_score }}";
+      document.getElementById("suggestionText").textContent = "{{ prediction.suggestion|escapejs }}";
+      {% endif %}
+
+      applyPredictionBars();
+    });
+  </script>
+</body>
+
+</html>

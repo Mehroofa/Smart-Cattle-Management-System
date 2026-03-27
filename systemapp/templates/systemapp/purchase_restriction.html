@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Purchase Restricted | Cattle Marketplace</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b5b",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221015",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .backdrop-blur-custom {
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased overflow-hidden">
+    <!-- Background Content (Blurred Listing Page) -->
+    <div class="relative min-h-screen w-full flex flex-col blur-md select-none pointer-events-none">
+        <!-- Top Navigation Bar -->
+        <header
+            class="flex items-center justify-between border-b border-primary/10 bg-white/80 dark:bg-background-dark/80 px-10 py-3">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-primary">
+                    <span class="material-symbols-outlined text-3xl">agriculture</span>
+                    <h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight">Cattle
+                        Marketplace</h2>
+                </div>
+                <div class="hidden md:flex items-center gap-6">
+                    <a class="text-slate-600 dark:text-slate-400 text-sm font-medium"
+                        href="{% url 'olx' %}">Marketplace</a>
+                    <a class="text-slate-600 dark:text-slate-400 text-sm font-medium" href="{% url 'my_requests' %}">My
+                        Bids</a>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 border border-primary/20"></div>
+            </div>
+        </header>
+        <!-- Main Listing Content -->
+        <main class="max-w-6xl mx-auto w-full p-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="space-y-6">
+                <div class="aspect-square bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm">
+                    <img alt="Premium Angus Cattle" class="w-full h-full object-cover"
+                        data-alt="Close up of black angus cattle in field"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPRqSIm7MXs9eOv7CSAMM5pL0BRJD5rDiSZgteb-C3xb4o0y_ZHuWavCFO3o_knG7eFQhoy6qZhsLImg1PUg3N6VS6-MtcFefbZwNuwuC-lD2HhnL-a3QWDR9UW5PvN-JTT5aqlp00Hj_xHLiWhlMs3pSvTjUpC_BqPI0pdbiTJ-XPwiQi0ctqW1DvzNIUrq3W7dXIDofJFOPQNoQXaojeZNDvdAMrGFWFQZreGqhdjidHRhykH3nDUSpXwS4iVZYf-ggOMGuyBhM" />
+                </div>
+            </div>
+            <div class="space-y-8">
+                <div>
+                    <span class="text-primary font-bold text-sm uppercase tracking-widest">Listing #4829</span>
+                    <h1 class="text-4xl font-extrabold text-slate-900 dark:text-slate-100 mt-2">Premium Angus Bull</h1>
+                    <p class="text-2xl font-semibold text-slate-700 dark:text-slate-300 mt-4">$4,500.00</p>
+                </div>
+                <div class="p-6 bg-white dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <h3 class="font-bold mb-4">Specifications</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Age:</span>
+                            <span>24 Months</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Weight:</span>
+                            <span>1,200 lbs</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Breed:</span>
+                            <span>Purebred Angus</span>
+                        </div>
+                        <div class="flex justify-between border-b pb-2"><span class="text-slate-500">Health:</span>
+                            <span>Certified</span>
+                        </div>
+                    </div>
+                </div>
+                <button
+                    class="w-full bg-primary text-white py-4 rounded-lg font-bold text-lg shadow-lg shadow-primary/20">
+                    Place Bid
+                </button>
+            </div>
+        </main>
+    </div>
+    <!-- Modal Overlay -->
+    <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background-dark/40 backdrop-blur-custom">
+        <!-- Modal Container -->
+        <div
+            class="w-full max-w-lg bg-white dark:bg-background-dark rounded-xl shadow-2xl border-2 border-primary overflow-hidden">
+            <div class="p-8 flex flex-col items-center text-center">
+                <!-- Lock Icon Decoration -->
+                <div class="mb-6 flex items-center justify-center w-20 h-20 bg-primary/10 rounded-full">
+                    <span class="material-symbols-outlined text-primary text-5xl font-light">lock_person</span>
+                </div>
+                <!-- Text Content -->
+                <div class="space-y-4">
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+                        Purchase Restricted
+                    </h2>
+                    <div class="space-y-3">
+                        <p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
+                            To ensure the security of our cattle marketplace, your account requires <span
+                                class="font-bold text-slate-900 dark:text-slate-100">admin approval</span> before you
+                            can place orders or finalize purchases.
+                        </p>
+                        <p class="text-slate-500 dark:text-slate-500 text-sm italic">
+                            Verification typically takes 24-48 hours. We will notify you via email once your account is
+                            active.
+                        </p>
+                    </div>
+                </div>
+                <!-- Action Section -->
+                <div class="mt-10 w-full space-y-4">
+                    <a href="{% url 'olx' %}"
+                        class="w-full bg-primary hover:bg-primary/90 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+                        <span class="material-symbols-outlined text-xl">arrow_back</span>
+                        Back to Browsing
+                    </a>
+                    <div class="flex flex-col items-center gap-2 pt-2">
+                        <a class="text-primary hover:underline text-sm font-semibold flex items-center gap-1"
+                            href="{% url 'report_issue' %}">
+                            <span class="material-symbols-outlined text-lg">support_agent</span>
+                            Contact Support for urgent verification
+                        </a>
+                        <div
+                            class="flex items-center gap-2 text-[11px] text-slate-400 dark:text-slate-600 uppercase tracking-widest font-bold mt-4">
+                            <span class="material-symbols-outlined text-xs">verified_user</span>
+                            Security Protected by CattleMarket Auth
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom Accent Bar -->
+            <div class="h-1.5 w-full bg-gradient-to-r from-primary via-primary/60 to-primary"></div>
+        </div>
+    </div>
+    <!-- Footer (Still part of background, but partially visible through blur) -->
+    <footer class="fixed bottom-0 w-full p-4 text-center blur-sm pointer-events-none">
+        <p class="text-xs text-slate-400">© 2024 Cattle Marketplace Security • Privacy Policy • Terms of Service</p>
+    </footer>
+</body>
+
+</html>

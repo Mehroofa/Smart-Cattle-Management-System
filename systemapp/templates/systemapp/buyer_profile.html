@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Buyer Profile - CattleMarket</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ee2b5b",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#221015",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light min-h-screen">
+
+    <!-- Top Navigation -->
+    <header class="w-full border-b border-primary/10 bg-white/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary p-2 rounded-lg text-white">
+                    <span class="material-symbols-outlined text-xl">agriculture</span>
+                </div>
+                <h2 class="text-lg font-extrabold tracking-tight">Cattle<span class="text-primary">Market</span></h2>
+            </div>
+            <nav class="flex items-center gap-6">
+                <a href="{% url 'olx' %}"
+                    class="text-slate-600 hover:text-primary transition-colors font-medium text-sm">Marketplace</a>
+                <a href="{% url 'account_verified' %}"
+                    class="text-slate-600 hover:text-primary transition-colors font-medium text-sm">Dashboard</a>
+                <a href="{% url 'logout' %}"
+                    class="text-xs font-bold text-primary border border-primary/20 px-4 py-2 rounded-full hover:bg-primary hover:text-white transition-all">Logout</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-10">
+        <!-- Profile Header Card -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden mb-8">
+            <div class="h-32 bg-gradient-to-r from-primary/80 to-primary/40 relative">
+                <div class="absolute -bottom-12 left-8">
+                    <div
+                        class="w-24 h-24 rounded-2xl bg-primary flex items-center justify-center text-white text-3xl font-black border-4 border-white shadow-lg">
+                        {{ user.first_name|slice:":1"|upper }}{{ user.last_name|slice:":1"|upper }}
+                    </div>
+                </div>
+            </div>
+            <div class="pt-16 pb-8 px-8">
+                <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                    <div>
+                        <h1 class="text-2xl font-extrabold text-slate-900">
+                            {% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}{{ user.username
+                            }}{% endif %}
+                        </h1>
+                        <p class="text-slate-500 text-sm mt-1 flex items-center gap-1">
+                            <span class="material-symbols-outlined text-base">mail</span>
+                            {{ user.email|default:user.username }}
+                        </p>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        {% if profile.approved %}
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">
+                            <span class="material-symbols-outlined text-sm">verified</span> Approved
+                        </span>
+                        {% else %}
+                        <span
+                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200">
+                            <span class="material-symbols-outlined text-sm">hourglass_top</span> Pending Approval
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Account Info -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Account Details -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">person</span> Account Information
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Full
+                                Name</label>
+                            <p class="text-base font-bold text-slate-800">
+                                {% if user.first_name %}{{ user.first_name }} {{ user.last_name }}{% else %}—{% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email</label>
+                            <p class="text-base font-bold text-slate-800">{{ user.email|default:"—" }}</p>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Username</label>
+                            <p class="text-base font-bold text-slate-800">{{ user.username }}</p>
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Member
+                                Since</label>
+                            <p class="text-base font-bold text-slate-800">{{ user.date_joined|date:"M d, Y" }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purchase Requests -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">shopping_bag</span> Recent Purchase
+                        Requests
+                    </h3>
+                    {% if purchase_requests %}
+                    <div class="space-y-3">
+                        {% for pr in purchase_requests %}
+                        <div
+                            class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary text-lg">pets</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-sm text-slate-800">{{
+                                        pr.cattle.breed|default:pr.cattle.tag_id }}</p>
+                                    <p class="text-xs text-slate-500">{{ pr.created_at|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-full
+                                {% if pr.status == 'approved' %}bg-emerald-100 text-emerald-700
+                                {% elif pr.status == 'rejected' %}bg-red-100 text-red-700
+                                {% else %}bg-amber-100 text-amber-700{% endif %}">
+                                {{ pr.status|title }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8 text-slate-400">
+                        <span class="material-symbols-outlined text-4xl mb-2">inventory_2</span>
+                        <p class="text-sm font-medium">No purchase requests yet</p>
+                        <a href="{% url 'olx' %}"
+                            class="text-primary text-xs font-bold hover:underline mt-1 inline-block">Browse Marketplace
+                            →</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Orders -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-lg">receipt_long</span> Orders
+                    </h3>
+                    {% if orders %}
+                    <div class="space-y-3">
+                        {% for order in orders %}
+                        <a href="{% url 'order_confirmation' order.id %}"
+                            class="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-primary/30 transition-colors">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-100 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-emerald-600 text-lg">check_circle</span>
+                                </div>
+                                <div>
+                                    <p class="font-bold text-sm text-slate-800">Order #{{ order.id }} — {{
+                                        order.cattle.breed|default:order.cattle.tag_id }}</p>
+                                    <p class="text-xs text-slate-500">{{ order.order_date|date:"M d, Y" }}</p>
+                                </div>
+                            </div>
+                            <span class="text-sm font-extrabold text-slate-800">${{ order.amount }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="text-center py-8 text-slate-400">
+                        <span class="material-symbols-outlined text-4xl mb-2">local_shipping</span>
+                        <p class="text-sm font-medium">No orders yet</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Column: Quick Stats -->
+            <div class="space-y-6">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-6">Quick Stats</h3>
+                    <div class="space-y-5">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-primary">shopping_cart</span>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-600">Purchase Requests</span>
+                            </div>
+                            <span class="text-xl font-extrabold text-slate-800">{{ stats.requests }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-emerald-600">check_circle</span>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-600">Orders Placed</span>
+                            </div>
+                            <span class="text-xl font-extrabold text-slate-800">{{ stats.orders }}</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-blue-600">gavel</span>
+                                </div>
+                                <span class="text-sm font-semibold text-slate-600">Bids Placed</span>
+                            </div>
+                            <span class="text-xl font-extrabold text-slate-800">{{ stats.bids }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Quick Actions</h3>
+                    <div class="space-y-3">
+                        <a href="{% url 'olx' %}"
+                            class="w-full flex items-center gap-3 p-3 rounded-xl bg-primary/5 hover:bg-primary/10 border border-primary/10 transition-colors">
+                            <span class="material-symbols-outlined text-primary">storefront</span>
+                            <span class="text-sm font-bold text-slate-700">Browse Marketplace</span>
+                        </a>
+                        <a href="{% url 'compare_cattle' %}"
+                            class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-100 transition-colors">
+                            <span class="material-symbols-outlined text-slate-500">compare_arrows</span>
+                            <span class="text-sm font-bold text-slate-700">Compare Cattle</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

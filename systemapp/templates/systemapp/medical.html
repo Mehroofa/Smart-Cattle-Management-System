@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Medical Report | Cattle Farm System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#CBA2CB",
+            "background-light": "#f6eef6",
+            "background-dark": "#1f2937"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#111811] dark:text-white min-h-screen">
+  <div class="sticky top-0 z-50 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-gray-800 print:hidden">
+    <div class="max-w-6xl mx-auto flex items-center p-5 justify-between">
+      <a href="{% url 'vet_dashboard' %}" class="flex items-center gap-2 font-semibold">
+        <span class="material-symbols-outlined text-base">arrow_back_ios</span>
+        Back
+      </a>
+      <h2 class="text-xl font-bold">Verified Medical Report</h2>
+      <button id="shareReportBtn" type="button" class="flex items-center gap-2">
+        <span class="material-symbols-outlined">share</span>
+        Share
+      </button>
+    </div>
+  </div>
+
+  <main class="max-w-6xl mx-auto p-8">
+    {% if not case %}
+      <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-200 dark:border-gray-800 p-10 text-center">
+        <h1 class="text-2xl font-bold mb-3">No medical report found</h1>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">Create or resolve a health case to generate a report.</p>
+        <a href="{% url 'vet_dashboard' %}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          Go To Vet Dashboard
+        </a>
+      </div>
+    {% else %}
+      <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <div class="p-8 border-b border-dashed border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/40 flex flex-col md:flex-row md:justify-between md:items-start gap-6">
+          <div>
+            <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Official Record</p>
+            <h1 class="text-3xl font-bold">Cattle ID: {{ case.cattle.tag_id }}</h1>
+            <div class="flex flex-wrap gap-8 mt-6 text-sm">
+              <div>
+                <p class="text-gray-500 uppercase font-semibold text-xs">Report Date</p>
+                <p class="font-medium">{{ case.created_at|date:"M d, Y H:i" }}</p>
+              </div>
+              <div>
+                <p class="text-gray-500 uppercase font-semibold text-xs">Case Severity</p>
+                <p class="font-medium">{{ case.get_severity_display }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="bg-primary/10 text-primary px-5 py-2 rounded-full font-bold flex items-center gap-2">
+            <span class="material-symbols-outlined">check_circle</span>
+            {% if is_verified %}Verified{% else %}Pending Review{% endif %}
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 p-8">
+          <div class="md:col-span-2 space-y-8">
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-wider mb-3">Reported Symptoms</h3>
+              <div class="p-6 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-800">
+                <p class="text-base leading-relaxed">{{ case.symptoms|linebreaksbr }}</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-wider mb-3">Clinical Diagnosis</h3>
+              <div class="p-6 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-800">
+                <p class="text-base leading-relaxed">{{ case.vet_diagnosis|default:"Diagnosis pending veterinarian update."|linebreaksbr }}</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-wider mb-3">Prescribed Treatment</h3>
+              <div class="p-6 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-800">
+                <p class="text-base leading-relaxed">{{ case.treatment_plan|default:"Treatment plan pending."|linebreaksbr }}</p>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-sm font-bold uppercase tracking-wider mb-3">AI Suggestion</h3>
+              <div class="p-6 bg-background-light dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-800">
+                <p class="text-base leading-relaxed">{{ case.ai_suggestion|default:"No AI suggestion available." }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="relative p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <div class="absolute -top-4 right-6">
+                <div class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-full shadow-lg">
+                  <span class="material-symbols-outlined text-sm">verified</span>
+                  {% if is_verified %}Verified Professional{% else %}Awaiting Sign-Off{% endif %}
+                </div>
+              </div>
+
+              <p class="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 mt-3">Digitally Signed By</p>
+              <div class="mb-6">
+                <h4 class="text-lg font-bold">
+                  {% if case.vet %}
+                    Dr. {{ case.vet.get_full_name|default:case.vet.username }}
+                  {% else %}
+                    Not assigned
+                  {% endif %}
+                </h4>
+                <p class="text-sm text-gray-500">
+                  {% if case.vet %}Veterinary Officer{% else %}Pending assignment{% endif %}
+                </p>
+              </div>
+
+              <div class="flex justify-between text-sm mb-6 gap-3">
+                <div>
+                  <p class="text-xs text-gray-500 uppercase">Reported By</p>
+                  <p class="font-mono font-bold">
+                    {% if case.reported_by %}{{ case.reported_by.username }}{% else %}N/A{% endif %}
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-xs text-gray-500 uppercase">Validation Hash</p>
+                  <p class="font-mono text-gray-500">{{ validation_hash }}</p>
+                </div>
+              </div>
+
+              <a href="{% url 'diagnose_case' case.id %}" class="w-full inline-flex justify-center py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-xl font-bold text-primary hover:bg-gray-100 transition">
+                View Case Details
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-4 mt-8 print:hidden">
+        <button id="downloadPdfBtn" type="button" class="px-8 h-12 bg-primary text-white font-bold rounded-xl shadow-lg flex items-center gap-2">
+          <span class="material-symbols-outlined">download</span>
+          Download / Print
+        </button>
+        <button id="printBtn" type="button" class="px-6 h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl flex items-center gap-2">
+          <span class="material-symbols-outlined">print</span>
+          Print
+        </button>
+      </div>
+    {% endif %}
+  </main>
+
+  <script>
+    (function () {
+      const printBtn = document.getElementById("printBtn");
+      const downloadBtn = document.getElementById("downloadPdfBtn");
+      const shareBtn = document.getElementById("shareReportBtn");
+
+      if (printBtn) {
+        printBtn.addEventListener("click", function () {
+          window.print();
+        });
+      }
+      if (downloadBtn) {
+        downloadBtn.addEventListener("click", function () {
+          window.print();
+        });
+      }
+      if (shareBtn) {
+        shareBtn.addEventListener("click", async function () {
+          try {
+            if (navigator.share) {
+              await navigator.share({ title: document.title, url: window.location.href });
+            } else if (navigator.clipboard) {
+              await navigator.clipboard.writeText(window.location.href);
+              alert("Report link copied to clipboard.");
+            } else {
+              alert("Sharing is not available in this browser.");
+            }
+          } catch (err) {
+            console.log(err);
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

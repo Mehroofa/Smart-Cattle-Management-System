@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Vet Registration Approval | AI Cattle Farm Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#cc7e5c",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#1e1714",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #f8f7f6;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col">
+<!-- Top Navbar -->
+<nav class="sticky top-0 z-50 w-full bg-white dark:bg-background-dark border-b border-primary/10 px-4 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-icons">smart_toy</span>
+</div>
+<span class="font-bold text-xl tracking-tight text-primary">BovineAI</span>
+</div>
+</div>
+<div class="hidden md:flex flex-1 max-w-xl mx-8">
+<div class="relative w-full">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-primary/40">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-background-light dark:bg-zinc-800 border-none rounded-lg focus:ring-2 focus:ring-primary/50 text-sm" placeholder="Search veterinarians or license numbers..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-primary/10 rounded-full relative">
+<span class="material-icons text-primary/70">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+</button>
+<div class="h-8 w-px bg-primary/20"></div>
+<div class="flex items-center gap-3 pl-2">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold">Admin Portal</p>
+<p class="text-[10px] text-primary/60 uppercase tracking-widest font-bold">Manager</p>
+</div>
+<img alt="Admin Avatar" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" data-alt="Professional male administrator portrait headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp10I2CO84OkV6qWZV1J6Ovf_MQTCujA94-9ea2QLwCOw6jJeFzxRgj76hxWnwdvAKrwyvmUo2gir4xSuqUE9ZStPB3TxQfb_ESE7xPBLj-eAzeVV9jzsMRrgTYIJjwcZN_ZB71g8s0WINliR0G_sdgFnPtkeqaHWq_lVOwehkf356I08X57mPl8avbbR0yzDEVFOpVscxR2Ou8FIN85_mhVGpHhSMq2kwpzS8GAtXA0Rd5UzUjxXJwb8HzO4PvVw8njmxFvP0Ixs"/>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar -->
+<aside class="w-64 hidden lg:flex flex-col border-r border-primary/10 bg-white dark:bg-background-dark p-4 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-icons">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-icons">agriculture</span>
+<span class="font-medium">Cattle Farms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-white shadow-lg shadow-primary/20 transition-colors" href="#">
+<span class="material-icons">medical_services</span>
+<span class="font-medium">Vet Approvals</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-icons">assignment_turned_in</span>
+<span class="font-medium">Certificates</span>
+</a>
+<div class="pt-4 mt-4 border-t border-primary/10">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 hover:bg-primary/5 transition-colors" href="#">
+<span class="material-icons">settings</span>
+<span class="font-medium">System Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto bg-[#F5F5DC] dark:bg-background-dark p-6">
+<div class="max-w-4xl mx-auto space-y-6">
+<!-- Header Section -->
+<div class="flex items-end justify-between mb-8">
+<div>
+<h1 class="text-3xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Vet Registration</h1>
+<p class="text-primary/70 font-medium">Review and verify veterinarian credentials for farm assignment.</p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary text-white rounded-full text-xs font-bold flex items-center gap-1">
+<span class="material-icons text-sm">pending_actions</span> 3 PENDING
+                        </span>
+</div>
+</div>
+<!-- Approval Card List -->
+<div class="space-y-6">
+<!-- Card 1 -->
+<div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-primary/10 overflow-hidden hover:shadow-md transition-shadow">
+<div class="p-6">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+<div class="flex gap-5">
+<img alt="Dr. Sarah Miller" class="w-20 h-20 rounded-xl object-cover ring-2 ring-primary/5" data-alt="Female veterinarian in white lab coat smiling" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPMW4HnB6BD12N4rqBoI3MjNLaHLj9l3kGpfzE5TOb26B7otrax3jF3tHg0AC7ZjPKDT1JgMaABWTN6CkCh8OTR1ktxCihg3I3AWQZwjCOIq3B_jROB_ExCFIn1LyD86MnpclBAPpJcleexpv4s-OxXEgE4M7eW2Wc9ijLrsHjQJbGF8I7nhboKtqOVtQHHIT2RjnNeFjXAY3WFwwd3WuN1KpP69yoil-r8u1ZDhrCIATP1VU8gUgAMBVNz1Oqm9wEwE40AEv8yKs"/>
+<div>
+<h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Dr. Sarah Miller</h2>
+<p class="text-primary font-bold text-sm tracking-wide">#VET-9901</p>
+<div class="flex items-center gap-1 text-slate-500 mt-1">
+<span class="material-icons text-base">location_on</span>
+<span class="text-sm font-medium">Austin, TX</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="bg-primary/10 px-4 py-3 rounded-xl border border-primary/20 text-center min-w-[140px]">
+<p class="text-[10px] uppercase font-bold text-primary tracking-widest leading-none mb-1">AI Authenticity</p>
+<div class="flex items-center justify-center gap-2">
+<span class="text-2xl font-black text-primary">98%</span>
+<span class="material-icons text-primary">verified</span>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary hover:bg-primary/5 px-4 py-2 rounded-lg border border-primary font-bold text-sm transition-all">
+<span class="material-icons text-sm">description</span>
+                                        View Certificate
+                                    </button>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-800">
+<h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-3">Suggested Nearest Farms</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Willow Creek Ranch
+                                    </span>
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Oak Ridge Cattle Co.
+                                    </span>
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Sunset Pastures
+                                    </span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-zinc-800/50 p-4 flex gap-3 justify-end border-t border-primary/5">
+<button class="px-6 py-2 rounded-lg font-bold text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">Reject</button>
+<button class="px-8 py-2 bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">Approve Registration</button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-primary/10 overflow-hidden hover:shadow-md transition-shadow opacity-95">
+<div class="p-6">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+<div class="flex gap-5">
+<img alt="Dr. James Wilson" class="w-20 h-20 rounded-xl object-cover ring-2 ring-primary/5" data-alt="Male veterinarian in clinic setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs0MJC5jvnoK8wAwuDuICGoUiEIxF9mXqOttyY12K7tP5chsGjmTk4NkeWnK8DXH7FBKy5nFtgPZJ8gBMbfSSC166MO3ZqjAagy9ZPhu2jjgYsC6dXdAMWMbCHYqOT2FBMZcQo_7y9IhMjYEYr3GU8iCLJ9UzfN4xFo2c-KRNMVarQL4jXc8M14_bG1z24U-elPis14v73acXLKq87YzyUATiXt9qnb7idlWe9hK1INiCqrZ61ni5NJ9caU1Ne4sG1u6dBXsKUdZY"/>
+<div>
+<h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Dr. James Wilson</h2>
+<p class="text-primary font-bold text-sm tracking-wide">#VET-4432</p>
+<div class="flex items-center gap-1 text-slate-500 mt-1">
+<span class="material-icons text-base">location_on</span>
+<span class="text-sm font-medium">Dallas, TX</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="bg-primary/10 px-4 py-3 rounded-xl border border-primary/20 text-center min-w-[140px]">
+<p class="text-[10px] uppercase font-bold text-primary tracking-widest leading-none mb-1">AI Authenticity</p>
+<div class="flex items-center justify-center gap-2">
+<span class="text-2xl font-black text-primary">92%</span>
+<span class="material-icons text-primary/60">analytics</span>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary hover:bg-primary/5 px-4 py-2 rounded-lg border border-primary font-bold text-sm transition-all">
+<span class="material-icons text-sm">description</span>
+                                        View Certificate
+                                    </button>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-800">
+<h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-3">Suggested Nearest Farms</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Lone Star Estates
+                                    </span>
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Big Tex Dairy
+                                    </span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-zinc-800/50 p-4 flex gap-3 justify-end border-t border-primary/5">
+<button class="px-6 py-2 rounded-lg font-bold text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">Reject</button>
+<button class="px-8 py-2 bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">Approve Registration</button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-primary/10 overflow-hidden hover:shadow-md transition-shadow opacity-95">
+<div class="p-6">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+<div class="flex gap-5">
+<img alt="Dr. Elena Rodriguez" class="w-20 h-20 rounded-xl object-cover ring-2 ring-primary/5" data-alt="Professional female doctor portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn-jSrMEKsZ5XadAjSdWoSL42un0bFxRJWNFd6mFQ2MrNFfw3YIimmkeVcC6CP77k6CQNVKxVezPFgV2HGfIMT_aYW_yeWB8qj6iMfTdHt_WjB7X7234I1Xc6bNmrQLR7h0DDJpGXtTlFDuoJM8hw19m0MuUvBYCbPAD3NUBVhX_tnPM063q6beMEqlicYuCZWvJppEdwehyCTgXBeB0PU7P5ZO3C9IGOtOWvBdlkeOX2A6QuHXDv8oar6uNLLndRmZSAqGdzokVo"/>
+<div>
+<h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 leading-tight">Dr. Elena Rodriguez</h2>
+<p class="text-primary font-bold text-sm tracking-wide">#VET-3188</p>
+<div class="flex items-center gap-1 text-slate-500 mt-1">
+<span class="material-icons text-base">location_on</span>
+<span class="text-sm font-medium">San Antonio, TX</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-3">
+<div class="bg-primary/10 px-4 py-3 rounded-xl border border-primary/20 text-center min-w-[140px]">
+<p class="text-[10px] uppercase font-bold text-primary tracking-widest leading-none mb-1">AI Authenticity</p>
+<div class="flex items-center justify-center gap-2">
+<span class="text-2xl font-black text-primary">84%</span>
+<span class="material-icons text-yellow-600">report_problem</span>
+</div>
+</div>
+<button class="flex items-center gap-2 text-primary hover:bg-primary/5 px-4 py-2 rounded-lg border border-primary font-bold text-sm transition-all">
+<span class="material-icons text-sm">description</span>
+                                        View Certificate
+                                    </button>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-100 dark:border-zinc-800">
+<h3 class="text-xs font-black uppercase text-slate-400 tracking-widest mb-3">Suggested Nearest Farms</h3>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 bg-background-light dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 rounded-lg text-sm font-semibold flex items-center gap-2">
+<span class="material-icons text-xs text-primary">agriculture</span> Mission Valley Farms
+                                    </span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 dark:bg-zinc-800/50 p-4 flex gap-3 justify-end border-t border-primary/5">
+<button class="px-6 py-2 rounded-lg font-bold text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors">Reject</button>
+<button class="px-8 py-2 bg-primary text-white rounded-lg font-bold shadow-md shadow-primary/20 hover:brightness-110 active:scale-95 transition-all">Approve Registration</button>
+</div>
+</div>
+</div>
+<!-- Footer/Pagination -->
+<div class="flex items-center justify-center pt-8 pb-12">
+<nav class="flex items-center gap-1">
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded bg-primary text-white text-sm font-bold">1</button>
+<button class="w-8 h-8 rounded hover:bg-primary/10 text-slate-600 text-sm font-bold">2</button>
+<button class="w-8 h-8 rounded hover:bg-primary/10 text-slate-600 text-sm font-bold">3</button>
+<button class="p-2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">chevron_right</span>
+</button>
+</nav>
+</div>
+</div>
+</main>
+</div>
+</body></html>

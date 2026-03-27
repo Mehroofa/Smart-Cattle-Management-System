@@ -1,0 +1,55 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Cattle Farm System{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'systemapp/app.css' %}">
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="icon-pill">=</span>
+        <div>
+          <div class="topbar-title">Cattle Farm System</div>
+          <div class="topbar-subtitle">Smart health & farm operations</div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        {% if request.user.is_authenticated %}
+        <span class="pill">{{ request.user.username }}</span>
+        {% else %}
+        <span class="pill">Secure Access</span>
+        {% endif %}
+      </div>
+    </header>
+
+    <main class="app-main">
+      {% block content %}{% endblock %}
+    </main>
+
+    {% block bottom_nav %}
+    {% if request.user.is_authenticated %}
+    <nav class="bottom-nav">
+      <a class="nav-item" href="{% url 'portal' %}">Home</a>
+      <a class="nav-item" href="{% url 'marketplace' %}">Cattle</a>
+      <a class="nav-item" href="{% url 'add_cattle' %}">Add Cattle</a>
+      <a class="nav-item" href="{% url 'worker_login' %}">Worker Login</a>
+      <a class="nav-item" href="{% url 'worker_reg' %}">Worker Reg</a>
+      <a class="nav-item" href="{% url 'report_health' %}">Report</a>
+      <a class="nav-item" href="{% url 'vet_dashboard' %}">Health</a>
+      <a class="nav-item" href="{% url 'medical' %}">Medical</a>
+      <a class="nav-item" href="{% url 'vet_login' %}">Vet Login</a>
+      <a class="nav-item" href="{% url 'admin_login' %}">Admin Login</a>
+      <a class="nav-item" href="{% url 'admin_workplace' %}">Admin</a>
+    </nav>
+    {% endif %}
+    {% endblock %}
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Worker Registry</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { primary: "#CF1020" },
+          fontFamily: { display: ["Lexend"] },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Lexend', sans-serif; }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gray-50">
+  <nav class="bg-white shadow-sm px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <span class="material-icons text-primary text-3xl">agriculture</span>
+      <h1 class="text-xl font-bold">FarmAdmin - Worker Registry</h1>
+    </div>
+    <a href="{% url 'worker_reg' %}" class="text-primary font-semibold text-sm">Back to Register</a>
+  </nav>
+
+  <main class="max-w-6xl mx-auto p-10 space-y-6">
+    <div class="bg-white p-6 rounded-2xl shadow-lg">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <h2 class="text-2xl font-bold">All Workers</h2>
+        <form method="get" class="flex gap-2">
+          <input
+            type="text"
+            name="q"
+            value="{{ q }}"
+            placeholder="Search name or phone..."
+            class="w-full md:w-80 border-2 border-gray-300 focus:border-primary rounded-xl px-4 py-3 outline-none"
+          />
+          <button class="bg-primary text-white px-5 rounded-xl font-semibold">Search</button>
+        </form>
+      </div>
+
+      <div class="mt-6 overflow-hidden rounded-xl border border-gray-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-primary/10 text-left">
+            <tr>
+              <th class="p-3">Worker</th>
+              <th class="p-3">Phone</th>
+              <th class="p-3">Language</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Registered</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for w in page_obj %}
+            <tr class="border-t">
+              <td class="p-3 font-semibold">
+                <div class="flex items-center gap-3">
+                  {% if w.photo %}
+                  <img src="{{ w.photo.url }}" alt="{{ w.full_name }}" class="w-9 h-9 rounded-full object-cover border border-gray-200" />
+                  {% else %}
+                  <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center border border-gray-200">
+                    <span class="material-icons text-primary text-base">person</span>
+                  </div>
+                  {% endif %}
+                  <span>{{ w.full_name }}</span>
+                </div>
+              </td>
+              <td class="p-3">{{ w.phone_number }}</td>
+              <td class="p-3">{{ w.get_preferred_language_display }}</td>
+              <td class="p-3 {% if w.is_active %}text-green-600{% else %}text-amber-600{% endif %} font-bold">
+                {% if w.is_active %}Active{% else %}Pending{% endif %}
+              </td>
+              <td class="p-3 text-gray-600">{{ w.created_at|date:"M d, Y" }}</td>
+            </tr>
+            {% empty %}
+            <tr class="border-t">
+              <td colspan="5" class="p-6 text-center text-gray-500">No workers found.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="mt-6 flex items-center justify-between text-sm">
+        <div class="text-gray-600">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </div>
+        <div class="flex gap-2">
+          {% if page_obj.has_previous %}
+          <a class="px-3 py-2 rounded-lg border border-gray-200 hover:border-primary" href="?q={{ q }}&page={{ page_obj.previous_page_number }}">Previous</a>
+          {% endif %}
+          {% if page_obj.has_next %}
+          <a class="px-3 py-2 rounded-lg border border-gray-200 hover:border-primary" href="?q={{ q }}&page={{ page_obj.next_page_number }}">Next</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </main>
+</body>
+</html>
+

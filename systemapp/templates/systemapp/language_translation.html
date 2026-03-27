@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="dark" dir="rtl" lang="ur"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ورکر ڈیش بورڈ - مویشی فارم</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Noto+Sans+Arabic:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#9dee2b",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#1a2210",
+                        "warning-yellow": "#facc15",
+                        "urgent-orange": "#fb923c"
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "Noto Sans Arabic", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Noto Sans Arabic', 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex h-full min-h-screen w-full flex-row overflow-x-hidden">
+<!-- Sidebar (Right-aligned for RTL) -->
+<aside class="fixed inset-y-0 right-0 z-50 w-64 bg-background-light dark:bg-[#12180b] border-l border-primary/10 transition-transform lg:translate-x-0">
+<div class="flex flex-col h-full p-6">
+<div class="flex items-center gap-3 mb-10 px-2">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-background-dark">
+<span class="material-symbols-outlined font-bold">agriculture</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">مویشی فارم</h2>
+</div>
+<nav class="flex-1 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/20 text-primary border border-primary/20" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">ڈیش بورڈ</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">pets</span>
+<span class="font-medium">مویشی</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">task_alt</span>
+<span class="font-medium">کام</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-medium">رپورٹس</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">ترتیبات</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5">
+<div class="flex items-center gap-3 px-2">
+<div class="size-10 rounded-full bg-primary/20 flex items-center justify-center overflow-hidden border border-primary/30">
+<img class="w-full h-full object-cover" data-alt="Worker profile photo avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQnyhX7S0bNSuSFKUMx_PYRqwC7awRVmb7hUKC41luEWn0BQWhIPZwL2QisDeCDvRvkXyYknaynnHwP1zuXarqHJ8ZF_IRNBTnngaejf-LL4-RtP9bjAzNM6IpqXWHFkh2Je0rNEmrUNasnGiNhNnFWTXyb4Dx0OAii0k0knA7e8aP6rNndYljleljuPdJAIV1Lw8IE977P_QZJIo4WQ9QgV1N41TbVKpr8UGsCpZENB5cQiiijo-MjwAaxuQ2mo97Zlkk77f0-ek"/>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold">علی خان</span>
+<span class="text-xs text-slate-400">فارم ورکر</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 mr-64">
+<!-- Top Header -->
+<header class="h-20 flex items-center justify-between px-8 bg-background-light/50 dark:bg-background-dark/50 backdrop-blur-md sticky top-0 z-40 border-b border-white/5">
+<div class="flex items-center gap-6">
+<div class="relative w-96 group">
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-white dark:bg-[#1b2512] border-none rounded-xl pr-11 pl-4 h-11 focus:ring-2 focus:ring-primary/50 text-sm" placeholder="تلاش کریں..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm">
+<span class="material-symbols-outlined text-sm">calendar_month</span>
+<span>۲۴ مئی، ۲۰۲۴</span>
+</div>
+<button class="size-11 rounded-xl bg-white dark:bg-[#1b2512] flex items-center justify-center hover:bg-primary/10 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2.5 right-2.5 size-2 bg-red-500 rounded-full border-2 border-[#1a2210]"></span>
+</button>
+<button class="px-4 h-11 rounded-xl bg-primary text-background-dark font-bold text-sm flex items-center gap-2">
+<span class="material-symbols-outlined">add</span>
+                        نیا ریکارڈ
+                    </button>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- AI Urgent Alert Banner -->
+<div class="bg-gradient-to-l from-urgent-orange/20 to-transparent border-r-4 border-urgent-orange p-6 rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-12 rounded-full bg-urgent-orange/20 flex items-center justify-center text-urgent-orange">
+<span class="material-symbols-outlined text-3xl">emergency_home</span>
+</div>
+<div>
+<h3 class="text-lg font-bold text-urgent-orange">فوری الرٹ: صحت کا مسئلہ</h3>
+<p class="text-slate-300">بھینس نمبر 4 بیمار محسوس ہو رہی ہے۔ اے آئی سسٹم نے غیر معمولی درجہ حرارت کا پتہ لگایا ہے۔</p>
+</div>
+</div>
+<button class="bg-urgent-orange text-white px-6 py-2.5 rounded-lg font-bold hover:brightness-110 transition-all">
+                        تفصیلات دیکھیں
+                    </button>
+</div>
+<!-- Stats Overview -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="p-6 rounded-2xl bg-white dark:bg-[#1b2512] border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">pets</span>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">کل تعداد</span>
+</div>
+<h4 class="text-slate-400 text-sm mb-1">کل مویشی</h4>
+<div class="text-3xl font-black">۵۰</div>
+</div>
+<div class="p-6 rounded-2xl bg-white dark:bg-[#1b2512] border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-xl bg-warning-yellow/10 text-warning-yellow flex items-center justify-center">
+<span class="material-symbols-outlined">flatware</span>
+</div>
+<span class="text-xs font-bold text-warning-yellow bg-warning-yellow/10 px-2 py-1 rounded">جاری ہے</span>
+</div>
+<h4 class="text-slate-400 text-sm mb-1">آج کی خوراک</h4>
+<div class="text-3xl font-black">۸۵٪</div>
+</div>
+<div class="p-6 rounded-2xl bg-white dark:bg-[#1b2512] border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center">
+<span class="material-symbols-outlined">opacity</span>
+</div>
+<span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded">مکمل</span>
+</div>
+<h4 class="text-slate-400 text-sm mb-1">پانی کی فراہمی</h4>
+<div class="text-3xl font-black">۱۰۰٪</div>
+</div>
+<div class="p-6 rounded-2xl bg-white dark:bg-[#1b2512] border border-white/5 shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">done_all</span>
+</div>
+<span class="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">آج کے کام</span>
+</div>
+<h4 class="text-slate-400 text-sm mb-1">مکمل شدہ کام</h4>
+<div class="text-3xl font-black">۱۲/۱۵</div>
+</div>
+</div>
+<!-- Main Grid: Tasks and Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Daily Actions (Mirrored Cards) -->
+<div class="lg:col-span-2 space-y-6">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold">روزانہ کے اعمال</h2>
+<a class="text-primary text-sm font-bold hover:underline" href="#">سب دیکھیں</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Feeding -->
+<div class="group cursor-pointer">
+<div class="relative overflow-hidden rounded-2xl aspect-square mb-3">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Worker feeding cattle silage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDs4jY00ziQnJLNdwgRIGOtIV2xSbAkm0SVbfwqSaxrt6Rg8MG7UnYAe8L8N7hyPlz5RdMIA8mpxofbkN9rWanP9k7Hwkk2UZoUQFhvFntiOsOKKfyfovQF6WkJfu99MD_LM0iLbQqwEXv3B7mK75_GWEJpP-1tKWu2KZ7miSFDThDxt5fpPqVWGYae5IXoc7ZZKKG5O3eR0fpTxBj6ldkHBqPpibIChCzVt20U1U_oEKFZSxy3HxHrPWKpbGTLx64_UdHDCHYQv4"/>
+<div class="absolute bottom-4 right-4 z-20">
+<div class="size-10 rounded-full bg-primary text-background-dark flex items-center justify-center">
+<span class="material-symbols-outlined">grass</span>
+</div>
+</div>
+</div>
+<h3 class="text-lg font-bold group-hover:text-primary transition-colors">چارہ ڈالنا</h3>
+<p class="text-slate-400 text-sm">تمام جانوروں کی خوراک کا ریکارڈ درج کریں</p>
+</div>
+<!-- Cleaning -->
+<div class="group cursor-pointer">
+<div class="relative overflow-hidden rounded-2xl aspect-square mb-3">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Clean farm barn yard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2Rm2ywPZks3j1Fk_kKcJXaZck65zsn4TF6AtWN0mUAcmnaXAxFg8hYH15MDvrGImk6C3bYY8E6Q55K1v8Qp0yApvofKiHxKbwdNEy5sZ2RJaRLfFKJZaCc2uGFqOnwtG1r7Ce2vrdu3CUx_h2A_DTe04ZqMvD5LEnC3TaexTY0XUdNV1wa-dbvQdZYs9TKYBW5q2NWFFUk4ghoC8LJDGAU-u3zeYhGYGZ_B9j4iaoEIB4Fe62iOsUZnQexEAJyV7BTtoLg7wdi1o"/>
+<div class="absolute bottom-4 right-4 z-20">
+<div class="size-10 rounded-full bg-warning-yellow text-background-dark flex items-center justify-center">
+<span class="material-symbols-outlined">mop</span>
+</div>
+</div>
+</div>
+<h3 class="text-lg font-bold group-hover:text-warning-yellow transition-colors">صفائی ستھرائی</h3>
+<p class="text-slate-400 text-sm">باڑے کی صفائی اور جراثیم کش اسپرے</p>
+</div>
+<!-- Health Report -->
+<div class="group cursor-pointer">
+<div class="relative overflow-hidden rounded-2xl aspect-square mb-3">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent z-10"></div>
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Veterinary checkup medical report" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCs2ilXslqnH8_9xb3eFZcvkNJRsJ09APtbmG88PHoP2pEFwi_-YtdWLqTmrN3hoWhK2Xwq-H7aEFO27dGHHZewcjvwxQtaTwLYBQEgq_WVoiKxj2JlNduLE7YsSGqV8KF7E63TQxzz-OLbAJQzUq3jcNmmTDaHWWCrde8hVipvHpp2oSi5DPUpnXvTMljmby4HwfQxPB6HDtwJd-07MDr8hbLTBEatpfDXe559VwS0I4MEUc5VDochn9KWulgtDuaU-MhwtvVAZo4"/>
+<div class="absolute bottom-4 right-4 z-20">
+<div class="size-10 rounded-full bg-urgent-orange text-white flex items-center justify-center">
+<span class="material-symbols-outlined">medical_services</span>
+</div>
+</div>
+</div>
+<h3 class="text-lg font-bold group-hover:text-urgent-orange transition-colors">صحت کی رپورٹ</h3>
+<p class="text-slate-400 text-sm">طبی معائنہ اور ویکسینیشن اپ ڈیٹ کریں</p>
+</div>
+</div>
+</div>
+<!-- Task List (Checklist) -->
+<div class="bg-white dark:bg-[#1b2512] rounded-2xl border border-white/5 p-6 h-fit">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-xl font-bold">آج کے کام</h2>
+<span class="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-bold">۳ باقی ہیں</span>
+</div>
+<div class="space-y-4">
+<label class="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-background-light dark:bg-background-dark cursor-pointer hover:border-primary/50 transition-colors">
+<input checked="" class="size-5 rounded border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold line-through text-slate-500">صبح کا دودھ نکالنا</span>
+<span class="text-xs text-slate-500">مکمل: صبح ۶:۰۰ بجے</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-background-light dark:bg-background-dark cursor-pointer hover:border-primary/50 transition-colors">
+<input class="size-5 rounded border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold">تازہ چارہ مکس کرنا</span>
+<span class="text-xs text-slate-400">وقت: دوپہر ۱۲:۰۰ بجے</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-background-light dark:bg-background-dark cursor-pointer hover:border-primary/50 transition-colors">
+<input class="size-5 rounded border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-urgent-orange">بھینس نمبر 4 کا معائنہ</span>
+<span class="text-xs text-urgent-orange/80">فوری کام</span>
+</div>
+</label>
+<label class="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-background-light dark:bg-background-dark cursor-pointer hover:border-primary/50 transition-colors">
+<input class="size-5 rounded border-white/20 bg-transparent text-primary focus:ring-primary focus:ring-offset-background-dark" type="checkbox"/>
+<div class="flex flex-col">
+<span class="text-sm font-bold">ویکسینیشن اسٹاک چیک</span>
+<span class="text-xs text-slate-400">وقت: شام ۴:۰۰ بجے</span>
+</div>
+</label>
+<button class="w-full py-3 rounded-xl border-2 border-dashed border-white/10 text-slate-400 hover:border-primary/50 hover:text-primary transition-all text-sm font-bold mt-2">
+                                + نیا ٹاسک شامل کریں
+                            </button>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table -->
+<div class="bg-white dark:bg-[#1b2512] rounded-2xl border border-white/5 overflow-hidden">
+<div class="px-6 py-5 border-b border-white/5 flex items-center justify-between">
+<h2 class="text-xl font-bold">حالیہ ریکارڈز</h2>
+<button class="text-sm bg-white/5 px-4 py-2 rounded-lg hover:bg-white/10">فلٹر</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-right">
+<thead class="bg-white/5 text-slate-400 text-sm">
+<tr>
+<th class="px-6 py-4 font-bold">جانور آئی ڈی</th>
+<th class="px-6 py-4 font-bold">سرگرمی</th>
+<th class="px-6 py-4 font-bold">وقت</th>
+<th class="px-6 py-4 font-bold">اسٹیٹس</th>
+<th class="px-6 py-4 font-bold">ورکر</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-white/5">
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium">B-042</td>
+<td class="px-6 py-4">خوراک: مکس سائیلج</td>
+<td class="px-6 py-4">۱۰:۳۰ صبح</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-green-500/10 text-green-500 text-xs font-bold">مکمل</span></td>
+<td class="px-6 py-4">علی خان</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium">C-015</td>
+<td class="px-6 py-4">طبی معائنہ: بخار</td>
+<td class="px-6 py-4">۰۹:۱۵ صبح</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-urgent-orange/10 text-urgent-orange text-xs font-bold">زیر غور</span></td>
+<td class="px-6 py-4">ڈاکٹر عاصم</td>
+</tr>
+<tr class="hover:bg-white/5 transition-colors">
+<td class="px-6 py-4 font-medium">B-008</td>
+<td class="px-6 py-4">دودھ کی پیداوار: ۱۲ لیٹر</td>
+<td class="px-6 py-4">۰۶:۰۰ صبح</td>
+<td class="px-6 py-4"><span class="px-2 py-1 rounded bg-green-500/10 text-green-500 text-xs font-bold">مکمل</span></td>
+<td class="px-6 py-4">ساجد علی</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

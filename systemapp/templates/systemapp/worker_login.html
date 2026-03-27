@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Worker Secure Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#7E191B",
+                        background: "#f8faf8"
+                    },
+                    fontFamily: {
+                        display: ["Lexend"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Lexend', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-background min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-6xl bg-white rounded-3xl shadow-2xl flex overflow-hidden">
+
+        <!-- Left Panel -->
+        <div class="w-1/2 bg-primary text-white p-12 flex flex-col justify-center space-y-6 relative overflow-hidden">
+            <div class="absolute inset-0">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/A_farmer_and_his_cows.jpg" alt=""
+                    class="h-full w-full object-cover object-center"
+                    style="filter:saturate(1.05) contrast(1.05) brightness(0.92);" />
+            </div>
+            <div class="absolute inset-0" style="background: rgba(126, 25, 27, 0.78);"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-black/10 via-transparent to-black/35"></div>
+
+            <div class="relative z-10 space-y-6">
+                <h2 class="text-4xl font-bold" id="welcomeText">Worker Access Portal</h2>
+                <p class="text-lg opacity-90" id="descriptionText">
+                    Secure login for farm workers. Enter your credentials to access the dashboard.
+                </p>
+
+                <!-- Language Selector -->
+                <div>
+                    <label class="block text-sm mb-2 font-semibold" id="langLabel">Select Language</label>
+                    <select id="languageSelect" class="w-full text-black px-4 py-3 rounded-lg">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी (Hindi)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="ur">اردو (Urdu)</option>
+                        <option value="ml">മലയാളം (Malayalam)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="w-1/2 p-12 flex flex-col justify-center space-y-8">
+
+            <h1 class="text-3xl font-bold" id="loginTitle">Worker Login</h1>
+            <p class="text-gray-500" id="instructionText">Enter your credentials to continue.</p>
+
+            {% if messages %}
+            <div class="space-y-2">
+                {% for message in messages %}
+                <div
+                    class="rounded-lg px-4 py-3 text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700{% elif message.tags == 'success' %}bg-green-50 text-green-700{% else %}bg-blue-50 text-blue-700{% endif %}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <form class="space-y-6" method="post" action="{% url 'worker_login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="language" id="languageHidden" value="en" />
+                <div>
+                    <label class="block text-sm font-semibold mb-2" id="usernameLabel">Username</label>
+                    <input type="text" name="username" required id="usernameInput" placeholder="Enter your username"
+                        class="w-full border-2 border-gray-300 focus:border-primary rounded-xl px-4 py-4 text-lg outline-none" />
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-2" id="passwordLabel">Password</label>
+                    <input type="password" name="password" required id="passwordInput" placeholder="Enter your password"
+                        class="w-full border-2 border-gray-300 focus:border-primary rounded-xl px-4 py-4 text-lg outline-none" />
+                </div>
+                <button type="submit"
+                    class="w-full bg-primary text-white py-4 rounded-xl text-xl font-bold hover:opacity-90 transition"
+                    id="loginBtn">
+                    Login Securely
+                </button>
+            </form>
+
+            <p class="text-sm text-gray-500 text-center" id="registerText">
+                New worker? <a href="{% url 'worker_register' %}"
+                    class="text-primary font-semibold hover:underline ml-1" id="registerLink">Register Now</a>
+            </p>
+
+        </div>
+
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                welcome: "Worker Access Portal",
+                description: "Secure login for farm workers. Enter your credentials to access the dashboard.",
+                langLabel: "Select Language",
+                loginTitle: "Worker Login",
+                instruction: "Enter your credentials to continue.",
+                usernameLabel: "Username",
+                usernamePlaceholder: "Enter your username",
+                passwordLabel: "Password",
+                passwordPlaceholder: "Enter your password",
+                loginBtn: "Login Securely",
+                registerText: "New worker?",
+                registerLink: "Register Now"
+            },
+            hi: {
+                welcome: "वर्कर एक्सेस पोर्टल",
+                description: "फार्म वर्कर्स के लिए सुरक्षित लॉगिन। डैशबोर्ड एक्सेस करने के लिए अपने क्रेडेंशियल्स दर्ज करें।",
+                langLabel: "भाषा चुनें",
+                loginTitle: "वर्कर लॉगिन",
+                instruction: "जारी रखने के लिए अपने क्रेडेंशियल्स दर्ज करें।",
+                usernameLabel: "यूज़रनेम",
+                usernamePlaceholder: "अपना यूज़रनेम दर्ज करें",
+                passwordLabel: "पासवर्ड",
+                passwordPlaceholder: "अपना पासवर्ड दर्ज करें",
+                loginBtn: "सुरक्षित लॉगिन",
+                registerText: "नए वर्कर?",
+                registerLink: "अब रजिस्टर करें"
+            },
+            ta: {
+                welcome: "தொழிலாளர் அணுகல் போர்டல்",
+                description: "பண்ணை தொழிலாளர்களுக்கான பாதுகாப்பான உள்நுழைவு. டாஷ்போர்டை அணுக உங்கள் விவரங்களை உள்ளிடவும்.",
+                langLabel: "மொழியை தேர்வு செய்க",
+                loginTitle: "தொழிலாளர் உள்நுழைவு",
+                instruction: "தொடர உங்கள் விவரங்களை உள்ளிடவும்.",
+                usernameLabel: "பயனர் பெயர்",
+                usernamePlaceholder: "உங்கள் பயனர் பெயரை உள்ளிடவும்",
+                passwordLabel: "கடவுச்சொல்",
+                passwordPlaceholder: "உங்கள் கடவுச்சொல்லை உள்ளிடவும்",
+                loginBtn: "பாதுகாப்பான உள்நுழைவு",
+                registerText: "புதிய தொழிலாளரா?",
+                registerLink: "இப்போது பதிவு செய்க"
+            },
+            ur: {
+                welcome: "ورکر ایکسیس پورٹل",
+                description: "فارم ورکرز کے لیے محفوظ لاگ اِن۔ ڈیش بورڈ تک رسائی کے لیے اپنی اسناد درج کریں۔",
+                langLabel: "زبان منتخب کریں",
+                loginTitle: "ورکر لاگ اِن",
+                instruction: "جاری رکھنے کے لیے اپنی اسناد درج کریں۔",
+                usernameLabel: "صارف نام",
+                usernamePlaceholder: "اپنا صارف نام درج کریں",
+                passwordLabel: "پاس ورڈ",
+                passwordPlaceholder: "اپنا پاس ورڈ درج کریں",
+                loginBtn: "محفوظ لاگ اِن",
+                registerText: "نئے ورکر؟",
+                registerLink: "ابھی رجسٹر کریں"
+            },
+            ml: {
+                welcome: "തൊഴിലാളി ആക്സസ് പോർട്ടൽ",
+                description: "ഫാം തൊഴിലാളികൾക്കുള്ള സുരക്ഷിത ലോഗിൻ. ഡാഷ്ബോർഡ് ആക്സസ് ചെയ്യാൻ നിങ്ങളുടെ ക്രെഡൻഷ്യലുകൾ നൽകുക.",
+                langLabel: "ഭാഷ തിരഞ്ഞെടുക്കുക",
+                loginTitle: "തൊഴിലാളി ലോഗിൻ",
+                instruction: "തുടരാൻ നിങ്ങളുടെ ക്രെഡൻഷ്യലുകൾ നൽകുക.",
+                usernameLabel: "ഉപയോക്തൃനാമം",
+                usernamePlaceholder: "നിങ്ങളുടെ ഉപയോക്തൃനാമം നൽകുക",
+                passwordLabel: "പാസ്‌വേഡ്",
+                passwordPlaceholder: "നിങ്ങളുടെ പാസ്‌വേഡ് നൽകുക",
+                loginBtn: "സുരക്ഷിത ലോഗിൻ",
+                registerText: "പുതിയ തൊഴിലാളി?",
+                registerLink: "ഇപ്പോൾ രജിസ്റ്റർ ചെയ്യുക"
+            }
+        };
+
+        document.getElementById("languageSelect").addEventListener("change", function () {
+            const lang = this.value;
+            const t = translations[lang] || translations.en;
+
+            document.getElementById("languageHidden").value = lang;
+
+            document.getElementById("welcomeText").innerText = t.welcome;
+            document.getElementById("descriptionText").innerText = t.description;
+            document.getElementById("langLabel").innerText = t.langLabel;
+
+            document.getElementById("loginTitle").innerText = t.loginTitle;
+            document.getElementById("instructionText").innerText = t.instruction;
+            document.getElementById("usernameLabel").innerText = t.usernameLabel;
+            document.getElementById("usernameInput").placeholder = t.usernamePlaceholder;
+            document.getElementById("passwordLabel").innerText = t.passwordLabel;
+            document.getElementById("passwordInput").placeholder = t.passwordPlaceholder;
+            document.getElementById("loginBtn").innerText = t.loginBtn;
+            document.getElementById("registerLink").innerText = t.registerLink;
+
+            const regP = document.getElementById("registerText");
+            regP.childNodes[0].textContent = t.registerText + " ";
+
+            if (lang === "ur") {
+                document.documentElement.setAttribute("dir", "rtl");
+            } else {
+                document.documentElement.setAttribute("dir", "ltr");
+            }
+
+            localStorage.setItem("workerPreferredLanguage", lang);
+        });
+
+        (function () {
+            const saved = localStorage.getItem("workerPreferredLanguage");
+            if (saved && document.getElementById("languageSelect")) {
+                document.getElementById("languageSelect").value = saved;
+                document.getElementById("languageSelect").dispatchEvent(new Event("change"));
+            }
+        })();
+    </script>
+
+</body>
+
+</html>

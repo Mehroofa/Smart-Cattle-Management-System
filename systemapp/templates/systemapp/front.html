@@ -1,0 +1,192 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cattle System Home (Warm Theme)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary-brown": "#3d2b1f",
+                        "accent-pink": "#f4dada",
+                        "soft-cream": "#fdfcf0",
+                        "earthy-brown": "#5d4037",
+                        "warm-highlight": "#ff8a80",
+                    },
+                    fontFamily: {
+                        "display": ["Crimson Pro", "serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+            --chocolate: #3d2b1f;
+            --cream: #fdfcf0;
+            --pink: #f4dada;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            background-color: var(--cream);
+        }
+        .academic-title {
+            font-family: 'Crimson Pro', serif;
+        }
+        .ios-blur {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-primary-brown min-h-screen flex flex-col">
+<div class="h-11 w-full bg-primary-brown sticky top-0 z-50"></div>
+<header class="sticky top-11 z-50 bg-primary-brown text-soft-cream shadow-md">
+<div class="px-6 py-4 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-accent-pink rounded-full flex items-center justify-center">
+<span class="material-icons text-primary-brown text-2xl">agriculture</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold tracking-widest uppercase academic-title">Bovines</span>
+<span class="text-[10px] text-white/70 font-medium leading-none uppercase tracking-tighter">Academic Research Unit</span>
+</div>
+</div>
+<div class="flex items-center bg-white/10 rounded-full px-3 py-1.5 border border-white/20">
+<span class="material-icons text-accent-pink text-sm mr-1">language</span>
+<button class="text-xs font-semibold text-soft-cream">EN</button>
+<span class="mx-1.5 text-white/30 text-xs">|</span>
+<button class="text-xs font-semibold text-white/50">HI</button>
+</div>
+</div>
+</header>
+<main class="flex-1 bg-soft-cream">
+
+    <!-- DESKTOP HORIZONTAL HERO -->
+    <section class="max-w-7xl mx-auto px-10 py-16 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+  
+      <!-- LEFT CONTENT -->
+      <div class="space-y-6">
+        <h1 class="text-5xl font-bold academic-title text-primary-brown leading-tight">
+          Smart <span class="italic text-earthy-brown">Cattle</span><br />
+          Management System
+        </h1>
+  
+        <p class="text-earthy-brown/80 text-lg max-w-xl">
+          A research-oriented platform for cattle health monitoring,
+          multilingual worker reporting, and veterinary oversight.
+        </p>
+  
+        <!-- ACTION BUTTONS -->
+        <div class="flex gap-6 pt-4 flex-wrap">
+          <a
+            href="{% url 'admin_login' %}"
+            class="bg-primary-brown hover:bg-earthy-brown text-soft-cream px-8 py-4 rounded-xl font-bold flex items-center gap-3 shadow-lg">
+            <span class="material-symbols-outlined">admin_panel_settings</span>
+            Admin Portal
+          </a>
+
+          <a
+            href="{% url 'portal' %}"
+            class="bg-white hover:bg-[#f7efe7] text-primary-brown px-8 py-4 rounded-xl font-bold flex items-center gap-3 border border-primary-brown/15">
+            <span class="material-symbols-outlined">space_dashboard</span>
+            Open Workspace
+          </a>
+
+          <a
+            href="{% url 'worker_login' %}"
+            class="bg-accent-pink hover:bg-[#ebd0d0] text-primary-brown px-8 py-4 rounded-xl font-bold flex items-center gap-3 border border-primary-brown/10">
+            <span class="material-symbols-outlined">engineering</span>
+            Worker Access
+          </a>
+
+          <a
+            href="{% url 'worker_reg' %}"
+            class="bg-[#d8ebff] hover:bg-[#c8e2ff] text-primary-brown px-8 py-4 rounded-xl font-bold flex items-center gap-3 border border-primary-brown/10">
+            <span class="material-symbols-outlined">person_add</span>
+            Worker Registration
+          </a>
+
+          <a
+            href="{% url 'vet_login' %}"
+            class="bg-[#F8F0C4] hover:bg-[#efe5b0] text-primary-brown px-8 py-4 rounded-xl font-bold flex items-center gap-3 border border-primary-brown/10">
+            <span class="material-symbols-outlined">medical_services</span>
+            Vet Login
+          </a>
+        </div>
+  
+        <!-- FEATURES -->
+        <div class="grid grid-cols-3 gap-6 pt-10 max-w-md">
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
+              <span class="material-symbols-outlined text-earthy-brown">analytics</span>
+            </div>
+            <span class="text-xs font-bold uppercase text-earthy-brown/60">Metrics</span>
+          </div>
+  
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
+              <span class="material-symbols-outlined text-earthy-brown">vital_signs</span>
+            </div>
+            <span class="text-xs font-bold uppercase text-earthy-brown/60">Vitals</span>
+          </div>
+  
+          <div class="flex flex-col items-center gap-2">
+            <div class="w-14 h-14 bg-white rounded-xl shadow flex items-center justify-center">
+              <span class="material-symbols-outlined text-earthy-brown">inventory_2</span>
+            </div>
+            <span class="text-xs font-bold uppercase text-earthy-brown/60">Registry</span>
+          </div>
+        </div>
+      </div>
+  
+      <!-- RIGHT IMAGE -->
+      <div class="relative rounded-3xl overflow-hidden shadow-2xl">
+        <img
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXNBtcPtcgUnUQhgoyPdF1MKjBpEM_sFgzR7nDIRVEMDdBFU_Mz8wjBhwJr4xC5Ey_un-dhIyFbNkedeXlME7qPWQbaGrzD3s5aB8KWEks_o0D38yTcGD0JQh1Dwt8bO9DnLxw-XgjbZ4bu1T0vf-r1ONCCsp0mbTX1lYAtQJiPuArPVpolljXykbN_Yo5gutTUBQ7Pfof9GsEk_iBxhY-5tVtYLbQBs-QSMV96nsD_bL34PsQEBU9LHFvA9SZAJ3lw7IOAzw3i_s"
+          class="w-full h-[420px] object-cover"
+          alt="Healthy cattle"/>
+  
+        <div class="absolute inset-0 bg-gradient-to-t from-primary-brown/50 to-transparent"></div>
+      </div>
+  
+    </section>
+  
+  </main>
+  
+<footer class="mt-auto px-8 py-10 bg-[#f9f8e8] border-t border-primary-brown/5">
+<div class="flex flex-col items-center gap-6">
+<div class="flex gap-8 text-[10px] font-bold text-earthy-brown/40 uppercase tracking-[0.2em]">
+<a class="hover:text-primary-brown transition-colors" href="#">Support</a>
+<a class="hover:text-primary-brown transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary-brown transition-colors" href="#">Lab Policy</a>
+</div>
+<div class="text-center">
+<p class="text-[11px] text-earthy-brown/60 leading-relaxed font-medium">
+                © 2024 Institute of Livestock Research.
+            </p>
+<p class="text-[9px] text-earthy-brown/40 uppercase mt-1 tracking-widest">
+                Agricultural Data Systems Variant 1.0
+            </p>
+</div>
+<div class="w-12 h-1.5 bg-accent-pink rounded-full"></div>
+</div>
+</footer>
+<div class="h-8 bg-[#f9f8e8]"></div>
+
+</body></html>
+

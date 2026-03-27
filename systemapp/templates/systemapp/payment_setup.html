@@ -1,0 +1,347 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Pay Online - CattleTrade AI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#AA98A9",
+            "background-light": "#F5F5DC",
+            "background-dark": "#102210",
+          },
+          fontFamily: { "display": ["Inter", "sans-serif"] },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <header
+      class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 md:px-20 py-4 bg-white dark:bg-slate-900">
+      <div class="flex items-center gap-3 text-slate-900 dark:text-slate-100">
+        <div class="size-8 text-primary">
+          <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path clip-rule="evenodd"
+              d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z"
+              fill="currentColor" fill-rule="evenodd"></path>
+            <path clip-rule="evenodd"
+              d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z"
+              fill="currentColor" fill-rule="evenodd"></path>
+          </svg>
+        </div>
+        <h2 class="text-lg font-bold leading-tight tracking-tight">CattleTrade AI</h2>
+      </div>
+      <div class="flex gap-3 items-center">
+        <a href="{% url 'order_confirmation' order.id %}"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-all">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          <span>Back</span>
+        </a>
+        <a href="{% url 'logout' %}"
+          class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-all">
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span>Logout</span>
+        </a>
+      </div>
+    </header>
+
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-10 md:py-16">
+      <div class="max-w-[760px] w-full">
+        <div class="mb-6">
+          <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Pay Online</h1>
+          <p class="mt-1 text-sm text-slate-600 dark:text-slate-300">
+            Scan the QR with Google Pay / any UPI app, or transfer to the bank account below.
+          </p>
+        </div>
+
+        {% if messages %}
+        <div class="mb-6 space-y-2">
+          {% for message in messages %}
+          <div
+            class="rounded-xl px-4 py-3 text-sm border {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-700{% elif message.tags == 'success' %}bg-emerald-50 border-emerald-200 text-emerald-800{% else %}bg-slate-50 border-slate-200 text-slate-800{% endif %}">
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mb-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-5">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined">receipt_long</span>
+              </div>
+              <div>
+                <div class="text-sm font-extrabold">Order #{{ order.id }}</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">
+                  {{ order.cattle.breed|default:order.cattle.tag_id }} • {{ order.cattle.farm.farm_name|default:order.cattle.farm.name }}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <div class="text-right">
+                <div class="text-xs text-slate-500 dark:text-slate-400">Amount to pay</div>
+                <div class="text-lg font-extrabold">{{ currency }} {{ order.amount }}</div>
+              </div>
+              {% if payment_submission %}
+              <span
+                class="ml-2 text-xs font-extrabold px-3 py-1 rounded-full border {% if payment_submission.status == 'verified' %}bg-emerald-50 border-emerald-200 text-emerald-700{% elif payment_submission.status == 'submitted' %}bg-amber-50 border-amber-200 text-amber-700{% elif payment_submission.status == 'rejected' %}bg-red-50 border-red-200 text-red-700{% else %}bg-slate-50 border-slate-200 text-slate-700{% endif %}">
+                {{ payment_submission.status|title }}
+              </span>
+              {% else %}
+              <span class="ml-2 text-xs font-extrabold px-3 py-1 rounded-full border bg-slate-50 border-slate-200 text-slate-700">Not submitted</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">QR Code</h2>
+              <span class="text-xs font-semibold px-2 py-1 rounded-full bg-primary/10 text-primary">UPI</span>
+            </div>
+
+            <div class="mt-4 flex items-center justify-center">
+              <div
+                class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 w-[252px] h-[252px] flex items-center justify-center">
+                <div id="qrBox" class="rounded-md overflow-hidden"></div>
+                <noscript>
+                  <img width="220" height="220" alt="Sample QR code" class="block rounded-md"
+                    src="{% static 'systemapp/sample_qr.svg' %}" />
+                </noscript>
+              </div>
+            </div>
+
+            <div class="mt-5 space-y-3">
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500 dark:text-slate-400">Payee</span>
+                <span class="font-semibold">{{ payee_name }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500 dark:text-slate-400">UPI ID</span>
+                <span class="font-mono font-semibold" id="upiIdText">{{ upi_id }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-slate-500 dark:text-slate-400">Amount</span>
+                <span class="font-extrabold">{{ currency }} {{ order.amount }}</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                <a href="{{ upi_uri }}" id="openUpiBtn"
+                  class="flex items-center justify-center gap-2 rounded-lg h-11 bg-primary text-slate-900 text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-primary/20">
+                  <span class="material-symbols-outlined text-sm">open_in_new</span>
+                  <span>Open UPI App</span>
+                </a>
+                <button type="button" id="copyUpiBtn"
+                  class="flex items-center justify-center gap-2 rounded-lg h-11 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-slate-900/15">
+                  <span class="material-symbols-outlined text-sm">content_copy</span>
+                  <span>Copy UPI Link</span>
+                </button>
+              </div>
+
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Tip: If the UPI app doesn’t open automatically, copy the UPI link and paste it in your UPI app/browser.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6">
+            <div class="flex items-center justify-between">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Bank Transfer
+              </h2>
+              <span class="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">NEFT/IMPS</span>
+            </div>
+
+            <div class="mt-5 space-y-4">
+              <div class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                <span class="text-slate-500 dark:text-slate-400 text-sm">Bank</span>
+                <span class="text-slate-900 dark:text-slate-100 font-medium">{{ bank_name }}</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                <span class="text-slate-500 dark:text-slate-400 text-sm">Account Number</span>
+                <span class="text-slate-900 dark:text-slate-100 font-mono font-semibold">{{ bank_account_number }}</span>
+              </div>
+              <div class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                <span class="text-slate-500 dark:text-slate-400 text-sm">IFSC</span>
+                <span class="text-slate-900 dark:text-slate-100 font-mono font-semibold">{{ bank_ifsc }}</span>
+              </div>
+              <div class="flex justify-between items-center py-1">
+                <span class="text-slate-500 dark:text-slate-400 text-sm">Reference</span>
+                <span class="text-slate-900 dark:text-slate-100 font-semibold">Order #{{ order.id }}</span>
+              </div>
+
+              <div class="mt-2 rounded-xl bg-primary/5 border border-primary/20 p-4">
+                <p class="text-sm font-semibold">Payment note</p>
+                <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                  Please include <span class="font-semibold">Order #{{ order.id }}</span> as the reference so we can match your payment.
+                </p>
+              </div>
+
+              <button type="button" id="copyBankBtn"
+                class="w-full mt-3 flex items-center justify-center gap-2 rounded-lg h-11 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99] shadow-lg shadow-slate-900/15">
+                <span class="material-symbols-outlined text-sm">content_copy</span>
+                <span>Copy Bank Details</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Confirm Your Payment</h3>
+            <span class="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">Receipt upload</span>
+          </div>
+
+          <form class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">Payment method</label>
+              <select name="method" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <option value="UPI" {% if payment_submission and payment_submission.method == "UPI" %}selected{% endif %}>UPI</option>
+                <option value="BANK" {% if payment_submission and payment_submission.method == "BANK" %}selected{% endif %}>Bank Transfer (NEFT/IMPS)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">Transaction reference (UTR/Txn ID)</label>
+              <input name="transaction_reference" value="{% if payment_submission %}{{ payment_submission.transaction_reference }}{% endif %}"
+                placeholder="Eg: 1234567890 / UTR / Txn ID"
+                class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800" />
+              <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Add at least a reference OR upload a receipt screenshot.</p>
+            </div>
+
+            <div class="md:col-span-2">
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-2">Receipt screenshot (optional)</label>
+              <input type="file" name="receipt" accept="image/*,.pdf" class="w-full rounded-xl border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800" />
+              {% if payment_submission and payment_submission.receipt %}
+              <p class="mt-2 text-[11px] text-slate-500 dark:text-slate-400">
+                Current receipt: <a class="font-semibold text-primary hover:underline" href="{{ payment_submission.receipt.url }}" target="_blank" rel="noreferrer">View uploaded file</a>
+              </p>
+              {% endif %}
+            </div>
+
+            <div class="md:col-span-2 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+              <button type="submit"
+                class="w-full sm:w-auto px-5 h-11 rounded-lg bg-primary text-slate-900 text-sm font-extrabold shadow-lg shadow-primary/20 hover:scale-[1.01] active:scale-[0.99] transition">
+                Submit Payment for Verification
+              </button>
+              {% if support_email or support_phone %}
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">
+                Need help?
+                {% if support_email %}<span class="font-semibold">{{ support_email }}</span>{% endif %}
+                {% if support_email and support_phone %} • {% endif %}
+                {% if support_phone %}<span class="font-semibold">{{ support_phone }}</span>{% endif %}
+              </div>
+              {% endif %}
+            </div>
+          </form>
+        </div>
+
+        <div class="mt-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800 p-6">
+          <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Order Details</h3>
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div class="flex justify-between">
+              <span class="text-slate-500 dark:text-slate-400">Order</span>
+              <span class="font-semibold">#{{ order.id }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 dark:text-slate-400">Cattle</span>
+              <span class="font-semibold">{{ order.cattle.breed|default:order.cattle.tag_id }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 dark:text-slate-400">Tag ID</span>
+              <span class="font-mono font-semibold">#{{ order.cattle.tag_id }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-500 dark:text-slate-400">Farm</span>
+              <span class="font-semibold">{{ order.cattle.farm.farm_name|default:order.cattle.farm.name }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    (function () {
+      const upiUri = "{{ upi_uri|escapejs }}";
+
+      const copyBtn = document.getElementById("copyUpiBtn");
+      if (copyBtn) {
+        copyBtn.addEventListener("click", async function () {
+          try {
+            await navigator.clipboard.writeText(upiUri);
+            copyBtn.querySelector("span:last-child").textContent = "Copied!";
+            setTimeout(() => copyBtn.querySelector("span:last-child").textContent = "Copy UPI Link", 1400);
+          } catch (e) {
+            // Clipboard may be blocked; do nothing
+          }
+        });
+      }
+
+      const copyBankBtn = document.getElementById("copyBankBtn");
+      if (copyBankBtn) {
+        const bankText = [
+          "Bank: {{ bank_name|escapejs }}",
+          "Account: {{ bank_account_number|escapejs }}",
+          "IFSC: {{ bank_ifsc|escapejs }}",
+          "Reference: Order #{{ order.id }}",
+          "Amount: {{ currency }} {{ order.amount }}"
+        ].join("\\n");
+        copyBankBtn.addEventListener("click", async function () {
+          try {
+            await navigator.clipboard.writeText(bankText);
+            copyBankBtn.querySelector("span:last-child").textContent = "Copied!";
+            setTimeout(() => copyBankBtn.querySelector("span:last-child").textContent = "Copy Bank Details", 1400);
+          } catch (e) { }
+        });
+      }
+
+      const qrBox = document.getElementById("qrBox");
+      if (qrBox && window.QRCode && upiUri) {
+        qrBox.innerHTML = "";
+        new QRCode(qrBox, {
+          text: upiUri,
+          width: 220,
+          height: 220,
+          correctLevel: QRCode.CorrectLevel.M,
+        });
+      }
+    })();
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#A67B5B", "primary-dark": "#7b5a41", "mocha": "#3E2723", "background-light": "#F2EFE1",
+                        "background-dark": "#1A1612",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow-sm {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+        }
+    </style>
+    <title>FarmAI - Smart Cattle Management</title>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 overflow-x-hidden">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <header class="fixed top-0 z-50 w-full px-4 lg:px-20 py-3">
+            <nav
+                class="flex items-center justify-between backdrop-blur-md bg-white/80 dark:bg-mocha/80 border border-white/20 dark:border-primary/20 rounded-xl px-6 py-2 shadow-lg">
+                <div class="flex items-center gap-2">
+                    <div class="flex items-center justify-center size-9 rounded-lg bg-primary text-white">
+                        <span class="material-symbols-outlined text-xl">agriculture</span>
+                    </div>
+                    <h2 class="text-slate-900 dark:text-white text-lg font-bold tracking-tight">FarmAI</h2>
+                </div>
+                <div class="hidden md:flex flex-1 justify-center gap-6">
+                    <a class="text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-primary transition-colors"
+                        href="#">Home</a>
+                    <a class="text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-primary transition-colors"
+                        href="#">About Us</a>
+                    <a class="text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-primary transition-colors"
+                        href="#">Services</a>
+                    <a class="text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-primary transition-colors"
+                        href="#">Marketplace</a>
+                    <a class="text-slate-700 dark:text-slate-200 text-xs font-semibold hover:text-primary transition-colors"
+                        href="#">Contact</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <!-- Login Dropdown -->
+                    <div class="relative group">
+                        <button
+                            class="hidden sm:flex min-w-[80px] cursor-pointer items-center justify-center rounded-lg h-9 px-4 border border-primary text-primary text-xs font-bold hover:bg-primary/5 transition-all gap-1">
+                            <span>Login</span>
+                            <span
+                                class="material-symbols-outlined text-sm transition-transform group-hover:rotate-180">expand_more</span>
+                        </button>
+                        <div
+                            class="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-slate-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                            <a href="{% url 'customer_login' %}"
+                                class="flex items-center gap-3 px-4 py-3 text-xs font-semibold text-slate-700 hover:bg-primary/5 hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-base text-primary/70">shopping_cart</span>
+                                <span>Buyer Login</span>
+                            </a>
+                            <a href="{% url 'worker_login' %}"
+                                class="flex items-center gap-3 px-4 py-3 text-xs font-semibold text-slate-700 hover:bg-primary/5 hover:text-primary transition-colors border-t border-slate-100">
+                                <span class="material-symbols-outlined text-base text-primary/70">engineering</span>
+                                <span>Worker Login</span>
+                            </a>
+                            <a href="{% url 'vet_login' %}"
+                                class="flex items-center gap-3 px-4 py-3 text-xs font-semibold text-slate-700 hover:bg-primary/5 hover:text-primary transition-colors border-t border-slate-100">
+                                <span
+                                    class="material-symbols-outlined text-base text-primary/70">medical_services</span>
+                                <span>Vet Login</span>
+                            </a>
+                        </div>
+                    </div>
+                    <a href="{% url 'register_choice' %}"
+                        class="flex min-w-[90px] cursor-pointer items-center justify-center rounded-lg h-9 px-4 bg-primary text-white text-xs font-bold shadow-md hover:bg-primary-dark transition-all">
+                        <span>Register</span>
+                    </a>
+                </div>
+            </nav>
+        </header>
+        <main class="flex-1">
+            <section
+                class="relative h-[85vh] min-h-[500px] w-full flex items-center justify-center px-4 overflow-hidden">
+                <div class="absolute inset-0 z-0">
+                    <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent z-10"></div>
+                    <img alt="Expansive cattle herd in sunlit field" class="w-full h-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaO9Ln5yxekCYO_eg8APS0ERHf8FQwcVPXbzx7a1AfsyRoRi_lUMiWimL9ks2FLapSMABo3k8V9OJgnEUCiGrpuhrjm4RiPYl6mjJSqc5pGifBwpDwULQxev-8GE6dc8SonOAi4akDq7k_o-bpDYenDITTt4x2QRJPyvJrsKAwq5vcV6IbQQ0wclBRiI8Ipbxl4-4oKN3AkM3ZCUW4Irjk3ion_6DS4ogI09ehsi-hmYnxZI4biaKp-B_-bzD3dmdaYHKTvoy0kNy9" />
+                </div>
+                <div class="relative z-20 container mx-auto lg:px-20 flex flex-col items-start gap-6 max-w-[1400px]">
+                    <div class="max-w-2xl space-y-4">
+                        <span
+                            class="inline-block px-3 py-1 bg-primary/30 backdrop-blur-md border border-primary/40 rounded-full text-white font-bold text-[10px] uppercase tracking-widest">
+                            The Future of Farming
+                        </span>
+                        <h1
+                            class="text-white text-4xl md:text-6xl font-bold leading-[1.1] tracking-tight text-shadow-sm">
+                            Smart Cattle <span class="text-primary">Management</span> <br />&amp; Marketplace
+                        </h1>
+                        <p
+                            class="text-slate-200 text-base md:text-lg font-normal max-w-lg leading-relaxed text-shadow-sm opacity-90">
+                            Revolutionizing livestock farming with AI-driven insights, health monitoring, and a seamless
+                            marketplace experience for global farmers.
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="{% url 'get_started' %}"
+                            class="flex min-w-[140px] items-center justify-center rounded-lg h-12 px-6 bg-primary text-white text-base font-bold shadow-xl hover:scale-105 transition-transform">
+                            Get Started
+                        </a>
+                        <button
+                            class="flex min-w-[140px] items-center justify-center rounded-lg h-12 px-6 bg-white/10 backdrop-blur-md border border-white/30 text-white text-base font-bold hover:bg-white/20 transition-all">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <section class="py-16 px-4 lg:px-20 bg-background-light dark:bg-background-dark">
+                <div class="container mx-auto max-w-[1200px]">
+                    <div class="text-center mb-10 space-y-2">
+                        <h2 class="text-primary font-bold text-xs tracking-[0.2em] uppercase">Features &amp; Services
+                        </h2>
+                        <h3 class="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">Empowering Modern
+                            Farmers</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">storefront</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Livestock Marketplace</h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Buy and sell verified
+                                cattle with ease in our trusted, secure digital marketplace.</p>
+                        </div>
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">medical_services</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Vet Appointment System
+                            </h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Instantly schedule
+                                health checkups with certified livestock veterinarians.</p>
+                        </div>
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">badge</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Worker Management</h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Coordinate tasks,
+                                shifts, and productivity across your entire farm staff.</p>
+                        </div>
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">monitoring</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Farm Analytics</h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Gain deep AI insights
+                                into herd performance, growth trends, and yield.</p>
+                        </div>
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">verified_user</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Secure Access</h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Advanced role-based
+                                security to protect sensitive farm and financial data.</p>
+                        </div>
+                        <div
+                            class="group p-6 rounded-2xl bg-white dark:bg-mocha/20 border border-slate-200 dark:border-primary/10 hover:border-primary transition-all duration-300 shadow-sm hover:shadow-xl">
+                            <div
+                                class="size-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-2xl">map</span>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 text-slate-900 dark:text-white">Real-time Tracking</h4>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Monitor your cattle
+                                positions and pasture health via GPS integration.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="py-16 px-4 lg:px-20 bg-white dark:bg-background-dark/50">
+                <div class="container mx-auto max-w-[1200px]">
+                    <div class="text-center mb-12 space-y-2">
+                        <h2 class="text-primary font-bold text-xs tracking-[0.2em] uppercase">Simple Process</h2>
+                        <h3 class="text-2xl md:text-4xl font-bold text-slate-900 dark:text-white">How It Works</h3>
+                    </div>
+                    <div class="relative grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div
+                            class="absolute top-1/4 left-0 w-full h-0.5 bg-slate-100 dark:bg-mocha/30 -translate-y-1/2 hidden md:block">
+                        </div>
+                        <div class="relative flex flex-col items-center text-center gap-4 group">
+                            <div
+                                class="z-10 size-14 rounded-full bg-primary text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-xl">person_add</span>
+                            </div>
+                            <div class="space-y-1">
+                                <h5 class="text-lg font-bold text-slate-900 dark:text-white">Register</h5>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">Create your farm profile easily.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center text-center gap-4 group">
+                            <div
+                                class="z-10 size-14 rounded-full bg-white dark:bg-mocha border-2 border-primary text-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-xl">how_to_reg</span>
+                            </div>
+                            <div class="space-y-1">
+                                <h5 class="text-lg font-bold text-slate-900 dark:text-white">Admin Approval</h5>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">Verifying farm credentials.</p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center text-center gap-4 group">
+                            <div
+                                class="z-10 size-14 rounded-full bg-white dark:bg-mocha border-2 border-primary text-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-xl">dashboard</span>
+                            </div>
+                            <div class="space-y-1">
+                                <h5 class="text-lg font-bold text-slate-900 dark:text-white">Dashboard Access</h5>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">Full management suite access.</p>
+                            </div>
+                        </div>
+                        <div class="relative flex flex-col items-center text-center gap-4 group">
+                            <div
+                                class="z-10 size-14 rounded-full bg-white dark:bg-mocha border-2 border-primary text-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                                <span class="material-symbols-outlined text-xl">rocket_launch</span>
+                            </div>
+                            <div class="space-y-1">
+                                <h5 class="text-lg font-bold text-slate-900 dark:text-white">Perform Actions</h5>
+                                <p class="text-slate-600 dark:text-slate-400 text-xs">Start trading and growing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="bg-mocha text-slate-300 py-12 px-4 lg:px-20">
+            <div class="container mx-auto max-w-[1200px]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <div class="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
+                                <span class="material-symbols-outlined">agriculture</span>
+                            </div>
+                            <h2 class="text-white text-xl font-bold tracking-tight">FarmAI</h2>
+                        </div>
+                        <p class="text-xs leading-relaxed opacity-80">
+                            Empowering the agricultural community with next-generation AI tools and a global
+                            marketplace.
+                        </p>
+                    </div>
+                    <div>
+                        <h6 class="text-white font-bold text-sm mb-4">Quick Links</h6>
+                        <ul class="space-y-2 text-xs">
+                            <li><a class="hover:text-primary transition-colors" href="#">Home</a></li>
+                            <li><a class="hover:text-primary transition-colors" href="#">Marketplace</a></li>
+                            <li><a class="hover:text-primary transition-colors" href="#">Services</a></li>
+                            <li><a class="hover:text-primary transition-colors" href="#">Analytics</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="text-white font-bold text-sm mb-4">Contact Us</h6>
+                        <ul class="space-y-3 text-xs">
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-base">mail</span>
+                                support@farmai.com
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <span class="material-symbols-outlined text-primary text-base">call</span>
+                                +1 (555) 123-4567
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h6 class="text-white font-bold text-sm mb-4">Newsletter</h6>
+                        <p class="text-xs mb-3 opacity-80">Stay updated with AgTech.</p>
+                        <div class="flex gap-2">
+                            <input
+                                class="bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-xs w-full focus:ring-1 focus:ring-primary outline-none text-white"
+                                placeholder="Email" type="email" />
+                            <button
+                                class="bg-primary text-white px-3 py-2 rounded-lg hover:bg-primary-dark transition-all">
+                                <span class="material-symbols-outlined text-sm">send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-[10px] opacity-60">© 2024 FarmAI Inc. All rights reserved.</p>
+                    <div class="flex gap-4 text-[10px] opacity-60">
+                        <a class="hover:text-primary transition-colors" href="#">Privacy Policy</a>
+                        <a class="hover:text-primary transition-colors" href="#">Terms of Service</a>
+                    </div>
+                    <div class="flex gap-3">
+                        <a class="size-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+                            href="#">
+                            <span class="material-symbols-outlined text-xs">social_leaderboard</span>
+                        </a>
+                        <a class="size-7 rounded-full bg-white/5 flex items-center justify-center hover:bg-primary hover:text-white transition-all"
+                            href="#">
+                            <span class="material-symbols-outlined text-xs">share</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+</body>
+
+</html>

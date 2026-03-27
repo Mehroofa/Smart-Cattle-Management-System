@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Veterinarian Health Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#b5dfcf",
+                        "background-light": "#fdf2f8",
+                        "background-dark": "#1f2937",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111827] dark:text-white">
+<!-- Top App Bar with Vet Profile -->
+<header class="sticky top-0 z-40 bg-white dark:bg-background-dark border-b border-gray-100 dark:border-gray-800">
+<div class="flex items-center justify-between p-4 pb-2">
+<div class="flex items-center gap-3">
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary" data-alt="Portrait of a female veterinarian" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuABX3tcUoJseOEp20t5W7FrlwV8wmXCkYjFAslYCyUz8Yea2IWyC1CQp54UHDxUu00zqENatcVtCof9NIXdiOKfcLy70FVOsoeeIvEwQ1Nt8zlFCnteIa6gbj3erUXse2fdjtmJ5FmdTGUqV7qaczG8PgmsuhP53jd_r3MxuT39h_IrAenmG8kGYn4ZmVBIlyKBpXUuSpi3aPbKFiadcLRc2_PfCF082WW_IxPnNCoTJ-2CGfq6BM-rQSltf796-ov74fosjFL5');">
+</div>
+<div>
+<h1 class="text-sm font-bold leading-none">Dr. Sarah Miller</h1>
+<div class="flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-primary text-[14px] fill">verified</span>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Verified Vet</span>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex size-10 items-center justify-center rounded-lg bg-gray-50 dark:bg-gray-900 text-[#111827] dark:text-white">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Navigation Drawer (Represented as a Mobile Sidebar/Quick Menu) -->
+<!-- This is the hidden-until-toggled version from components, but displayed as a main nav -->
+<div class="px-4 py-2 flex gap-4 overflow-x-auto no-scrollbar bg-white dark:bg-background-dark border-b border-gray-100 dark:border-gray-800">
+<div class="flex flex-col items-center gap-1 min-w-[70px] border-b-2 border-primary pb-2">
+<span class="material-symbols-outlined text-primary fill">dashboard</span>
+<span class="text-[10px] font-bold">Dash</span>
+</div>
+<div class="flex flex-col items-center gap-1 min-w-[70px] opacity-40 pb-2">
+<span class="material-symbols-outlined">description</span>
+<span class="text-[10px] font-bold">Cases</span>
+</div>
+<div class="flex flex-col items-center gap-1 min-w-[70px] opacity-40 pb-2">
+<span class="material-symbols-outlined">pets</span>
+<span class="text-[10px] font-bold">Cattle</span>
+</div>
+<div class="flex flex-col items-center gap-1 min-w-[70px] opacity-40 pb-2">
+<span class="material-symbols-outlined">assessment</span>
+<span class="text-[10px] font-bold">Reports</span>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full items-stretch rounded-lg h-12">
+<div class="text-[#6b7280] flex border-none bg-white dark:bg-gray-900 items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-white dark:bg-gray-900 text-[#111827] dark:text-white focus:outline-0 focus:ring-0 h-full placeholder:text-[#6b7280] px-4 rounded-r-lg text-base font-normal" placeholder="Search farm or cattle ID..."/>
+</div>
+</label>
+</div>
+<!-- Section Header -->
+<div class="px-4 flex items-center justify-between">
+<h2 class="text-[#111827] dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em]">Pending Consultations</h2>
+<span class="bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded-full">12 New</span>
+</div>
+<!-- Consultation List -->
+<main class="flex flex-col gap-3 p-4">
+<!-- List Item 1 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[64px] shrink-0 border border-gray-100 dark:border-gray-800" data-alt="Close up of a Holstein cow" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCqCM1q5fyDr0M_P6x4F1sxqOnN2o0UQPWOYlET-g5wbY_uZJP5Fe-LXEP5fKLe1QSsp9kDQkwWM71qgsseKb00P_oceAnSyj5ueFYhetUV0eCmN62NG6JiHFLXGCpo7osySo4N1BZ8r6H7IGN4pdcoGsx3_ibWmuJA6N3M6WaAlRBROei-RfuT6oFp-jeapU7Ar9oIJyovDIFJqfmsF5INrEKCt73Y-t1AD_7e2wAC9b2eXh8pLrMpJ2WI2QyQNfbiPZFZMuLM");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#111827] dark:text-white text-base font-bold truncate">Green Valley Acres</p>
+<div class="size-3 rounded-full bg-red-500 animate-pulse"></div>
+</div>
+<p class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">ID: #CH-8802</p>
+<div class="mt-3 inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-primary text-sm fill">bolt</span>
+<p class="text-primary text-[11px] font-bold leading-tight uppercase tracking-wide">AI: Suspected Ketosis (85%)</p>
+</div>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-primary text-background-dark font-bold text-sm py-2 rounded-lg">Review Case</button>
+<button class="px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- List Item 2 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[64px] shrink-0 border border-gray-100 dark:border-gray-800" data-alt="Aerial view of cattle farm" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBoOkyQRYSSUhz5x9TdLBNtbeKNgYH1RDq5LidcG_tXxTYMephVRD-sOYinuHQIMF9y5Tt2pOd2YDDR4tG1wiOnyPFLXUCkx92Jieg1Pn8vpdcR9_MSfqYO_V_Vg0nkVfVhywmUqlv9Zqdq9GV4pVBhj176QaTXv7-30xWSDxjfC4Q7cyUM3uV3CV6Khz5a8-JcFqd7lWJggMaNQmTZS8lVOhdzwmeUTpZYtmhI3BZEmzEUrKfSNyp4BR9MHPN6Cz3p6J4BBCu1");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#111827] dark:text-white text-base font-bold truncate">Oak Ridge Farm</p>
+<div class="size-3 rounded-full bg-orange-400"></div>
+</div>
+<p class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">ID: #BX-4219</p>
+<div class="mt-3 inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-primary text-sm fill">bolt</span>
+<p class="text-primary text-[11px] font-bold leading-tight uppercase tracking-wide">AI: Early Mastitis (72%)</p>
+</div>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-primary text-background-dark font-bold text-sm py-2 rounded-lg">Review Case</button>
+<button class="px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+<!-- List Item 3 -->
+<div class="bg-white dark:bg-gray-900 rounded-xl p-4 shadow-sm border border-gray-100 dark:border-gray-800">
+<div class="flex gap-4 items-start">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[64px] shrink-0 border border-gray-100 dark:border-gray-800" data-alt="Close up of a brown calf" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCFcgrZS9FUDhvcCcH0dVl5j5E1y_dXv9dhIN1Ig3_7I05Aab8b9cqT2UWCUXZzVEfnuuMTclrrOCUYmmVOhJ3oR4qRk2YGHM_yQebEk551DpRa_TpcLl5KCbFO4G56GT8YuBrSJ9BC0AWVGXdwP7A90xz5jGCYO1OxhytKiwDMChuD-p2X9m5G45YRsZJeVGLs81kfK4GMj8WJ4GEDkYhGaRrnkaE5_ZX-JqtZfHfq1PQKbAjPOnzVBZpsuKQnSUKiJfBfQaDy");'></div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-[#111827] dark:text-white text-base font-bold truncate">Blue Sky Dairy</p>
+<div class="size-3 rounded-full bg-gray-500"></div>
+</div>
+<p class="text-xs font-mono text-gray-500 dark:text-gray-400 mt-0.5">ID: #CH-0114</p>
+<div class="mt-3 inline-flex items-center gap-1.5 bg-primary/10 border border-primary/20 px-2 py-1 rounded">
+<span class="material-symbols-outlined text-primary text-sm fill">bolt</span>
+<p class="text-primary text-[11px] font-bold leading-tight uppercase tracking-wide">AI: Respiratory Stress (61%)</p>
+</div>
+</div>
+</div>
+<div class="mt-4 flex gap-2">
+<button class="flex-1 bg-primary text-background-dark font-bold text-sm py-2 rounded-lg">Review Case</button>
+<button class="px-3 bg-gray-100 dark:bg-gray-800 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">more_horiz</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Navigation Bar Spacing -->
+<div class="h-24"></div>
+<!-- Quick Action Floating Button -->
+<div class="fixed bottom-6 right-6 z-50">
+<button class="flex size-14 items-center justify-center rounded-full bg-primary text-background-dark shadow-lg shadow-primary/40">
+<span class="material-symbols-outlined text-3xl font-bold">add</span>
+</button>
+</div>
+</body></html>

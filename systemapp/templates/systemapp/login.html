@@ -1,0 +1,112 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Login | FarmAI</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#A67B5B",
+            "primary-dark": "#7b5a41",
+            "background-light": "#F2EFE1",
+            "mocha": "#3E2723",
+          },
+          fontFamily: { "display": ["Space Grotesk", "sans-serif"] },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: "Space Grotesk", sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light min-h-screen flex items-center justify-center px-4 py-12">
+  <div class="w-full max-w-lg">
+    <!-- Header -->
+    <div class="text-center mb-10">
+      <a href="{% url 'home' %}" class="inline-flex items-center gap-2 mb-6">
+        <div class="flex items-center justify-center size-10 rounded-lg bg-primary text-white">
+          <span class="material-symbols-outlined">agriculture</span>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight">FarmAI</h2>
+      </a>
+      <h1 class="text-3xl font-bold text-slate-900 mb-2">Choose Your Portal</h1>
+      <p class="text-slate-500">Select your role to sign in to the appropriate dashboard.</p>
+    </div>
+
+    <!-- Login Options -->
+    <div class="space-y-4">
+      <!-- Buyer Login -->
+      <a href="{% url 'customer_login' %}"
+        class="flex items-center gap-5 bg-white rounded-2xl p-5 border border-slate-200 hover:border-primary hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 group">
+        <div
+          class="flex items-center justify-center size-14 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+          <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-slate-900">Buyer Login</h3>
+          <p class="text-sm text-slate-500">Access the livestock marketplace</p>
+        </div>
+        <span
+          class="material-symbols-outlined text-slate-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+      </a>
+
+      <!-- Worker Login -->
+      <a href="{% url 'worker_login' %}"
+        class="flex items-center gap-5 bg-white rounded-2xl p-5 border border-slate-200 hover:border-primary hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 group">
+        <div
+          class="flex items-center justify-center size-14 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+          <span class="material-symbols-outlined text-2xl">engineering</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-slate-900">Worker Login</h3>
+          <p class="text-sm text-slate-500">Manage daily farm tasks</p>
+        </div>
+        <span
+          class="material-symbols-outlined text-slate-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+      </a>
+
+      <!-- Vet Login -->
+      <a href="{% url 'vet_login' %}"
+        class="flex items-center gap-5 bg-white rounded-2xl p-5 border border-slate-200 hover:border-primary hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 group">
+        <div
+          class="flex items-center justify-center size-14 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-all">
+          <span class="material-symbols-outlined text-2xl">medical_services</span>
+        </div>
+        <div class="flex-1">
+          <h3 class="text-lg font-bold text-slate-900">Veterinarian Login</h3>
+          <p class="text-sm text-slate-500">Review cases & manage health records</p>
+        </div>
+        <span
+          class="material-symbols-outlined text-slate-400 group-hover:text-primary group-hover:translate-x-1 transition-all">arrow_forward</span>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-10 text-center space-y-3">
+      <p class="text-sm text-slate-500">
+        Don't have an account? <a href="{% url 'register_choice' %}"
+          class="text-primary font-bold hover:underline">Register Here</a>
+      </p>
+      <a href="{% url 'home' %}"
+        class="inline-flex items-center gap-1 text-sm text-slate-400 hover:text-primary transition-colors">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        Back to Home
+      </a>
+    </div>
+  </div>
+</body>
+
+</html>

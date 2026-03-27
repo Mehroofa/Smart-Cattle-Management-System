@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="page_title">Worker Copilot | CattlePro</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" />
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "worker-bg": "#FFCC99",
+            "worker-panel": "#FF9966",
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-worker-bg text-black min-h-screen flex">
+  <aside class="w-64 border-r border-black/10 hidden lg:flex flex-col bg-worker-panel sticky top-0 h-screen">
+    <div class="p-6 flex items-center gap-3">
+      <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white">
+        <span class="material-symbols-outlined text-2xl">agriculture</span>
+      </div>
+      <div>
+        <h1 class="font-bold text-sm">CattlePro</h1>
+        <p class="text-[10px] uppercase font-semibold tracking-widest text-black/70" data-i18n="copilot">Copilot</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-4 space-y-1">
+      <a href="{% url 'worker_dashboard' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span data-i18n="dashboard">Dashboard</span>
+      </a>
+
+      <a href="{% url 'nearby_vets' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">local_hospital</span>
+        <span data-i18n="nearby_vets">Nearby Vets</span>
+      </a>
+
+      <a href="{% url 'worker_copilot' %}"
+        class="flex items-center gap-3 px-3 py-2 bg-black/10 text-black rounded-lg font-extrabold">
+        <span class="material-symbols-outlined">support_agent</span>
+        <span data-i18n="ai_copilot">AI Copilot</span>
+      </a>
+
+      <a href="{% url 'language_translation' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">calendar_month</span>
+        <span data-i18n="schedules">Schedules</span>
+      </a>
+
+      <a href="{% url 'AI_issue_reporting' %}"
+        class="flex items-center gap-3 px-3 py-2 text-black hover:bg-black/5 rounded-lg">
+        <span class="material-symbols-outlined">analytics</span>
+        <span data-i18n="reports">Reports</span>
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-black/10">
+      <a href="{% url 'worker_logout' %}"
+        class="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-black/10 text-black font-extrabold hover:bg-black/15 transition-colors">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span data-i18n="logout">Log Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col min-w-0">
+    <header class="h-16 border-b border-black/10 bg-worker-panel sticky top-0 z-30 px-4 lg:px-8 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="material-symbols-outlined text-black">support_agent</span>
+        <div>
+          <div class="font-extrabold leading-tight" data-i18n="header_title">Worker AI Copilot</div>
+          <div class="text-xs text-black/70" data-i18n="header_sub">Health, vaccination, symptoms Q&A</div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <label for="languageSelector" class="text-xs font-semibold text-black" data-i18n="language">Language</label>
+          <select id="languageSelector" class="rounded-lg bg-worker-bg border border-black/15 text-sm py-2 px-3">
+            <option value="en">English</option>
+            <option value="hi">Hindi</option>
+            <option value="ml">Malayalam</option>
+            <option value="ta">Tamil</option>
+            <option value="ur">Urdu</option>
+          </select>
+        </div>
+
+        <a href="{% url 'worker_copilot' %}?reset=1"
+          class="inline-flex items-center gap-1 px-3 py-2 rounded-lg text-xs font-extrabold bg-worker-bg hover:bg-black/5 border border-black/10">
+          <span class="material-symbols-outlined text-sm">restart_alt</span>
+          <span data-i18n="reset">Reset</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="flex-1 px-4 lg:px-8 py-6 max-w-5xl w-full mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section class="lg:col-span-2">
+          <div class="bg-worker-panel rounded-2xl border border-black/10 shadow-sm overflow-hidden">
+            <div class="px-5 py-4 border-b border-black/10 flex items-center justify-between">
+              <div class="text-sm font-extrabold" data-i18n="chat">Chat</div>
+              <div class="text-xs text-black/70" data-i18n="disclaimer">Replies are guidance only — contact vet for emergencies</div>
+            </div>
+
+            <div id="chatScroll" class="p-5 space-y-3 max-h-[520px] overflow-y-auto">
+              {% if history %}
+              {% for m in history %}
+              {% if m.role == 'user' %}
+              <div class="flex justify-end">
+                <div class="max-w-[85%] rounded-2xl rounded-br-md bg-worker-bg border border-black/10 px-4 py-3 text-sm whitespace-pre-line text-black">
+                  {{ m.content }}
+                </div>
+              </div>
+              {% else %}
+              <div class="flex justify-start">
+                <div class="max-w-[85%] rounded-2xl rounded-bl-md bg-white/60 border border-black/10 px-4 py-3 text-sm whitespace-pre-line text-black">
+                  {{ m.content }}
+                </div>
+              </div>
+              {% endif %}
+              {% endfor %}
+              {% else %}
+              <div class="text-sm text-black">
+                <span data-i18n="examples">Ask something like:</span>
+                <ul class="list-disc pl-5 mt-2 space-y-1 text-xs text-black/70">
+                  <li data-i18n="ex1">“Cattle has fever and no appetite”</li>
+                  <li data-i18n="ex2">“When is FMD vaccination due?”</li>
+                  <li data-i18n="ex3">“Symptoms: cough and breathing problem”</li>
+                </ul>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="px-5 py-4 border-t border-black/10">
+              <form method="post" class="flex gap-3 items-end">
+                {% csrf_token %}
+                <input type="hidden" id="languageHidden" name="language" value="{{ language }}">
+                <div class="flex-1">
+                  <label class="block text-xs font-semibold text-black mb-2" data-i18n="message">Message</label>
+                  <textarea name="message" rows="3" data-i18n-placeholder="message_ph"
+                    placeholder="Type symptoms, vaccination question, or cattle tag id…"
+                    class="w-full rounded-xl border border-black/15 bg-worker-bg text-sm px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black/40 text-black"></textarea>
+                </div>
+                <button type="submit"
+                  class="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-xl bg-black text-white font-extrabold text-sm hover:opacity-95 active:opacity-90">
+                  <span class="material-symbols-outlined text-sm">send</span>
+                  <span data-i18n="send">Send</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <aside class="space-y-4">
+          <div class="bg-worker-panel rounded-2xl border border-black/10 p-5 shadow-sm">
+            <div class="text-sm font-extrabold mb-2" data-i18n="quick_help">Quick help</div>
+            <div class="text-xs text-black space-y-2">
+              <p class="font-semibold" data-i18n="include">Include:</p>
+              <ul class="list-disc pl-5 space-y-1 text-black/70">
+                <li data-i18n="inc1">Cattle tag id</li>
+                <li data-i18n="inc2">Age (months/years)</li>
+                <li data-i18n="inc3">Temperature (if measured)</li>
+                <li data-i18n="inc4">Appetite + water intake</li>
+                <li data-i18n="inc5">How long symptoms present</li>
+              </ul>
+              <p class="mt-2 font-semibold" data-i18n="emergency_signs">Emergency signs:</p>
+              <p class="text-black/70" data-i18n="emergency_list">Breathing trouble, seizures, heavy bleeding, severe bloat, unable to stand.</p>
+            </div>
+          </div>
+
+          <div class="bg-worker-panel rounded-2xl border border-black/10 p-5 shadow-sm">
+            <div class="text-sm font-extrabold mb-2" data-i18n="privacy">Privacy</div>
+            <p class="text-xs text-black/70" data-i18n="privacy_text">
+              Chat history is stored only in your browser session and is cleared with Reset.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const csrfToken = "{{ csrf_token }}";
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+      return "";
+    }
+
+    const i18n = {
+      en: { page_title: "Worker Copilot | CattlePro", copilot: "Copilot", dashboard: "Dashboard", nearby_vets: "Nearby Vets", ai_copilot: "AI Copilot", schedules: "Schedules", reports: "Reports", logout: "Log Out", header_title: "Worker AI Copilot", header_sub: "Health, vaccination, symptoms Q&A", language: "Language", reset: "Reset", chat: "Chat", disclaimer: "Replies are guidance only — contact vet for emergencies", examples: "Ask something like:", ex1: "“Cattle has fever and no appetite”", ex2: "“When is FMD vaccination due?”", ex3: "“Symptoms: cough and breathing problem”", message: "Message", message_ph: "Type symptoms, vaccination question, or cattle tag id…", send: "Send", quick_help: "Quick help", include: "Include:", inc1: "Cattle tag id", inc2: "Age (months/years)", inc3: "Temperature (if measured)", inc4: "Appetite + water intake", inc5: "How long symptoms present", emergency_signs: "Emergency signs:", emergency_list: "Breathing trouble, seizures, heavy bleeding, severe bloat, unable to stand.", privacy: "Privacy", privacy_text: "Chat history is stored only in your browser session and is cleared with Reset." },
+      hi: { page_title: "वर्कर कोपायलट | कैटलप्रो", copilot: "कोपायलट", dashboard: "डैशबोर्ड", nearby_vets: "पास के वेट", ai_copilot: "AI कोपायलट", schedules: "शेड्यूल", reports: "रिपोर्ट्स", logout: "लॉग आउट", header_title: "वर्कर AI कोपायलट", header_sub: "स्वास्थ्य, टीकाकरण, लक्षण Q&A", language: "भाषा", reset: "रीसेट", chat: "चैट", disclaimer: "यह केवल मार्गदर्शन है — आपात स्थिति में पशु चिकित्सक से संपर्क करें", examples: "उदाहरण:", ex1: "“पशु को बुखार है और भूख नहीं है”", ex2: "“FMD टीका कब देय है?”", ex3: "“लक्षण: खांसी और सांस की समस्या”", message: "संदेश", message_ph: "लक्षण, टीका प्रश्न, या टैग आईडी लिखें…", send: "भेजें", quick_help: "त्वरित मदद", include: "ये शामिल करें:", inc1: "टैग आईडी", inc2: "उम्र (महीने/साल)", inc3: "तापमान (यदि मापा हो)", inc4: "भूख + पानी पीना", inc5: "लक्षण कितने समय से", emergency_signs: "आपात संकेत:", emergency_list: "सांस में तकलीफ, दौरे, ज्यादा खून, गंभीर पेट फूलना, खड़ा न होना।", privacy: "गोपनीयता", privacy_text: "चैट इतिहास केवल सत्र में रहता है और रीसेट से साफ हो जाता है।" },
+      ml: { page_title: "വർകാർ കോപൈലറ്റ് | കാറ്റിൽപ്രോ", copilot: "കോപൈലറ്റ്", dashboard: "ഡാഷ്ബോർഡ്", nearby_vets: "അടുത്തുള്ള വെറ്റുകൾ", ai_copilot: "AI കോപൈലറ്റ്", schedules: "ഷെഡ്യൂളുകൾ", reports: "റിപ്പോർട്ടുകൾ", logout: "ലോഗ് ഔട്ട്", header_title: "വർകാർ AI കോപൈലറ്റ്", header_sub: "ആരോഗ്യം, വാക്സിൻ, ലക്ഷണങ്ങൾ Q&A", language: "ഭാഷ", reset: "റീസെറ്റ്", chat: "ചാറ്റ്", disclaimer: "ഇത് മാർഗ്ഗനിർദ്ദേശം മാത്രം — അടിയന്തിരത്തിൽ വെറ്റിനെ ബന്ധപ്പെടുക", examples: "ഉദാഹരണങ്ങൾ:", ex1: "“മൃഗത്തിന് ജ്വരവും ഭക്ഷണമില്ല”", ex2: "“FMD വാക്സിൻ എപ്പോൾ due?”", ex3: "“ലക്ഷണം: ചുമയും ശ്വാസതടസവും”", message: "സന്ദേശം", message_ph: "ലക്ഷണങ്ങൾ/വാക്സിൻ ചോദ്യം/ടാഗ് ഐഡി ടൈപ്പ് ചെയ്യുക…", send: "അയക്കുക", quick_help: "വേഗത്തിൽ സഹായം", include: "ഇവ ഉൾപ്പെടുത്തുക:", inc1: "ടാഗ് ഐഡി", inc2: "പ്രായം (മാസം/വർഷം)", inc3: "താപനില (അളന്നാൽ)", inc4: "ഭക്ഷണം + വെള്ളം കുടിക്കൽ", inc5: "എത്രകാലമായി ലക്ഷണങ്ങൾ", emergency_signs: "അടിയന്തിര ലക്ഷണങ്ങൾ:", emergency_list: "ശ്വാസതടസം, കുഴഞ്ഞുവീഴൽ, രക്തസ്രാവം, കടുത്ത വയർവീര്‌പ്പ്, നിൽക്കാൻ കഴിയാത്തത്.", privacy: "സ്വകാര്യത", privacy_text: "ചാറ്റ് ചരിത്രം സെഷനിൽ മാത്രം സൂക്ഷിക്കും; റീസെറ്റ് ചെയ്താൽ മായും." },
+      ta: { page_title: "வொர்கர் கோபைலட் | கேட்டில்ப்ரோ", copilot: "கோபைலட்", dashboard: "டாஷ்போர்டு", nearby_vets: "அருகிலுள்ள மருத்துவர்", ai_copilot: "AI கோபைலட்", schedules: "அட்டவணைகள்", reports: "அறிக்கைகள்", logout: "வெளியேறு", header_title: "வொர்கர் AI கோபைலட்", header_sub: "ஆரோக்கியம், தடுப்பூசி, அறிகுறிகள் Q&A", language: "மொழி", reset: "ரீசெட்", chat: "சாட்", disclaimer: "இது வழிகாட்டல் மட்டும் — அவசரத்தில் மருத்துவரை அணுகவும்", examples: "உதாரணங்கள்:", ex1: "“மாட்டுக்கு காய்ச்சல் மற்றும் பசியில்லை”", ex2: "“FMD தடுப்பூசி எப்போது due?”", ex3: "“அறிகுறி: இருமல் மற்றும் மூச்சுத்திணறல்”", message: "செய்தி", message_ph: "அறிகுறி/தடுப்பூசி கேள்வி/டேக் ஐடி எழுதுங்கள்…", send: "அனுப்பு", quick_help: "விரைவு உதவி", include: "இவை சேர்க்கவும்:", inc1: "டேக் ஐடி", inc2: "வயது (மாதம்/ஆண்டு)", inc3: "வெப்பநிலை (அளந்தால்)", inc4: "பசி + தண்ணீர் குடிப்பு", inc5: "எவ்வளவு நேரமாக அறிகுறி", emergency_signs: "அவசர அறிகுறிகள்:", emergency_list: "மூச்சுத்திணறல், குலுக்கல்/வலிப்பு, அதிக இரத்தம், கடும் வீக்கம், நிற்க முடியாத நிலை.", privacy: "தனியுரிமை", privacy_text: "சாட் வரலாறு செஷனில் மட்டுமே இருக்கும்; ரீசெட் செய்தால் நீங்கும்." },
+      ur: { page_title: "ورکر کوپائلٹ | کیٹل پرو", copilot: "کوپائلٹ", dashboard: "ڈیش بورڈ", nearby_vets: "قریبی ویٹس", ai_copilot: "AI کوپائلٹ", schedules: "شیڈول", reports: "رپورٹس", logout: "لاگ آؤٹ", header_title: "ورکر AI کوپائلٹ", header_sub: "صحت، ویکسین، علامات Q&A", language: "زبان", reset: "ری سیٹ", chat: "چیٹ", disclaimer: "یہ صرف رہنمائی ہے — ایمرجنسی میں ویٹرنری ڈاکٹر سے رابطہ کریں", examples: "مثالیں:", ex1: "“جانور کو بخار ہے اور بھوک نہیں”", ex2: "“FMD ویکسین کب due ہے؟”", ex3: "“علامات: کھانسی اور سانس کی تکلیف”", message: "پیغام", message_ph: "علامات/ویکسین سوال/ٹیگ آئی ڈی لکھیں…", send: "بھیجیں", quick_help: "فوری مدد", include: "یہ شامل کریں:", inc1: "ٹیگ آئی ڈی", inc2: "عمر (مہینے/سال)", inc3: "درجہ حرارت (اگر ناپا ہو)", inc4: "بھوک + پانی پینا", inc5: "علامات کب سے ہیں", emergency_signs: "ایمرجنسی علامات:", emergency_list: "سانس میں مشکل، دورے، زیادہ خون، شدید پیٹ پھولنا، کھڑا نہ ہونا۔", privacy: "پرائیویسی", privacy_text: "چیٹ ہسٹری صرف سیشن میں رہتی ہے اور ری سیٹ سے صاف ہو جاتی ہے۔" }
+    };
+
+    function applyLanguage(code) {
+      const lang = i18n[code] ? code : "en";
+      const dict = i18n[lang];
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+      localStorage.setItem("workerPreferredLanguage", lang);
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (dict[key]) el.textContent = dict[key];
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        if (dict[key]) el.setAttribute("placeholder", dict[key]);
+      });
+
+      const selector = document.getElementById("languageSelector");
+      if (selector) selector.value = lang;
+      const hidden = document.getElementById("languageHidden");
+      if (hidden) hidden.value = lang;
+    }
+
+    async function saveLanguageToServer(lang) {
+      const payload = new URLSearchParams();
+      payload.append("language", lang);
+      await fetch("{% url 'set_worker_language' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+        },
+        body: payload.toString()
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const supported = ["en", "hi", "ml", "ur", "ta"];
+      const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+      const savedLang = localStorage.getItem("workerPreferredLanguage");
+      const initial = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+      applyLanguage(initial);
+
+      const selector = document.getElementById("languageSelector");
+      if (selector) {
+        selector.addEventListener("change", async (event) => {
+          const lang = event.target.value;
+          applyLanguage(lang);
+          try {
+            await saveLanguageToServer(lang);
+          } catch (e) {
+            console.error("Language save failed", e);
+          }
+        });
+      }
+
+      const chat = document.getElementById("chatScroll");
+      if (chat) chat.scrollTop = chat.scrollHeight;
+    });
+  </script>
+</body>
+
+</html>

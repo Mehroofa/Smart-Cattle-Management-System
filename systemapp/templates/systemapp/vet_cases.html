@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>VetTrack | Veterinarian Management Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#a1cf17",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#1d2111",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen">
+<!-- Top Navbar -->
+<nav class="fixed top-0 z-50 w-full bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-800 h-16 flex items-center justify-between px-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-icons text-white">pets</span>
+</div>
+<span class="text-xl font-extrabold tracking-tight text-slate-800 dark:text-white">Vet<span class="text-primary">Track</span></span>
+</div>
+<div class="flex-1 max-w-xl mx-8 hidden md:block">
+<div class="relative">
+<span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded-lg py-2 pl-10 pr-4 focus:ring-2 focus:ring-primary text-sm transition-all" placeholder="Search Cattle ID, Farm, or Case..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full relative">
+<span class="material-icons">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="text-sm font-bold leading-none">Dr. Elena Ross</p>
+<p class="text-xs text-slate-500 mt-1 uppercase tracking-wider">Senior Veterinarian</p>
+</div>
+<img alt="Profile" class="w-10 h-10 rounded-full object-cover border-2 border-primary/20" data-alt="Professional female veterinarian headshot profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbLDe5vMBdq8UPxFZn4LGFXyVRGD5sdZc_NwbQEwElQdFWqa1v0feYEvD274cgu0TXmlxLyLmJ94WoilTyEAOCYwQgScROGDA_va7iNtYmxNXzC5LagkFhbC6blHNFJpS7HmdQbI65KmgryEcfSFgJCJzAGLlBpwsX9OhKcY_x0ekipM3jRy4Tg0dZGUz8ReO_mrBmhMcFD2U6k5D1pseoVz3O9582Ys3ax65yUAXPxgh7Dy1QIfNiep34EqO9nG2JqlRITOq24y0"/>
+</div>
+</div>
+</nav>
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-16 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 hidden lg:block overflow-y-auto">
+<div class="p-6 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 bg-primary/10 text-primary font-bold rounded-lg transition-colors" href="#">
+<span class="material-icons">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">agriculture</span>
+<span>My Farms</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">history</span>
+<span>Case History</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">file_upload</span>
+<span>Upload Reports</span>
+</a>
+<div class="pt-8 pb-4 px-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Support &amp; Settings</div>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors group" href="#">
+<span class="material-icons group-hover:text-primary transition-colors">help_outline</span>
+<span>Help Center</span>
+</a>
+</div>
+<div class="absolute bottom-0 w-full p-6">
+<div class="bg-primary/10 rounded-xl p-4">
+<p class="text-xs font-bold text-primary uppercase">System Status</p>
+<div class="flex items-center gap-2 mt-2">
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+<span class="text-xs text-slate-600 dark:text-slate-400 font-medium">AI Engine Online</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-20 p-6 md:p-8">
+<div class="max-w-7xl mx-auto space-y-8">
+<!-- Welcome Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h1 class="text-3xl font-extrabold text-slate-900 dark:text-white">Vet Dashboard</h1>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Reviewing 12 farms and 4 active emergency alerts.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors flex items-center gap-2">
+<span class="material-icons text-lg">calendar_today</span>
+                        Schedule Visit
+                    </button>
+<button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:brightness-105 transition-all shadow-sm flex items-center gap-2">
+<span class="material-icons text-lg">add</span>
+                        New Case
+                    </button>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Assigned Farms Section -->
+<section class="xl:col-span-1 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+<span class="w-1.5 h-6 bg-primary rounded-full"></span>
+                            Assigned Farms
+                        </h2>
+<a class="text-xs font-bold text-primary hover:underline" href="#">See All</a>
+</div>
+<div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<div class="divide-y divide-slate-100 dark:divide-slate-800">
+<!-- Farm Card 1 -->
+<div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+<img alt="Farm thumbnail" class="w-full h-full object-cover" data-alt="Vibrant green farm fields with rolling hills" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP-_I7ChbmeLCI_7y0mQU68Gp0nw0lzQGvL65YooKyPbgEmqLuUjRCjfSYUNr4I4k_df_HNSpyf5aIejRVTfgXSB2IZR5TrZxuma5eRMNqSIL1MYOoRni0tuVw7fqU3yGYQzzfME7_6Z9ELFcHuGaIj8YkhH0iB8N34pBpWFqGL_RQZjZbYQc7wu7ihzPbCj-xQFPJIouM84HHpv5DgV9-NeW7SJUMP0RRcrvD5uUOjYsdGPt72wlqAFyY0LrRL-AbBW8SoFnU6rI"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white">Green Valley Ranch</p>
+<p class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-icons text-[12px]">location_on</span> Zone B, North Sector
+                                        </p>
+</div>
+</div>
+<button class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-all">View</button>
+</div>
+<!-- Farm Card 2 -->
+<div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+<img alt="Farm thumbnail" class="w-full h-full object-cover" data-alt="Traditional red barn on a farm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxkwqLqf8W96wsdlmUSe8pjeLs9zrMRDScmQ883xfQM2cjZ4VnfWDgwaRLffnAnktzfOd284Kkqnwuf9Z3bj44rclWPyWL6gyHC330h92k_eMbT6eTkQ6gXm4eIJ2jLq9U35w6Hv8mYmhAxukKJix4dOlJfQfrPp6_RlLvZkpvZn8qpLggZ7OmVQ1ksGccOFbq2M3adU2PAMDFtPx0gzJtR0AnFSPZX0n-vEvW0OeDE9GIWIUq9e1lJWHSibxfoqKk1i6hsFvp9DE"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white">Oakwood Dairy</p>
+<p class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-icons text-[12px]">location_on</span> Block 4, South
+                                        </p>
+</div>
+</div>
+<button class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-all">View</button>
+</div>
+<!-- Farm Card 3 -->
+<div class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center overflow-hidden">
+<img alt="Farm thumbnail" class="w-full h-full object-cover" data-alt="Cattle grazing in a sunny pasture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbgWotC1Dezsz5C1nh_0x1_73-edZpw3h64PwDmmlLxWk3xM6deB1Z7CKgHI__mWgVqCxTz1YPJiaa1rkJslH1piVesoBXApzaCyEMSViwY-lr4MP5So6z6PVX3Xx6ddawOXWxvNNkKZjPNF4lZYv83Kn3wyHpK5YLE_6dz_UgAlUpCR-KIiggygd6adRzM-AVg9sWwwLCIJ5M3CNN2BM9qGOI2BAiwF7Rh0-LDvvz1WsD0w-HkSxg6iGZfABrUQSxVE_LZarxtw4"/>
+</div>
+<div>
+<p class="font-bold text-slate-900 dark:text-white">Sunset Meadows</p>
+<p class="text-xs text-slate-500 flex items-center gap-1">
+<span class="material-icons text-[12px]">location_on</span> Plot 12, West
+                                        </p>
+</div>
+</div>
+<button class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-bold px-3 py-1.5 rounded-lg group-hover:bg-primary group-hover:text-white transition-all">View</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Active Emergency Cases -->
+<section class="xl:col-span-2 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+<span class="w-1.5 h-6 bg-red-500 rounded-full"></span>
+                            Active Emergency Cases
+                        </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Emergency Case 1 -->
+<div class="bg-red-50 dark:bg-red-900/10 border border-red-100 dark:border-red-900/30 rounded-xl p-5 relative overflow-hidden">
+<div class="flex justify-between items-start relative z-10">
+<div class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase mb-3">Critical</div>
+<span class="text-xs text-red-600 dark:text-red-400 font-bold">12 mins ago</span>
+</div>
+<h3 class="font-extrabold text-slate-900 dark:text-white text-lg">Cattle #842</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mt-1 mb-4 leading-relaxed line-clamp-2">Exhibiting severe respiratory distress and increased rectal temperature. Immediate onsite nebulization recommended.</p>
+<button class="w-full bg-primary text-white py-2.5 rounded-lg font-bold shadow-md hover:brightness-105 transition-all text-sm">Attend Now</button>
+</div>
+<!-- Emergency Case 2 -->
+<div class="bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/30 rounded-xl p-5 relative overflow-hidden">
+<div class="flex justify-between items-start relative z-10">
+<div class="bg-amber-500 text-white text-[10px] font-black px-2 py-0.5 rounded tracking-widest uppercase mb-3">Urgent</div>
+<span class="text-xs text-amber-600 dark:text-amber-400 font-bold">45 mins ago</span>
+</div>
+<h3 class="font-extrabold text-slate-900 dark:text-white text-lg">Cattle #319</h3>
+<p class="text-sm text-slate-600 dark:text-slate-400 mt-1 mb-4 leading-relaxed line-clamp-2">Limping observed in hind leg; suspected hoof rot or injury. AI cameras detected irregular gait patterns.</p>
+<button class="w-full bg-primary text-white py-2.5 rounded-lg font-bold shadow-md hover:brightness-105 transition-all text-sm">Attend Now</button>
+</div>
+</div>
+</section>
+<!-- Health Report Form -->
+<section class="xl:col-span-1 space-y-4">
+<h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+<span class="w-1.5 h-6 bg-primary rounded-full"></span>
+                        Upload Health Report
+                    </h2>
+<div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+<form class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Cattle ID</label>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg py-2.5 text-sm focus:ring-primary focus:border-primary transition-all" placeholder="e.g. #842" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Visit Date</label>
+<input class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg py-2.5 text-sm focus:ring-primary focus:border-primary transition-all" type="date"/>
+</div>
+<div>
+<label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Diagnosis Notes</label>
+<textarea class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg py-2.5 text-sm focus:ring-primary focus:border-primary transition-all" placeholder="Describe the condition and treatment..." rows="3"></textarea>
+</div>
+<div class="border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg p-6 text-center hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer group">
+<span class="material-icons text-slate-400 group-hover:text-primary transition-colors text-3xl">cloud_upload</span>
+<p class="text-sm font-bold text-slate-600 dark:text-slate-400 mt-2">Upload PDF or Images</p>
+<p class="text-[10px] text-slate-400 mt-1 italic">Max size: 10MB</p>
+</div>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold shadow-sm hover:brightness-105 transition-all uppercase tracking-widest text-xs" type="button">Submit Report</button>
+</form>
+</div>
+</section>
+<!-- Past Treatment History Table -->
+<section class="xl:col-span-2 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
+<span class="w-1.5 h-6 bg-primary rounded-full"></span>
+                            Past Treatment History
+                        </h2>
+<button class="flex items-center gap-1 text-slate-500 hover:text-slate-900 text-xs font-bold">
+<span class="material-icons text-sm">filter_list</span> Filter
+                        </button>
+</div>
+<div class="bg-white dark:bg-background-dark border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
+<th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Date</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Cattle ID</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Diagnosis</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-[10px] font-black text-slate-500 uppercase tracking-widest">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">Oct 12, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">Cattle #201</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Mild Foot Rot</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold">
+<span class="w-1 h-1 bg-green-500 rounded-full"></span> Resolved
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-primary/80 transition-colors"><span class="material-icons">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">Oct 09, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">Cattle #552</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Vaccination Booster</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold">
+<span class="w-1 h-1 bg-green-500 rounded-full"></span> Done
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-primary/80 transition-colors"><span class="material-icons">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">Oct 05, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">Cattle #128</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Parasite Treatment</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-[10px] font-bold">
+<span class="w-1 h-1 bg-blue-500 rounded-full"></span> Ongoing
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-primary/80 transition-colors"><span class="material-icons">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 dark:hover:bg-slate-800/20 transition-colors">
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400 font-medium">Sep 28, 2023</td>
+<td class="px-6 py-4 text-sm font-bold text-slate-900 dark:text-white">Cattle #940</td>
+<td class="px-6 py-4 text-sm text-slate-600 dark:text-slate-400">Digestive Issues</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold">
+<span class="w-1 h-1 bg-green-500 rounded-full"></span> Resolved
+                                        </span>
+</td>
+<td class="px-6 py-4">
+<button class="text-primary hover:text-primary/80 transition-colors"><span class="material-icons">visibility</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-slate-50 dark:bg-slate-800/50 flex justify-center">
+<button class="text-xs font-bold text-slate-500 hover:text-primary transition-colors">Load More History</button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- Mobile Navigation (Floating Bottom Bar) -->
+<div class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-2xl rounded-full px-6 py-3 flex items-center gap-8 border border-slate-200 dark:border-slate-700 z-50">
+<button class="text-primary"><span class="material-icons">dashboard</span></button>
+<button class="text-slate-400"><span class="material-icons">agriculture</span></button>
+<button class="bg-primary text-white w-12 h-12 rounded-full flex items-center justify-center -mt-12 shadow-lg"><span class="material-icons">add</span></button>
+<button class="text-slate-400"><span class="material-icons">history</span></button>
+<button class="text-slate-400"><span class="material-icons">person</span></button>
+</div>
+</body></html>

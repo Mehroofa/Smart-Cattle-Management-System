@@ -1,0 +1,60 @@
+{% extends 'systemapp/base.html' %}
+
+{% block title %}Portal | Cattle Farm System{% endblock %}
+
+{% block content %}
+<style>
+  .portal-pink .hero-card {
+    background: linear-gradient(120deg, #fff2f8, #fde7f1) !important;
+    border: 1px solid rgba(236, 164, 194, 0.38);
+  }
+
+  .portal-pink .grid-cards .card {
+    background: rgba(255, 241, 247, 0.95) !important;
+    border: 1px solid rgba(236, 164, 194, 0.38);
+  }
+
+  .portal-pink .btn.primary {
+    background: linear-gradient(120deg, #f2a7c6, #e58eb5) !important;
+    color: #fff !important;
+  }
+
+  .portal-pink .btn.ghost {
+    background: #fff7fa !important;
+    border: 1px solid rgba(236, 164, 194, 0.5) !important;
+    color: #8f3f63 !important;
+  }
+</style>
+<div class="portal-pink">
+  <section class="hero-card">
+    <div>
+      <p class="eyebrow">Welcome back</p>
+      <h1>Choose your workspace</h1>
+      <p class="lead">Switch between worker reporting, vet triage, and admin oversight.</p>
+    </div>
+    <div class="hero-actions">
+      <a class="btn primary" href="{% url 'marketplace' %}">Explore Cattle</a>
+      <a class="btn ghost" href="{% url 'report_health' %}">Quick Report</a>
+      <a class="btn ghost" href="{% url 'add_cattle' %}">Add Cattle</a>
+    </div>
+  </section>
+
+  <section class="grid-cards">
+    <article class="card">
+      <h3>Worker Console</h3>
+      <p>Voice-first health reporting in local languages.</p>
+      <a class="btn primary" href="{% url 'report_health' %}">Open Worker View</a>
+      <a class="btn ghost" href="{% url 'worker_login' %}">Worker Login</a>
+      <a class="btn ghost" href="{% url 'worker_reg' %}">Worker Registration</a>
+    </article>
+    <article class="card">
+      <h3>Veterinarian Desk</h3>
+      <p>Review pending cases and add diagnoses.</p>
+      <a class="btn primary" href="{% url 'vet_dashboard' %}">Open Vet View</a>
+      <a class="btn ghost" href="{% url 'medical' %}">Medical Report</a>
+      <a class="btn ghost" href="{% url 'vet_login' %}">Vet Login</a>
+    </article>
+
+  </section>
+</div>
+{% endblock %}

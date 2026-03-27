@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Cattle Farm Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#A67B5B",
+            "background-light": "#F2EFE1",
+            "background-dark": "#1d2111",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+  <div class="relative flex h-screen w-full overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <aside
+      class="w-64 border-r border-primary/20 bg-white dark:bg-background-dark flex flex-col justify-between py-6 px-4">
+      <div class="flex flex-col gap-8">
+        <div class="flex items-center gap-3 px-2">
+          <div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+            <span class="material-symbols-outlined">agriculture</span>
+          </div>
+          <h2 class="text-lg font-bold tracking-tight">FarmAdmin</h2>
+        </div>
+        <nav class="flex flex-col gap-1">
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
+            href="{% url 'admin_workplace' %}">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'vet_approval' %}">
+            <span class="material-symbols-outlined">medical_services</span>
+            <span>Vet Management</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors" href="{% url 'worker_reg' %}">
+            <span class="material-symbols-outlined">engineering</span>
+            <span>Worker Management</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors" href="{% url 'customer_approval' %}">
+            <span class="material-symbols-outlined">handshake</span>
+            <span>Buyer Approvals</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'olx' %}">
+            <span class="material-symbols-outlined">database</span>
+            <span>Livestock Records</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'cattle_approval' %}">
+            <span class="material-symbols-outlined">fact_check</span>
+            <span>Cattle Approval</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'admin_overview' %}">
+            <span class="material-symbols-outlined">monitoring</span>
+            <span>System Overview</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'alert_page' %}">
+            <span class="material-symbols-outlined">warning</span>
+            <span>Alerts</span>
+          </a>
+          <a class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-primary/5 transition-colors"
+            href="{% url 'admin_add_cattle' %}">
+            <span class="material-symbols-outlined">add_circle</span>
+            <span>Add Cattle</span>
+          </a>
+        </nav>
+      </div>
+      <div class="flex flex-col gap-4 border-t border-primary/10 pt-6">
+        <div class="flex items-center gap-3 px-2">
+          <div class="size-10 rounded-full bg-primary/20 bg-cover bg-center" data-alt="Profile picture of John Doe"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApZXl0A-YA5TDlATf8slGanbLe16pC6fQJ3iCCPcZ-syVTY1KHXn1Ys25b43fIgQcpSf8Fch8WIDNBxS-jBM_Bufm5sy4ponLzlu0ygZgkZaGcm73UJKQ2NclV9DRzNLaKS4f4Tc6xEn30hncZ2ueXKx4zOcFd4sdw1-cvpYpwxUwtd5eeITcu-vQ-g-ak1zjqyfeelQWTtfSITew4x8TXZJvBkLyPDOD7Pt97Lc44pM8n0fRh79Z7_JDIOK5JB0SnPR2PU_mShHP6')">
+          </div>
+          <div class="flex flex-col">
+            <p class="text-sm font-semibold">{{ request.user.username }}</p>
+            <p class="text-xs text-slate-500">Farm Administrator</p>
+          </div>
+        </div>
+        <a href="{% url 'admin_logout' %}"
+          class="flex items-center justify-center gap-2 w-full py-2 px-4 rounded-lg bg-primary/10 text-primary font-bold hover:bg-primary/20 transition-colors">
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span>Log Out</span>
+        </a>
+      </div>
+    </aside>
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-y-auto">
+      <!-- Header -->
+      <header
+        class="flex items-center justify-between px-8 py-4 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-10 border-b border-primary/10">
+        <div class="flex items-center gap-4">
+          <h1 class="text-xl font-bold">Admin Dashboard Overview</h1>
+          <div class="h-4 w-px bg-primary/20"></div>
+          <div class="flex items-center gap-6">
+            <a class="text-sm font-medium hover:text-primary" href="#">Overview</a>
+            <a class="text-sm font-medium text-slate-500 hover:text-primary" href="#">Reports</a>
+            <a class="text-sm font-medium text-slate-500 hover:text-primary" href="{% url 'admin_settings' %}">Settings</a>
+          </div>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative w-64">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+            <input
+              class="w-full pl-10 pr-4 py-2 bg-primary/5 border-none rounded-lg focus:ring-2 focus:ring-primary text-sm"
+              placeholder="Search activities..." type="text" />
+          </div>
+          <button class="p-2 rounded-lg bg-primary/5 text-slate-600 hover:bg-primary/10">
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <a class="p-2 rounded-lg bg-primary/5 text-slate-600 hover:bg-primary/10" href="{% url 'admin_settings' %}">
+            <span class="material-symbols-outlined">settings</span>
+          </a>
+        </div>
+      </header>
+      <!-- Content Area -->
+      <div class="p-8 max-w-7xl mx-auto w-full flex flex-col gap-8">
+        <!-- Hero Banner -->
+        <section class="relative h-64 w-full rounded-xl overflow-hidden bg-background-dark">
+          <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+            data-alt="Cattle grazing in a lush green field"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSLXM4UcS6f-1xo2Z5oLcm6KSmfi7hiCVNrCTZ4A6iT81alWH-7OeatWIr3PZz8trWhwxrT-1Db2EL8GAgoTMC8YzivlkDr8lvdoLwshbyKjK5X2eFVkuLOqZ4r9iwCQrOu-EktAxFLBWTPZikZJSQ_SuaYj9GaeTA5UC33KpaY8IqXilrEBm1qdIAGzLO7D2PlMLlsEmZT-rkxB6AH9_H4TiHC7dCyiYsamGJLwP0NKQyZj3whv0JYItKX0LHRk-_ZK0gSdNFTqcm')">
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-r from-background-dark/80 to-transparent"></div>
+          <div class="relative h-full flex flex-col justify-center px-10">
+            <p class="text-primary font-bold uppercase tracking-widest text-xs mb-2">Management Portal</p>
+            <h2 class="text-3xl font-extrabold text-white mb-4">Welcome back, Admin John</h2>
+            <p class="text-slate-300 max-w-md">Streamline your cattle farm operations, manage specialized staff, and
+              review buyer applications from a central command center.</p>
+          </div>
+        </section>
+        <!-- Quick Action Cards -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Vet Registration Card -->
+          <div
+            class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="size-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-3xl">medical_services</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold">Vet Registration</h3>
+              <p class="text-sm text-slate-500 mt-1">Register and manage qualified veterinary professionals for your
+                livestock healthcare.</p>
+            </div>
+            <div class="flex items-center gap-2 py-2 px-3 bg-primary/5 rounded-lg">
+              <span class="material-symbols-outlined text-primary text-sm">verified</span>
+              <span class="text-xs font-medium">{{ pending_vets }} Pending Verifications</span>
+            </div>
+            <a href="{% url 'vet_approval' %}"
+              class="mt-2 w-full py-2.5 bg-primary text-slate-900 font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <span>Register Now</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+          <!-- Worker Registration Card -->
+          <div
+            class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="size-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-3xl">engineering</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold">Worker Registration</h3>
+              <p class="text-sm text-slate-500 mt-1">Onboard new farm hands, technicians, and maintenance staff to the
+                facility.</p>
+            </div>
+            <div class="flex items-center gap-2 py-2 px-3 bg-primary/5 rounded-lg">
+              <span class="material-symbols-outlined text-primary text-sm">group_add</span>
+              <span class="text-xs font-medium">{{ pending_workers }} New Applications</span>
+            </div>
+            <a href="{% url 'worker_reg' %}"
+              class="mt-2 w-full py-2.5 bg-primary text-slate-900 font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <span>Add Worker</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+          <!-- Buyer Approval Card -->
+          <div
+            class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl p-6 flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow">
+            <div class="size-12 bg-primary/20 rounded-lg flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-3xl">person_check</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-bold">Buyer Approval</h3>
+              <p class="text-sm text-slate-500 mt-1">Review credentials and approve applications from prospective
+                livestock buyers.</p>
+            </div>
+            <div class="flex items-center gap-2 py-2 px-3 bg-primary/5 rounded-lg">
+              <span class="material-symbols-outlined text-primary text-sm">pending_actions</span>
+              <span class="text-xs font-medium">{{ pending_buyers }} Pending Approvals</span>
+            </div>
+            <a href="{% url 'customer_approval' %}"
+              class="mt-2 w-full py-2.5 bg-primary text-slate-900 font-bold rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+              <span>Approve Buyers</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+          </div>
+        </section>
+
+        {% if messages %}
+        <div class="space-y-2">
+          {% for message in messages %}
+          <div class="rounded-lg px-5 py-3 text-sm font-medium
+                {% if message.tags == 'error' %}bg-red-50 text-red-700
+                {% elif message.tags == 'success' %}bg-green-50 text-green-700
+                {% elif message.tags == 'warning' %}bg-amber-50 text-amber-700
+                {% else %}bg-blue-50 text-blue-700{% endif %}">
+            {{ message }}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Nearby Vets -->
+        <section class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl shadow-sm overflow-hidden mb-8">
+          <div class="px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">location_on</span>
+              <h3 class="font-bold">Nearby Approved Vets</h3>
+              <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">{{ nearby_vets|length }}</span>
+            </div>
+            <form method="get" class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-500">Farm</label>
+              <select name="farm_id" class="rounded-lg border border-slate-200 bg-white dark:bg-background-dark px-3 py-2 text-sm">
+                <option value="">All</option>
+                {% for farm in farms %}
+                <option value="{{ farm.id }}" {% if selected_farm and selected_farm.id == farm.id %}selected{% endif %}>
+                  {{ farm.farm_name }} ({{ farm.location }})
+                </option>
+                {% endfor %}
+              </select>
+              <button class="px-3 py-2 rounded-lg bg-primary text-white text-xs font-bold">Filter</button>
+            </form>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-primary/5 text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th class="px-6 py-3 font-semibold">Username</th>
+                  <th class="px-6 py-3 font-semibold">Location</th>
+                  <th class="px-6 py-3 font-semibold">License</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-primary/10 text-sm">
+                {% for vet in nearby_vets %}
+                <tr class="hover:bg-primary/5 transition-colors">
+                  <td class="px-6 py-4 font-medium">{{ vet.user.username }}</td>
+                  <td class="px-6 py-4 text-slate-500">{{ vet.location|default:"—" }}</td>
+                  <td class="px-6 py-4 text-slate-500 font-mono">{{ vet.license_number }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="px-6 py-4 text-center text-slate-500">No approved vets found.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Vet Profile Approvals -->
+        {% if pending_vet_profiles %}
+        <section class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">medical_services</span>
+              <h3 class="font-bold">Pending Vet Approvals</h3>
+              <span class="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-0.5 rounded-full">{{
+                pending_vet_profiles|length }}</span>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-primary/5 text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th class="px-6 py-3 font-semibold">Username</th>
+                  <th class="px-6 py-3 font-semibold">License Number</th>
+                  <th class="px-6 py-3 font-semibold">Proof</th>
+                  <th class="px-6 py-3 font-semibold">Status</th>
+                  <th class="px-6 py-3 font-semibold text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-primary/10 text-sm">
+                {% for row in pending_vet_profile_rows %}
+                {% with profile=row.profile validation=row.validation %}
+                <tr class="hover:bg-primary/5 transition-colors">
+                  <td class="px-6 py-4 font-medium">{{ profile.user.username }}</td>
+                  <td class="px-6 py-4 text-slate-500 font-mono">{{ profile.license_number }}</td>
+                  <td class="px-6 py-4">
+                    {% if profile.license_document %}
+                    <a href="{{ profile.license_document.url }}" target="_blank"
+                      class="inline-flex items-center gap-1 px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-200 transition-colors">
+                      <span class="material-symbols-outlined text-sm">description</span> View Proof
+                    </a>
+                    {% else %}
+                    <span class="text-xs font-bold text-slate-400">No file</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex flex-col gap-1 items-start">
+                      <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">Pending</span>
+                      {% if validation.format_ok %}
+                      <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-[10px] font-bold">Format OK · {{ validation.score }}%</span>
+                      {% else %}
+                      <span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-[10px] font-bold">Needs Review · {{ validation.score }}%</span>
+                      {% endif %}
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-right space-x-2">
+                    <a href="{% url 'approve_vet' profile.id %}"
+                      class="inline-flex items-center gap-1 px-3 py-1.5 bg-green-500 text-white text-xs font-bold rounded-lg hover:bg-green-600 transition-colors">
+                      <span class="material-symbols-outlined text-sm">check</span> Approve
+                    </a>
+                    <a href="{% url 'reject_vet' profile.id %}"
+                      class="inline-flex items-center gap-1 px-3 py-1.5 bg-red-500 text-white text-xs font-bold rounded-lg hover:bg-red-600 transition-colors">
+                      <span class="material-symbols-outlined text-sm">close</span> Reject
+                    </a>
+                  </td>
+                </tr>
+                {% endwith %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+        {% endif %}
+        <!-- Recent Activity Table -->
+        <section class="bg-white dark:bg-background-dark border border-primary/10 rounded-xl shadow-sm overflow-hidden">
+          <div class="px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+            <h3 class="font-bold">Recent Registration Activity</h3>
+            <button class="text-sm text-primary font-semibold hover:underline">View All</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left">
+              <thead class="bg-primary/5 text-xs uppercase tracking-wider text-slate-500">
+                <tr>
+                  <th class="px-6 py-3 font-semibold">Entity Name</th>
+                  <th class="px-6 py-3 font-semibold">Type</th>
+                  <th class="px-6 py-3 font-semibold">Date Submitted</th>
+                  <th class="px-6 py-3 font-semibold">Status</th>
+                  <th class="px-6 py-3 font-semibold text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-primary/10 text-sm">
+                {% for activity in recent_activities %}
+                <tr>
+                  <td class="px-6 py-4 font-medium">{{ activity.name|default:activity.company_name }}</td>
+                  <td class="px-6 py-4 text-slate-500">{% if activity.specialization %}Vet Professional{% elif
+                    activity.role %}Worker{% else %}Buyer{% endif %}</td>
+                  <td class="px-6 py-4 text-slate-500">{{ activity.submitted_date|date:"M d, Y" }}</td>
+                  <td class="px-6 py-4">
+                    {% if activity.is_approved %}
+                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Approved</span>
+                    {% else %}
+                    <span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">Pending</span>
+                    {% endif %}
+                  </td>
+                  <td class="px-6 py-4 text-right">
+                    <button class="text-primary font-bold hover:underline">
+                      {% if activity.is_approved %}View{% else %}Review{% endif %}
+                    </button>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="px-6 py-4 text-center text-slate-500">No recent activities available.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+
+</html>

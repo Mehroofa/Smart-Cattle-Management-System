@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Order Confirmation - CattleTrade AI</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#AA98A9",
+                        "background-light": "#F5F5DC",
+                        "background-dark": "#102210",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <!-- Header Component -->
+            <header
+                class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 md:px-20 py-4 bg-white dark:bg-slate-900">
+                <div class="flex items-center gap-3 text-slate-900 dark:text-slate-100">
+                    <div class="size-8 text-primary">
+                        <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                            <path clip-rule="evenodd"
+                                d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                            <path clip-rule="evenodd"
+                                d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z"
+                                fill="currentColor" fill-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-lg font-bold leading-tight tracking-tight">CattleTrade AI</h2>
+                </div>
+                <div class="flex flex-1 justify-end gap-6 items-center">
+                    <a href="{% url 'logout' %}"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm font-semibold transition-all">
+                        <span class="material-symbols-outlined text-sm">logout</span>
+                        <span>Logout</span>
+                    </a>
+                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border-2 border-primary/20"
+                        data-alt="User profile avatar portrait"
+                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAxwifK1QWWqZyJkLrG8cPyBjLTWtEDEyAM-eC9ILNAT3zCzcRH3l8jQM1toq8cDuxrIdGXRmn4gAkwonVAN3tox8DoJzAzZWr_TLn62bz9JJlVUxxzpCZQb9NTNBx8R1j1tJHxkWx12t3ByDNetazlThnam1XGMhmp0lmtJB14M9JTflAvthg9DepmI4o0pNvxidat5JFOZj3r6dU5cO3va7vaP3fGpYJJR_qMwHhI9ql4YUd4XwKKdoAsO8zlKRVjg6lblcvAd7E8");'>
+                    </div>
+                </div>
+            </header>
+            <!-- Main Content Area -->
+            <main class="flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-20">
+                <div
+                    class="max-w-[640px] w-full bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 p-8 md:p-12">
+                    <!-- Success Indicator -->
+                    <div class="flex flex-col items-center text-center mb-10">
+                        <div class="size-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
+                            <span class="material-symbols-outlined text-primary text-5xl">check_circle</span>
+                        </div>
+                        <h1
+                            class="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-extrabold tracking-tight mb-4">
+                            Order Confirmed!</h1>
+                        <p class="text-slate-500 dark:text-slate-400 text-base max-w-md mx-auto">
+                            Your transaction has been securely processed. Our AI systems are now conducting final market
+                            compliance checks.
+                        </p>
+                    </div>
+                    <!-- Order Details Card -->
+                    <div
+                        class="bg-background-light dark:bg-background-dark/50 rounded-lg p-6 mb-8 border border-slate-100 dark:border-slate-800">
+                        <h3
+                            class="text-sm font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-4 px-1">
+                            Transaction Details</h3>
+                        <div class="space-y-4">
+                            <div
+                                class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Cattle ID</span>
+                                <span class="text-slate-900 dark:text-slate-100 font-mono font-medium">#{{ order.cattle.tag_id }}</span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Farm Name</span>
+                                <span class="text-slate-900 dark:text-slate-100 font-medium">{{ order.cattle.farm.farm_name|default:order.cattle.farm.name }}</span>
+                            </div>
+                            <div
+                                class="flex justify-between items-center py-1 border-b border-slate-200/50 dark:border-slate-800/50">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Amount</span>
+                                <span class="text-slate-900 dark:text-slate-100 font-bold text-lg">{{ order.amount }}</span>
+                            </div>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="text-slate-500 dark:text-slate-400 text-sm">Estimated Delivery</span>
+                                <span class="text-slate-900 dark:text-slate-100 font-medium">
+                                    {{ order.estimated_delivery_start|date:"M d" }} - {{ order.estimated_delivery_end|date:"M d" }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- AI Security Badge -->
+                    <div class="flex items-start gap-4 p-4 mb-10 bg-primary/5 rounded-lg border border-primary/20">
+                        <span class="material-symbols-outlined text-primary mt-0.5">verified_user</span>
+                        <div>
+                            <p class="text-sm font-semibold text-slate-900 dark:text-slate-100">AI Fairness Guard Active
+                            </p>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Our proprietary AI security engine is monitoring this trade for market manipulation,
+                                seller compliance, and price fairness to ensure a secure ecosystem for all members.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+                    {% if payment_submission %}
+                    <div class="mb-6 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3 text-sm">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="font-semibold">Payment status</div>
+                            <span
+                                class="text-xs font-extrabold px-3 py-1 rounded-full border {% if payment_submission.status == 'verified' %}bg-emerald-50 border-emerald-200 text-emerald-700{% elif payment_submission.status == 'submitted' %}bg-amber-50 border-amber-200 text-amber-700{% elif payment_submission.status == 'rejected' %}bg-red-50 border-red-200 text-red-700{% else %}bg-slate-50 border-slate-200 text-slate-700{% endif %}">
+                                {{ payment_submission.status|title }}
+                            </span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                            Method: <span class="font-semibold">{{ payment_submission.method }}</span>
+                            {% if payment_submission.transaction_reference %} • Ref: <span class="font-semibold">{{ payment_submission.transaction_reference }}</span>{% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="flex flex-col gap-4">
+                        <a href="{% url 'payment_setup' order.id %}"
+                            class="w-full flex items-center justify-center gap-2 rounded-lg h-14 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-slate-900/15">
+                            <span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+                            <span>Pay Online (QR / Bank)</span>
+                        </a>
+                        <a href="{% url 'logout' %}"
+                            class="w-full flex items-center justify-center gap-2 rounded-lg h-14 bg-primary text-slate-900 text-lg font-bold transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-primary/20">
+                            <span class="material-symbols-outlined text-red-500">lock</span>
+                            <span>Securely Logout</span>
+                        </a>
+                    </div>
+                    <!-- Secondary Options -->
+                    <div class="mt-8 pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-center gap-6">
+                        <button onclick="window.print()"
+                            class="text-slate-400 dark:text-slate-500 text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-base">download</span>
+                            Download Invoice (PDF)
+                        </button>
+                        <a href="{% url 'portal' %}"
+                            class="text-slate-400 dark:text-slate-500 text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+                            <span class="material-symbols-outlined text-base">support_agent</span>
+                            Need Help?
+                        </a>
+                    </div>
+                </div>
+                <!-- Simple Footer -->
+                <div class="mt-12 text-center text-slate-400 dark:text-slate-600 text-sm">
+                    <p>© 2024 CattleTrade AI. Secure Agricultural Marketplace.</p>
+                    <p class="mt-1">Authorized transaction environment encrypted with AES-256.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+
+</html>

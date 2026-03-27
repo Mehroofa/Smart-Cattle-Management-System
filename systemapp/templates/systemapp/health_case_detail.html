@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Case Details | VetPortal</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#7E191B",
+            surface: "#ffffff",
+            "surface-alt": "#f6f3f2",
+            danger: "#dc2626",
+            accent: "#A67B50"
+          },
+          fontFamily: { display: ["Inter", "sans-serif"] },
+          borderRadius: { xl: "0.75rem", "2xl": "1rem" }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: Inter, sans-serif;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+    }
+  </style>
+</head>
+
+<body class="bg-[#FBF7F5] min-h-screen text-slate-900">
+  <header class="sticky top-0 z-40 bg-white/90 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">clinical_notes</span>
+        </div>
+        <div>
+          <div class="text-sm font-black tracking-tight">VetPortal</div>
+          <div class="text-xs text-slate-500">Health Case Details</div>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <a href="{% url 'vet_dashboard' %}"
+          class="inline-flex items-center gap-2 rounded-lg bg-slate-100 hover:bg-slate-200 px-4 py-2 text-sm font-bold">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Back
+        </a>
+        <a href="{% url 'diagnose_case' case.id %}"
+          class="inline-flex items-center gap-2 rounded-lg bg-primary text-white hover:brightness-110 px-4 py-2 text-sm font-black shadow-lg shadow-primary/20">
+          <span class="material-symbols-outlined text-sm">stethoscope</span>
+          Diagnose
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-black px-3 py-1 rounded-full bg-primary/10 text-primary">Case #{{ case.id }}</span>
+              <span class="text-xs font-black px-3 py-1 rounded-full {% if case.is_resolved %}bg-emerald-100 text-emerald-700{% else %}bg-amber-100 text-amber-700{% endif %}">
+                {% if case.is_resolved %}Resolved{% else %}Pending{% endif %}
+              </span>
+              <span
+                class="text-xs font-black px-3 py-1 rounded-full {% if case.severity == 'EMERGENCY' %}bg-red-100 text-red-700{% elif case.severity == 'HIGH' %}bg-amber-100 text-amber-700{% elif case.severity == 'MEDIUM' %}bg-yellow-100 text-yellow-700{% else %}bg-slate-100 text-slate-600{% endif %}">
+                {{ case.severity }}
+              </span>
+            </div>
+            <h1 class="mt-3 text-2xl font-black tracking-tight">Diagnosis Description</h1>
+            <p class="mt-1 text-sm text-slate-600">
+              Reported on <span class="font-semibold">{{ case.created_at|date:"M d, Y • h:i A" }}</span>
+              {% if case.reported_by %} by <span class="font-semibold">{{ case.reported_by.username }}</span>{% endif %}.
+            </p>
+          </div>
+        </div>
+
+        <div class="mt-6 grid grid-cols-1 gap-4">
+          <div class="rounded-2xl border border-primary/20 bg-primary/5 p-5">
+            <div class="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-primary">
+              <span class="material-symbols-outlined text-sm">psychology</span>
+              AI suggestion
+            </div>
+            <p class="mt-3 text-sm text-slate-800 leading-relaxed">
+              {{ case.ai_suggestion|default:"Awaiting AI analysis of this case." }}
+            </p>
+          </div>
+
+          <div class="rounded-2xl border border-slate-200 p-5">
+            <div class="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-slate-500">
+              <span class="material-symbols-outlined text-sm">notes</span>
+              Reported symptoms
+            </div>
+            <p class="mt-3 text-sm text-slate-800 leading-relaxed whitespace-pre-wrap">
+              {{ case.symptoms|default:"-" }}
+            </p>
+          </div>
+
+          {% if case.vet_diagnosis or case.treatment_plan %}
+          <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-5">
+            <div class="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-emerald-700">
+              <span class="material-symbols-outlined text-sm">check_circle</span>
+              Vet outcome
+            </div>
+            {% if case.vet_diagnosis %}
+            <div class="mt-3">
+              <div class="text-xs font-black text-emerald-800">Diagnosis</div>
+              <div class="text-sm text-emerald-900 whitespace-pre-wrap">{{ case.vet_diagnosis }}</div>
+            </div>
+            {% endif %}
+            {% if case.treatment_plan %}
+            <div class="mt-3">
+              <div class="text-xs font-black text-emerald-800">Treatment</div>
+              <div class="text-sm text-emerald-900 whitespace-pre-wrap">{{ case.treatment_plan }}</div>
+            </div>
+            {% endif %}
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <aside class="bg-white rounded-2xl border border-slate-200 p-6">
+        <h2 class="text-sm font-black uppercase tracking-widest text-slate-500">Cattle</h2>
+        <div class="mt-4 rounded-2xl border border-slate-200 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <div class="text-xs text-slate-500 font-bold">Tag</div>
+              <div class="text-lg font-black">#{{ case.cattle.tag_id }}</div>
+            </div>
+            <span class="text-xs font-black px-3 py-1 rounded-full bg-slate-100 text-slate-700">
+              {{ case.cattle.cattle_type|default:"-" }}
+            </span>
+          </div>
+          <div class="mt-3 text-sm text-slate-700">
+            <div><span class="text-slate-500">Breed:</span> <span class="font-semibold">{{ case.cattle.breed|default:"-" }}</span></div>
+            <div class="mt-1"><span class="text-slate-500">Farm:</span> <span class="font-semibold">{{ case.cattle.farm.farm_name|default:case.cattle.farm.name }}</span></div>
+            <div class="mt-1"><span class="text-slate-500">Location:</span> <span class="font-semibold">{{ case.cattle.farm.location|default:"-" }}</span></div>
+          </div>
+        </div>
+
+        <div class="mt-6 rounded-2xl border border-slate-200 p-4">
+          <h3 class="text-sm font-black">Next actions</h3>
+          <div class="mt-3 grid gap-2">
+            <a href="{% url 'diagnose_case' case.id %}"
+              class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary text-white px-4 py-2 text-sm font-black hover:brightness-110">
+              <span class="material-symbols-outlined text-sm">stethoscope</span>
+              Diagnose now
+            </a>
+            <a href="{% url 'vaccination_reminder' %}"
+              class="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-100 hover:bg-slate-200 px-4 py-2 text-sm font-black">
+              <span class="material-symbols-outlined text-sm">vaccines</span>
+              Vaccinations
+            </a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+</body>
+
+</html>
+

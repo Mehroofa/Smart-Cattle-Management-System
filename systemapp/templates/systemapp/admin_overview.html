@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CattleAI Admin Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f5f5db",
+                        "background-light": "#f8f8f6",
+                        "background-dark": "#1f1f13",
+                        "olive-header": "#84846d",
+                        "alert-high": "#fee2e2",
+                        "alert-medium": "#fef9c3",
+                        "alert-low": "#dcfce7",
+                        "text-high": "#991b1b",
+                        "text-medium": "#854d0e",
+                        "text-low": "#166534"
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-[#f5f5db] font-display text-stone-800 antialiased min-h-screen">
+<!-- Top Navbar -->
+<nav class="fixed top-0 z-50 w-full bg-white border-b border-stone-200 h-16 flex items-center justify-between px-6">
+<div class="flex items-center gap-3">
+<div class="bg-olive-header w-8 h-8 rounded-lg flex items-center justify-center text-white">
+<span class="material-icons text-xl">psychology</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight text-stone-800">CattleAI <span class="font-normal text-stone-500">System</span></h1>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-stone-500 hover:bg-stone-100 rounded-full transition-colors">
+<span class="material-icons">notifications</span>
+</button>
+<div class="h-8 w-[1px] bg-stone-200 mx-2"></div>
+<div class="flex items-center gap-3 cursor-pointer hover:bg-stone-50 p-1 pr-3 rounded-full transition-colors">
+<img alt="Admin Profile" class="w-8 h-8 rounded-full border border-stone-200" data-alt="Profile photo of the admin user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmSRreaau9YikNzkz8QPV-R43HzNDgj733RHMj0khF9jkQF-cdV614TIw2K1mc7GSZqQkbr3fLxz5OjXXokUYkdzanm-I5Ru5cfTJBAnYaV5waYnAL2NJ8gmyD5XnD0euYl9CwLZZEHsx1Ak8BObIwOahXIrsaN9dKkjAbsCKp_z_ci54CjGLsOrWqJ11quEvJf8WJdVxsdk4uYQzKx9qfv7rXfE87CmjR1zapxXPv0-CvzqxXOeTJLjkq-dH69JhjoYaK1M61zvs"/>
+<span class="text-sm font-semibold text-stone-700">Admin User</span>
+<span class="material-icons text-stone-400 text-sm">expand_more</span>
+</div>
+</div>
+</nav>
+<!-- Sidebar -->
+<aside class="fixed left-0 top-16 w-64 h-[calc(100vh-64px)] bg-white border-r border-stone-200 p-4 overflow-y-auto hidden lg:block">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-primary text-stone-800 rounded-lg font-semibold transition-all" href="#">
+<span class="material-icons">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all" href="#">
+<span class="material-icons">agriculture</span>
+<span>Farms</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all" href="#">
+<span class="material-icons">fact_check</span>
+<span>Cattle Approval</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all" href="#">
+<span class="material-icons">medical_services</span>
+<span>Vet Approval</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all" href="#">
+<span class="material-icons">group</span>
+<span>Customers</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 hover:text-stone-800 rounded-lg transition-all" href="#">
+<span class="material-icons">warning</span>
+<span>Emergency Alerts</span>
+</a>
+</li>
+</ul>
+<div class="mt-8 pt-8 border-t border-stone-100">
+<p class="px-4 text-xs font-bold text-stone-400 uppercase tracking-widest mb-4">System Help</p>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 rounded-lg transition-all" href="#">
+<span class="material-icons">help_outline</span>
+<span>Support Center</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-stone-500 hover:bg-stone-50 rounded-lg transition-all" href="#">
+<span class="material-icons">settings</span>
+<span>Configurations</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="lg:ml-64 pt-24 px-8 pb-12">
+<!-- Dashboard Header -->
+<div class="mb-8">
+<h2 class="text-2xl font-bold text-stone-800">Admin Overview</h2>
+<p class="text-stone-500">Live monitoring of AI-powered cattle management system.</p>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+<!-- Total Farms -->
+<div class="bg-white rounded-xl overflow-hidden border border-stone-200 flex flex-col">
+<div class="bg-olive-header/10 px-4 py-2 border-b border-stone-200">
+<p class="text-xs font-bold text-olive-header uppercase tracking-wider">Total Farms</p>
+</div>
+<div class="p-6 flex justify-between items-end">
+<div>
+<p class="text-3xl font-extrabold text-stone-800">{{ total_farms }}</p>
+<p class="text-xs text-green-600 font-medium mt-1">+3 since last month</p>
+</div>
+<span class="material-icons text-stone-300 text-4xl">domain</span>
+</div>
+</div>
+<!-- Total Cattle -->
+<div class="bg-white rounded-xl overflow-hidden border border-stone-200 flex flex-col">
+<div class="bg-olive-header/10 px-4 py-2 border-b border-stone-200">
+<p class="text-xs font-bold text-olive-header uppercase tracking-wider">Total Cattle</p>
+</div>
+<div class="p-6 flex justify-between items-end">
+<div>
+<p class="text-3xl font-extrabold text-stone-800">{{ total_cattle }}</p>
+<p class="text-xs text-stone-400 font-medium mt-1">Across all registered sites</p>
+</div>
+<span class="material-icons text-stone-300 text-4xl">pets</span>
+</div>
+</div>
+<!-- Emergency Alerts -->
+<div class="bg-white rounded-xl overflow-hidden border border-stone-200 flex flex-col">
+<div class="bg-olive-header/10 px-4 py-2 border-b border-stone-200">
+<p class="text-xs font-bold text-olive-header uppercase tracking-wider">Emergency Alerts</p>
+</div>
+<div class="p-6 flex justify-between items-end">
+<div>
+<p class="text-3xl font-extrabold text-stone-800">{{ emergency_alerts }}</p>
+<p class="text-xs text-red-600 font-medium mt-1">Active alerts requiring action</p>
+</div>
+<span class="material-icons text-stone-300 text-4xl">campaign</span>
+</div>
+</div>
+<!-- AI Risk Cases -->
+<div class="bg-white rounded-xl overflow-hidden border border-stone-200 flex flex-col">
+<div class="bg-olive-header/10 px-4 py-2 border-b border-stone-200">
+<p class="text-xs font-bold text-olive-header uppercase tracking-wider">AI Risk Cases</p>
+</div>
+<div class="p-6 flex justify-between items-end">
+<div>
+<p class="text-3xl font-extrabold text-stone-800">{{ ai_risk_cases }}</p>
+<p class="text-xs text-yellow-600 font-medium mt-1">Predicted health anomalies</p>
+</div>
+<span class="material-icons text-stone-300 text-4xl">bolt</span>
+</div>
+</div>
+</div>
+<!-- Secondary Content Section -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+<!-- Recent Emergency Alerts List -->
+<div class="xl:col-span-2 bg-white rounded-xl border border-stone-200 overflow-hidden">
+<div class="p-6 border-b border-stone-100 flex items-center justify-between">
+<h3 class="text-lg font-bold text-stone-800">Recent Emergency Alerts</h3>
+<button class="text-sm font-semibold text-olive-header hover:underline">View All Alerts</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead class="bg-stone-50">
+<tr>
+<th class="px-6 py-3 text-xs font-bold text-stone-500 uppercase tracking-wider">Farm Name</th>
+<th class="px-6 py-3 text-xs font-bold text-stone-500 uppercase tracking-wider">Alert Type</th>
+<th class="px-6 py-3 text-xs font-bold text-stone-500 uppercase tracking-wider">Time</th>
+<th class="px-6 py-3 text-xs font-bold text-stone-500 uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-stone-100">
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-stone-800">Green Valley Ranch</td>
+<td class="px-6 py-4 text-sm text-stone-600">High Body Temp Detection</td>
+<td class="px-6 py-4 text-sm text-stone-400">14 mins ago</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-alert-high text-text-high text-xs font-bold rounded-full">High Risk</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-stone-800">Oak Ridge Dairy</td>
+<td class="px-6 py-4 text-sm text-stone-600">Fence Perimeter Breach</td>
+<td class="px-6 py-4 text-sm text-stone-400">42 mins ago</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-alert-medium text-text-medium text-xs font-bold rounded-full">Medium</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-stone-800">Sunrise Meadows</td>
+<td class="px-6 py-4 text-sm text-stone-600">Unusual Gait Movement</td>
+<td class="px-6 py-4 text-sm text-stone-400">1 hour ago</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-alert-medium text-text-medium text-xs font-bold rounded-full">Medium</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-stone-800">Blue River Farm</td>
+<td class="px-6 py-4 text-sm text-stone-600">Vet Checkup Completed</td>
+<td class="px-6 py-4 text-sm text-stone-400">3 hours ago</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-alert-low text-text-low text-xs font-bold rounded-full">Resolved</span>
+</td>
+</tr>
+<tr class="hover:bg-stone-50 transition-colors">
+<td class="px-6 py-4 text-sm font-medium text-stone-800">Heritage Plains</td>
+<td class="px-6 py-4 text-sm text-stone-600">Water Supply Warning</td>
+<td class="px-6 py-4 text-sm text-stone-400">5 hours ago</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-alert-low text-text-low text-xs font-bold rounded-full">Resolved</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- AI Insights Panel -->
+<div class="bg-white rounded-xl border border-stone-200 overflow-hidden flex flex-col h-full">
+<div class="p-6 border-b border-stone-100">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-icons text-olive-header text-lg">auto_awesome</span>
+<h3 class="text-lg font-bold text-stone-800">AI Insights</h3>
+</div>
+<p class="text-xs text-stone-400 uppercase font-semibold">Weekly intelligence report</p>
+</div>
+<div class="p-6 space-y-6 flex-grow">
+<!-- Metric 1 -->
+<div>
+<p class="text-xs font-bold text-stone-400 uppercase mb-3">Most Active Farm</p>
+<div class="flex items-center gap-4 bg-stone-50 p-4 rounded-lg">
+<div class="w-10 h-10 bg-white border border-stone-200 rounded flex items-center justify-center">
+<span class="material-icons text-olive-header">location_on</span>
+</div>
+<div>
+<p class="text-sm font-bold text-stone-800">Oak Ridge Dairy</p>
+<p class="text-xs text-stone-500">2,140 data points processed today</p>
+</div>
+</div>
+</div>
+<!-- Metric 2 -->
+<div>
+<p class="text-xs font-bold text-stone-400 uppercase mb-3">Disease Trend Summary</p>
+<div class="flex items-start gap-4 p-2">
+<div class="mt-1 w-2 h-2 rounded-full bg-green-500"></div>
+<div>
+<p class="text-sm font-semibold text-stone-800">Downward Trend</p>
+<p class="text-xs text-stone-500 leading-relaxed">Incidents of Respiratory distress have decreased by 14% this week across the region.</p>
+</div>
+</div>
+</div>
+<!-- Metric 3 -->
+<div>
+<p class="text-xs font-bold text-stone-400 uppercase mb-3">Worker Performance Score</p>
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-center text-sm">
+<span class="text-stone-600">Average Compliance</span>
+<span class="font-bold text-stone-800">92/100</span>
+</div>
+<div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+<div class="bg-olive-header h-full rounded-full" style="width: 92%;"></div>
+</div>
+<p class="text-[11px] text-stone-400 italic">Based on AI sensor activity tracking and vet approvals.</p>
+</div>
+</div>
+</div>
+<div class="p-6 pt-0 mt-auto">
+<button class="w-full py-3 bg-stone-100 hover:bg-primary text-stone-700 text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2">
+<span class="material-icons text-sm">download</span>
+                        Export PDF Report
+                    </button>
+</div>
+</div>
+</main>
+</body></html>

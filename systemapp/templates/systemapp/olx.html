@@ -1,0 +1,274 @@
+{% load cattle_media %}
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cattle Marketplace | AI Farm Management</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#B66A50",
+            "background-light": "#f7f8f6",
+            "background-dark": "#192210",
+            "marketplace-bg": "#C4AEAD",
+            "olive-dark": "#3d4a2a",
+            "olive-primary": "#556b2f"
+          },
+          fontFamily: {
+            display: ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: "Manrope", sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-marketplace-bg dark:bg-background-dark min-h-screen font-display">
+  <nav
+    class="bg-white dark:bg-background-dark border-b border-background-light dark:border-olive-dark sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16 items-center">
+        <div class="flex items-center gap-2">
+          <div class="bg-primary p-1.5 rounded-lg"><span class="material-icons text-white">agriculture</span></div>
+          <span class="text-xl font-extrabold text-olive-dark dark:text-primary tracking-tight">AgriSmart AI</span>
+        </div>
+        <div class="hidden md:flex items-center space-x-8">
+          <a class="text-olive-dark/70 dark:text-white/70 hover:text-olive-dark font-medium"
+            href="{% url 'portal' %}">Dashboard</a>
+          <a class="text-olive-dark dark:text-primary font-bold border-b-2 border-primary pb-1"
+            href="{% url 'olx' %}">Marketplace</a>
+          <a class="text-olive-dark/70 dark:text-white/70 hover:text-olive-dark font-medium"
+            href="{% url 'medical' %}">Health Logs</a>
+          <a class="text-olive-dark/70 dark:text-white/70 hover:text-olive-dark font-medium"
+            href="{% url 'vet_cases' %}">Reports</a>
+        </div>
+        <div class="flex items-center gap-4">
+          <a href="{% url 'alert_page' %}"
+            class="p-2 text-olive-dark/60 hover:bg-background-light rounded-full transition-colors">
+            <span class="material-icons">notifications</span>
+          </a>
+          <div
+            class="h-8 w-8 rounded-full bg-olive-primary flex items-center justify-center text-white text-sm font-bold">
+            {% if request.user.is_authenticated %}{{ request.user.username|slice:":2"|upper }}{% else %}GU{% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-olive-dark dark:text-white mb-2">Cattle Marketplace</h1>
+      <p class="text-olive-dark/60 dark:text-white/60">Browse {{ total_count }} high-quality, AI-verified cattle
+        listings from certified farms.</p>
+    </div>
+
+    <form id="marketFilterForm" method="get"
+      class="bg-white dark:bg-background-dark p-4 rounded-xl shadow-sm border border-background-light dark:border-olive-dark mb-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div class="md:col-span-5 relative">
+          <span class="material-icons absolute left-3 top-1/2 -translate-y-1/2 text-olive-dark/40">search</span>
+          <input name="q" value="{{ q }}"
+            class="w-full pl-10 pr-4 py-2.5 rounded-lg border-background-light dark:border-olive-dark bg-background-light dark:bg-olive-dark/10 focus:ring-primary focus:border-primary"
+            placeholder="Search breed, location, or farm name..." type="text" />
+        </div>
+        <div class="md:col-span-2">
+          <select name="breed" id="breedSelect"
+            class="auto-submit-filter w-full py-2.5 rounded-lg border-background-light dark:border-olive-dark bg-background-light dark:bg-olive-dark/10 focus:ring-primary focus:border-primary text-olive-dark/70">
+            <option value="">Breed: All</option>
+            {% for b in breed_options %}
+            <option value="{{ b }}">{{ b }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <select name="price" id="priceSelect"
+            class="auto-submit-filter w-full py-2.5 rounded-lg border-background-light dark:border-olive-dark bg-background-light dark:bg-olive-dark/10 focus:ring-primary focus:border-primary text-olive-dark/70">
+            <option value="">Price Range</option>
+            <option value="0-1500">$0 - $1500</option>
+            <option value="1500-3000">$1500 - $3000</option>
+            <option value="3000+">$3000+</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <select name="location" id="locationSelect"
+            class="auto-submit-filter w-full py-2.5 rounded-lg border-background-light dark:border-olive-dark bg-background-light dark:bg-olive-dark/10 focus:ring-primary focus:border-primary text-olive-dark/70">
+            <option value="">Location: All</option>
+            {% for loc in location_options %}
+            <option value="{{ loc }}">{{ loc }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="md:col-span-1">
+          <button
+            class="w-full h-full bg-primary hover:opacity-90 text-olive-dark font-bold rounded-lg transition-all flex items-center justify-center"
+            type="submit">
+            <span class="material-icons">tune</span>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <div class="flex flex-wrap items-center gap-2 mb-8">
+      <span class="text-xs font-bold text-olive-dark/40 uppercase tracking-wider mr-2">Applied:</span>
+      {% if applied_filters %}
+      {% for f in applied_filters %}
+      <div
+        class="flex items-center gap-1 bg-white px-3 py-1 rounded-full border border-background-light text-sm text-olive-dark">
+        {{ f }}</div>
+      {% endfor %}
+      <a href="{% url 'olx' %}" class="text-xs font-bold text-primary hover:underline ml-2">Clear all</a>
+      {% else %}
+      <span class="text-sm text-olive-dark/60">No filters applied</span>
+      {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for cattle in cattle_list %}
+      <div
+        class="group bg-white dark:bg-background-dark rounded-xl overflow-hidden border border-background-light dark:border-olive-dark hover:shadow-xl transition-all duration-300 flex flex-col">
+        <div class="relative h-48 bg-background-light overflow-hidden">
+          <img alt="{{ cattle.tag_id }}"
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            src="{{ cattle|cattle_image_url }}" />
+          <div class="absolute top-3 left-3 flex gap-2">
+            <div
+              class="bg-primary text-olive-dark text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-sm">
+              <span class="material-icons text-[12px]">verified</span>AI VERIFIED
+            </div>
+          </div>
+          <div
+            class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg border border-white/50">
+            <div class="text-[10px] text-olive-dark/60 font-bold uppercase leading-tight">Health Score</div>
+            <div class="text-sm font-extrabold text-olive-dark leading-tight">
+              {% if cattle.health_status == "HEALTHY" %}96/100{% elif cattle.health_status == "SICK" %}62/100{% elif
+              cattle.health_status == "QUARANTINE" %}78/100{% else %}85/100{% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="p-5 flex-grow">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-bold text-olive-dark dark:text-white leading-tight">{% firstof cattle.breed cattle.name "Cattle" %}</h3>
+            <span class="material-icons text-olive-dark/20 hover:text-red-400 cursor-pointer">favorite_border</span>
+          </div>
+          <div class="grid grid-cols-2 gap-y-3 mb-6">
+            <div>
+              <p class="text-[10px] text-olive-dark/40 uppercase font-bold tracking-wider">Age</p>
+              <p class="text-sm font-semibold text-olive-dark dark:text-white/80">{{ cattle.age }} Years</p>
+            </div>
+            <div>
+              <p class="text-[10px] text-olive-dark/40 uppercase font-bold tracking-wider">Type</p>
+              <p class="text-sm font-semibold text-olive-dark dark:text-white/80">{{ cattle.cattle_type }}</p>
+            </div>
+            <div>
+              <p class="text-[10px] text-olive-dark/40 uppercase font-bold tracking-wider">Location</p>
+              <p class="text-sm font-semibold text-olive-dark dark:text-white/80">{{ cattle.farm.location|default:"-" }}
+              </p>
+            </div>
+            <div>
+              <p class="text-[10px] text-olive-dark/40 uppercase font-bold tracking-wider">Tag ID</p>
+              <p class="text-sm font-semibold text-olive-dark dark:text-white/80">{{ cattle.tag_id }}</p>
+            </div>
+          </div>
+          <div
+            class="flex items-center justify-between mt-auto pt-4 border-t border-background-light dark:border-olive-dark">
+            <span class="text-xl font-extrabold text-olive-dark dark:text-white">${{ cattle.price }}</span>
+            <a href="{% url 'compare_cattle' %}?ids={{ cattle.id }}"
+              class="bg-olive-primary hover:bg-olive-dark text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors">View
+              Details</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-span-full bg-white rounded-xl border border-background-light p-10 text-center">
+        <p class="text-xl font-bold text-olive-dark mb-2">No listings found</p>
+        <p class="text-olive-dark/60 mb-4">Try changing the filters or search text.</p>
+        <a href="{% url 'olx' %}" class="inline-flex bg-primary text-olive-dark font-bold px-4 py-2 rounded-lg">Reset
+          Filters</a>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="mt-12 flex flex-col items-center gap-4">
+      {% if page_obj.has_next %}
+      <a href="?q={{ q|urlencode }}&breed={{ breed|urlencode }}&price={{ price|urlencode }}&location={{ location|urlencode }}&page={{ page_obj.next_page_number }}"
+        class="bg-white dark:bg-background-dark text-olive-dark dark:text-white border border-background-light dark:border-olive-dark px-8 py-3 rounded-xl font-bold hover:bg-background-light transition-colors shadow-sm">
+        Load More Listings
+      </a>
+      {% endif %}
+      <p class="text-xs text-olive-dark/40 dark:text-white/40 uppercase font-bold tracking-widest">
+        Showing {{ shown_count }} of {{ total_count }} available cattle
+      </p>
+    </div>
+  </main>
+
+  <footer class="mt-16 bg-olive-dark text-white/60 py-12 border-t border-white/10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="bg-primary p-1 rounded"><span class="material-icons text-white text-lg">agriculture</span></div>
+            <span class="text-xl font-extrabold text-white tracking-tight">AgriSmart AI</span>
+          </div>
+          <p class="max-w-xs mb-6">Revolutionizing cattle farm management through AI-driven insights and a transparent
+            global marketplace.</p>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Marketplace</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a class="hover:text-primary transition-colors" href="{% url 'add_cattle' %}">Sell Cattle</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'olx' %}">Buyer Protection</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'olx' %}">Verified Farms</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'olx' %}">Shipping Logistics</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Support</h4>
+          <ul class="space-y-2 text-sm">
+            <li><a class="hover:text-primary transition-colors" href="{% url 'alert_page' %}">Help Center</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'portal' %}">Terms of Service</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'portal' %}">Privacy Policy</a></li>
+            <li><a class="hover:text-primary transition-colors" href="{% url 'portal' %}">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+        <p class="text-sm">&copy; 2026 AgriSmart AI Systems. All rights reserved.</p>
+        <div class="flex gap-4">
+          <span class="material-icons cursor-pointer hover:text-white">facebook</span>
+          <span class="material-icons cursor-pointer hover:text-white">language</span>
+          <span class="material-icons cursor-pointer hover:text-white">mail</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // Auto-submit filters on change
+    document.querySelectorAll(".auto-submit-filter").forEach((el) => {
+      el.addEventListener("change", () => {
+        document.getElementById("marketFilterForm").submit();
+      });
+    });
+    // Restore selected filter values from URL params (avoids auto-formatter breaking Django == syntax)
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("breed")) document.getElementById("breedSelect").value = params.get("breed");
+    if (params.get("price")) document.getElementById("priceSelect").value = params.get("price");
+    if (params.get("location")) document.getElementById("locationSelect").value = params.get("location");
+  </script>
+</body>
+
+</html>

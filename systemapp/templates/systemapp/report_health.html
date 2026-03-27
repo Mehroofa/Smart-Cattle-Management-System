@@ -1,0 +1,307 @@
+﻿{% extends 'systemapp/base.html' %}
+{% block title %}Report Health | Cattle Farm System{% endblock %}
+{% block bottom_nav %}{% endblock %}
+{% block content %}
+<style>
+  .rh-wrap {
+    background: #A67B50;
+    border: 1px solid #DED1B7;
+    border-radius: 18px;
+    padding: 18px;
+  }
+
+  .rh-card {
+    background: #fff;
+    border: 1px solid #DED1B7;
+    border-radius: 16px;
+    padding: 16px;
+  }
+
+  .rh-mic {
+    width: 150px;
+    height: 150px;
+    border-radius: 999px;
+    border: none;
+    background: #DED1B7;
+    display: grid;
+    place-items: center;
+    font-size: 52px;
+    cursor: pointer;
+  }
+
+  .rh-mic.is-recording {
+    outline: 4px solid rgba(222, 209, 183, 0.75);
+    box-shadow: 0 0 0 8px rgba(165, 42, 42, 0.12);
+  }
+
+  .rh-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .rh-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .rh-btn {
+    border: 1px solid #DED1B7;
+    background: #fff;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 700;
+  }
+
+  .rh-btn.primary {
+    background: #5c5f66;
+    color: #fff;
+    border-color: #5c5f66;
+  }
+
+  .rh-wrap a {
+    color: #A52A2A;
+  }
+
+  .rh-wrap a:hover {
+    color: #8B1E1E;
+  }
+
+  @media (max-width: 900px) {
+    .rh-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="rh-wrap">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div>
+      <h2 style="margin:0;font-size:32px;font-weight:800;" data-i18n="title">Health Issue Reporting</h2>
+      <p style="margin:6px 0 0;color:#6b6b6b;" data-i18n="subtitle">Record symptoms quickly with voice and submit.</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <select id="language-select" class="rh-btn">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+        <option value="ml">മലയാളം</option>
+        <option value="ur">اردو</option>
+        <option value="ta">தமிழ்</option>
+      </select>
+      <a class="rh-btn" href="{% url 'vet_dashboard' %}" data-i18n="back">Back</a>
+    </div>
+  </div>
+
+  <form method="post" class="rh-card" style="margin-top:14px;">
+    {% csrf_token %}
+    <div class="rh-grid">
+      <label>
+        <div style="font-weight:700;margin-bottom:6px;" data-i18n="cattle">Select Cattle</div>
+        <select name="cattle" disabled style="width:100%;padding:10px;border:1px solid #DED1B7;border-radius:10px;">
+          <option value="{{ cattle.id }}">{{ cattle.tag_id }} - {{ cattle.breed|default:"Cattle" }}</option>
+        </select>
+        <input type="hidden" name="cattle_id" value="{{ cattle.id }}" />
+      </label>
+      <label>
+        <div style="font-weight:700;margin-bottom:6px;" data-i18n="spoken_lang">Language</div>
+        <select id="spoken-select" name="language"
+          style="width:100%;padding:10px;border:1px solid #DED1B7;border-radius:10px;">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="ml">മലയാളം</option>
+          <option value="ur">اردو</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </label>
+    </div>
+
+    <div style="margin-top:12px;">
+      <div style="font-weight:700;margin-bottom:6px;" data-i18n="symptoms">Symptoms (Voice to Text)</div>
+      <textarea id="symptoms" name="symptoms" rows="5" required data-i18n-placeholder="symptoms_ph"
+        placeholder="Describe the condition, behavior, and symptoms."
+        style="width:100%;padding:12px;border:1px solid #DED1B7;border-radius:12px;"></textarea>
+    </div>
+
+    <div class="rh-card"
+      style="margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;">
+      <div>
+        <h3 style="margin:0 0 6px;" data-i18n="voice">Voice Capture</h3>
+        <p id="voice-status" style="margin:0;color:#6b6b6b;" data-i18n="ready">Ready to listen…</p>
+      </div>
+      <button type="button" id="mic-button" class="rh-mic" title="Speaker">🔊</button>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="rh-btn" id="start-btn" data-i18n="start">Start Recording</button>
+        <button type="button" class="rh-btn" id="stop-btn" data-i18n="stop" disabled style="opacity:.6;cursor:not-allowed;">Stop</button>
+      </div>
+    </div>
+
+    <div class="rh-actions">
+      <button type="submit" class="rh-btn primary" data-i18n="submit">Submit Health Report</button>
+      <button type="reset" class="rh-btn" id="reset-btn" data-i18n="reset">Reset</button>
+      <a href="{% url 'alert_page' %}" class="rh-btn" data-i18n="emergency">Emergency</a>
+    </div>
+  </form>
+</section>
+
+<script>
+  let recognitionInstance = null;
+  let isRecording = false;
+  const i18n = {
+    en: { title: "Health Issue Reporting", subtitle: "Record symptoms quickly with voice and submit.", back: "Back", cattle: "Select Cattle", spoken_lang: "Language", symptoms: "Symptoms (Voice to Text)", symptoms_ph: "Describe the condition, behavior, and symptoms.", voice: "Voice Capture", ready: "Ready to listen…", start: "Start Recording", stop: "Stop", submit: "Submit Health Report", reset: "Reset", emergency: "Emergency" },
+    hi: { title: "स्वास्थ्य समस्या रिपोर्टिंग", subtitle: "आवाज़ से लक्षण दर्ज करें और भेजें।", back: "वापस", cattle: "पशु चुनें", spoken_lang: "भाषा", symptoms: "लक्षण (वॉइस टू टेक्स्ट)", symptoms_ph: "स्थिति, व्यवहार और लक्षण बताएं।", voice: "वॉइस कैप्चर", ready: "सुनने के लिए तैयार…", start: "रिकॉर्डिंग शुरू", stop: "रोकें", submit: "स्वास्थ्य रिपोर्ट जमा करें", reset: "रीसेट", emergency: "आपातकाल" },
+    ml: { title: "ആരോഗ്യ പ്രശ്ന റിപ്പോർട്ടിംഗ്", subtitle: "ശബ്ദം ഉപയോഗിച്ച് ലക്ഷണങ്ങൾ രേഖപ്പെടുത്തി സമർപ്പിക്കുക.", back: "തിരികെ", cattle: "കന്നുകാലി തിരഞ്ഞെടുക്കുക", spoken_lang: "ഭാഷ", symptoms: "ലക്ഷണങ്ങൾ (വോയ്സ് ടു ടെക്സ്റ്റ്)", symptoms_ph: "അവസ്ഥ, പെരുമാറ്റം, ലക്ഷണങ്ങൾ എഴുതുക.", voice: "വോയ്സ് ക്യാപ്ചർ", ready: "കേൾക്കാൻ തയ്യാറാണ്…", start: "റെക്കോർഡ് ആരംഭിക്കുക", stop: "നിർത്തുക", submit: "ഹെൽത്ത് റിപ്പോർട്ട് സമർപ്പിക്കുക", reset: "റീസെറ്റ്", emergency: "അടിയന്തരാവസ്ഥ" },
+    ur: { title: "صحت مسئلہ رپورٹنگ", subtitle: "آواز سے علامات درج کریں اور بھیجیں۔", back: "واپس", cattle: "مویشی منتخب کریں", spoken_lang: "زبان", symptoms: "علامات (وائس ٹو ٹیکسٹ)", symptoms_ph: "حالت، رویہ اور علامات لکھیں۔", voice: "وائس کیپچر", ready: "سننے کے لیے تیار…", start: "ریکارڈنگ شروع", stop: "روکیں", submit: "ہیلتھ رپورٹ جمع کریں", reset: "ری سیٹ", emergency: "ایمرجنسی" },
+    ta: { title: "சுகாதார பிரச்சனை அறிக்கை", subtitle: "குரல் மூலம் அறிகுறிகளை பதிவு செய்து சமர்ப்பிக்கவும்.", back: "பின்", cattle: "கால்நடை தேர்வு", spoken_lang: "மொழி", symptoms: "அறிகுறிகள் (குரல்-உரை)", symptoms_ph: "நிலை, நடத்தை மற்றும் அறிகுறிகளை எழுதவும்.", voice: "குரல் பதிவு", ready: "கேட்க தயார்…", start: "பதிவை தொடங்கு", stop: "நிறுத்து", submit: "சுகாதார அறிக்கையை சமர்ப்பிக்கவும்", reset: "ரீசெட்", emergency: "அவசரம்" }
+  };
+
+  function applyLanguage(code) {
+    const lang = i18n[code] ? code : "en";
+    const dict = i18n[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+    localStorage.setItem("workerPreferredLanguage", lang);
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict[key]) el.setAttribute("placeholder", dict[key]);
+    });
+    const topSel = document.getElementById("language-select");
+    const spokenSel = document.getElementById("spoken-select");
+    if (topSel) topSel.value = lang;
+    if (spokenSel) spokenSel.value = lang;
+  }
+
+  async function saveLanguageToServer(lang) {
+    const payload = new URLSearchParams();
+    payload.append("language", lang);
+    await fetch("{% url 'set_worker_language' %}", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded", "X-CSRFToken": "{{ csrf_token }}" },
+      body: payload.toString()
+    });
+  }
+
+  function resolveLanguage() {
+    const map = { hi: "hi-IN", ta: "ta-IN", ml: "ml-IN", ur: "ur-PK", en: "en-IN" };
+    return map[document.getElementById("spoken-select").value] || "en-IN";
+  }
+
+  async function startVoice() {
+    const status = document.getElementById("voice-status");
+    const startBtn = document.getElementById("start-btn");
+    const stopBtn = document.getElementById("stop-btn");
+    const micBtn = document.getElementById("mic-button");
+
+    if (isRecording && recognitionInstance) {
+      try { recognitionInstance.stop(); } catch (e) { }
+      isRecording = false;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) {
+      status.textContent = "Voice recognition is not supported in this browser.";
+      return;
+    }
+    if (!window.isSecureContext) {
+      status.textContent = "Voice input needs a secure context (localhost or HTTPS).";
+      return;
+    }
+
+    try {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        stream.getTracks().forEach((track) => track.stop());
+      }
+    } catch (err) {
+      status.textContent = "Microphone permission blocked. Please allow mic access.";
+      return;
+    }
+
+    recognitionInstance = new SR();
+    recognitionInstance.lang = resolveLanguage();
+    recognitionInstance.interimResults = true;
+    recognitionInstance.continuous = true;
+    recognitionInstance.maxAlternatives = 1;
+    recognitionInstance.onstart = () => {
+      isRecording = true;
+      status.textContent = "Listening...";
+      if (startBtn) startBtn.disabled = true;
+      if (stopBtn) { stopBtn.disabled = false; stopBtn.style.opacity = "1"; stopBtn.style.cursor = "pointer"; }
+      if (micBtn) micBtn.classList.add("is-recording");
+    };
+    recognitionInstance.onresult = (e) => {
+      let finalText = "";
+      let interimText = "";
+      for (let i = 0; i < e.results.length; i += 1) {
+        const transcript = e.results[i][0].transcript;
+        if (e.results[i].isFinal) finalText += transcript + " ";
+        else interimText += transcript + " ";
+      }
+      const box = document.getElementById("symptoms");
+      const current = box.value.trim();
+      const nextFinal = finalText.trim();
+      const nextInterim = interimText.trim();
+      if (nextFinal) {
+        box.value = current ? `${current} ${nextFinal}`.trim() : nextFinal;
+      } else if (nextInterim) {
+        box.value = current ? `${current} ${nextInterim}`.trim() : nextInterim;
+      }
+      status.textContent = "Listening...";
+    };
+    recognitionInstance.onerror = (event) => {
+      if (event.error === "not-allowed") status.textContent = "Mic permission denied.";
+      else if (event.error === "audio-capture") status.textContent = "No microphone device found.";
+      else status.textContent = `Voice recognition error: ${event.error}`;
+    };
+    recognitionInstance.onend = () => {
+      if (status.textContent === "Listening...") status.textContent = "Stopped.";
+      isRecording = false;
+      if (startBtn) startBtn.disabled = false;
+      if (stopBtn) { stopBtn.disabled = true; stopBtn.style.opacity = ".6"; stopBtn.style.cursor = "not-allowed"; }
+      if (micBtn) micBtn.classList.remove("is-recording");
+    };
+    recognitionInstance.start();
+  }
+  function stopVoice() {
+    const status = document.getElementById("voice-status");
+    if (recognitionInstance) {
+      try { recognitionInstance.stop(); } catch (e) { }
+    }
+    status.textContent = "Stopped.";
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const supported = ["en", "hi", "ml", "ur", "ta"];
+    const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+    const savedLang = localStorage.getItem("workerPreferredLanguage");
+    const lang = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+    applyLanguage(lang);
+
+    const topLangSel = document.getElementById("language-select");
+    const spokenLangSel = document.getElementById("spoken-select");
+
+    topLangSel.addEventListener("change", async (e) => {
+      const lang = e.target.value;
+      applyLanguage(lang);
+      try { await saveLanguageToServer(lang); } catch (err) { console.error(err); }
+    });
+
+    spokenLangSel.addEventListener("change", async (e) => {
+      const lang = e.target.value;
+      applyLanguage(lang);
+      try { await saveLanguageToServer(lang); } catch (err) { console.error(err); }
+    });
+    document.getElementById("mic-button").addEventListener("click", startVoice);
+    document.getElementById("start-btn").addEventListener("click", startVoice);
+    document.getElementById("stop-btn").addEventListener("click", stopVoice);
+    document.getElementById("reset-btn").addEventListener("click", () => {
+      stopVoice();
+      setTimeout(() => { document.getElementById("symptoms").value = ""; document.getElementById("voice-status").textContent = i18n[document.documentElement.lang].ready; }, 0);
+    });
+  });
+</script>
+{% endblock %}

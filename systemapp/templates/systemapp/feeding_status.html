@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="dark" lang="{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title data-i18n="page_title">Feeding Status Update &amp; AI Prediction</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#D2691E",
+            "background-light": "#f7f8f6",
+            "background-dark": "#CD853F",
+            "panel-dark": "#DEB887"
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: "Inter", sans-serif; }
+    .material-symbols-outlined { font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24; }
+    /* Force high-contrast text for this page */
+    body, body * { color: #000000 !important; }
+    input::placeholder, textarea::placeholder { color: #000000 !important; opacity: 0.8; }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+  <header class="flex items-center justify-between border-b border-primary/20 bg-background-light dark:bg-background-dark px-6 py-3 lg:px-10 sticky top-0 z-50">
+    <div class="flex items-center gap-8">
+      <div class="flex items-center gap-4 text-primary">
+        <div class="size-8 bg-primary/20 rounded-lg flex items-center justify-center">
+          <span class="material-symbols-outlined text-primary">agriculture</span>
+        </div>
+        <h2 class="text-slate-900 dark:text-black text-lg font-bold">CattleFarm AI</h2>
+      </div>
+      <nav class="hidden md:flex items-center gap-6">
+        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary" href="{% url 'worker_dashboard' %}" data-i18n="dashboard">Dashboard</a>
+        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary" href="{% url 'marketplaces' %}" data-i18n="cattle">Cattle</a>
+        <a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="{% url 'feeding_status' %}" data-i18n="feeding">Feeding</a>
+        <a class="text-slate-600 dark:text-slate-300 text-sm font-medium hover:text-primary" href="{% url 'AI_issue_reporting' %}" data-i18n="health">Health</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="hidden lg:flex items-center bg-primary/10 rounded-lg px-3 py-1.5 border border-primary/20">
+        <span class="material-symbols-outlined text-primary text-sm mr-2">translate</span>
+        <select id="languageSelectorHeader" class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 cursor-pointer p-0">
+          <option value="en">English</option>
+          <option value="hi">हिंदी</option>
+          <option value="ml">മലയാളം</option>
+          <option value="ur">اردو</option>
+          <option value="ta">தமிழ்</option>
+        </select>
+      </div>
+      <a href="{% url 'alert_page' %}" class="p-2 hover:bg-primary/20 rounded-lg transition-colors text-slate-400">
+        <span class="material-symbols-outlined">notifications</span>
+      </a>
+      <div class="w-8 h-8 rounded-full bg-primary/30 border border-primary/50"></div>
+    </div>
+  </header>
+
+  <main class="flex-1 flex flex-col max-w-7xl mx-auto w-full px-4 lg:px-10 py-6">
+    {% if form_error %}
+    <div class="mb-4 rounded-lg border border-red-400/40 bg-red-500/10 text-red-200 px-4 py-3 text-sm">{{ form_error }}</div>
+    {% endif %}
+    {% if saved %}
+    <div class="mb-4 rounded-lg border border-primary/40 bg-primary/10 text-primary px-4 py-3 text-sm" data-i18n="saved_success">Feeding status saved successfully.</div>
+    {% endif %}
+
+    <div class="flex items-center gap-2 mb-6 text-sm">
+      <a class="text-slate-500 hover:text-primary" href="{% url 'worker_dashboard' %}" data-i18n="management">Management</a>
+      <span class="material-symbols-outlined text-xs text-slate-500">chevron_right</span>
+      <a class="text-slate-500 hover:text-primary" href="{% url 'feeding_status' %}" data-i18n="feeding">Feeding</a>
+      <span class="material-symbols-outlined text-xs text-slate-500">chevron_right</span>
+      <span class="text-primary font-semibold" data-i18n="update_status">Update Status</span>
+    </div>
+
+    <div class="mb-8">
+      <h1 class="text-3xl font-black text-slate-900 dark:text-black tracking-tight" data-i18n="feeding_status_update">Feeding Status Update</h1>
+      <p class="text-slate-500 dark:text-slate-400 mt-1 italic" data-i18n="feeding_subtitle">Log feeding data and get instant production forecasts powered by AI.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-8 space-y-6">
+        <form id="feedingForm" method="post" action="{% url 'feeding_status' %}" class="space-y-6">
+          {% csrf_token %}
+
+          <div class="bg-white dark:bg-panel-dark rounded-xl p-6 shadow-sm border border-slate-200 dark:border-primary/10">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-primary">list_alt</span>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-black" data-i18n="general_information">General Information</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-600 dark:text-slate-300" data-i18n="cattle_id_rfid">Cattle ID / RFID</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="material-symbols-outlined text-slate-400 text-sm">search</span></span>
+                  <select id="cattleSelect" name="cattle_id" required class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg pl-10 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                    <option value="" data-i18n="select_cattle">Select cattle...</option>
+                    {% for cattle in cattle_list %}
+                    <option value="{{ cattle.tag_id }}" data-breed="{{ cattle.breed }}" data-age="{{ cattle.age }}" data-health="{{ cattle.health_status }}">{{ cattle.tag_id }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                  <span id="healthStatusText" class="text-[10px] uppercase font-bold text-primary tracking-wider" data-i18n="status_healthy">Status: Healthy</span>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-600 dark:text-slate-300" data-i18n="feeding_time">Feeding Time</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><span class="material-symbols-outlined text-slate-400 text-sm">schedule</span></span>
+                  <input name="feeding_time" required class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg pl-10 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="time"/>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-panel-dark rounded-xl p-6 shadow-sm border border-slate-200 dark:border-primary/10">
+            <div class="flex items-center gap-3 mb-6">
+              <span class="material-symbols-outlined text-primary">restaurant</span>
+              <h3 class="text-lg font-bold text-slate-900 dark:text-black" data-i18n="feed_composition">Feed Composition</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-600 dark:text-slate-300" data-i18n="feed_type">Feed Type</label>
+                <select name="feed_type" required class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-lg px-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+                  <option value="" data-i18n="select_type">Select Type...</option>
+                  <option value="Silage">Silage (Corn/Grass)</option>
+                  <option value="Concentrates">Concentrates (Grain Mix)</option>
+                  <option value="Roughage">Roughage (Hay/Straw)</option>
+                  <option value="Vitamins">Vitamins &amp; Additives</option>
+                </select>
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-slate-600 dark:text-slate-300" data-i18n="quantity">Quantity</label>
+                <div class="flex">
+                  <input name="quantity" min="0.01" step="0.01" required class="w-full bg-slate-50 dark:bg-background-dark border border-slate-200 dark:border-primary/20 rounded-l-lg px-4 py-2.5 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="0.00" type="number"/>
+                  <span class="inline-flex items-center px-4 rounded-r-lg border border-l-0 border-slate-200 dark:border-primary/20 bg-slate-100 dark:bg-panel-dark text-slate-600 dark:text-primary font-bold text-sm">KG</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-orange-50/50 dark:bg-orange-500/10 rounded-xl p-6 border-2 border-orange-200 dark:border-orange-500/30 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-4 opacity-10"><span class="material-symbols-outlined text-8xl text-orange-600">medical_services</span></div>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="material-symbols-outlined text-orange-500 font-bold">warning</span>
+              <h3 class="text-lg font-bold text-orange-800 dark:text-orange-400" data-i18n="special_diet">Special Diet / Sick Cow Requirements</h3>
+            </div>
+            <div class="space-y-4 relative z-10">
+              <div class="flex flex-wrap gap-4">
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input name="medication" class="w-5 h-5 rounded text-orange-500 border-orange-300 focus:ring-orange-500" type="checkbox"/>
+                  <span class="text-sm font-medium text-orange-900 dark:text-orange-200" data-i18n="administering_medication">Administering Medication</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer">
+                  <input name="quarantine" class="w-5 h-5 rounded text-orange-500 border-orange-300 focus:ring-orange-500" type="checkbox"/>
+                  <span class="text-sm font-medium text-orange-900 dark:text-orange-200" data-i18n="quarantine_feed">Quarantine Feed Protocols</span>
+                </label>
+              </div>
+              <div class="space-y-2">
+                <label class="text-sm font-semibold text-orange-800 dark:text-orange-300" data-i18n="observation_notes">Observation Notes</label>
+                <textarea name="notes" class="w-full bg-white dark:bg-background-dark border border-orange-200 dark:border-orange-500/20 rounded-lg px-4 py-2.5 focus:border-orange-500 focus:ring-1 focus:ring-orange-500 outline-none transition-all" data-i18n-placeholder="notes_placeholder" placeholder="Describe symptoms or specific feeding instructions..." rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-end gap-4 py-4">
+            <a href="{% url 'worker_dashboard' %}" class="px-6 py-2.5 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors" data-i18n="cancel">Cancel</a>
+            <button type="submit" class="px-8 py-2.5 bg-primary hover:bg-primary/90 text-background-dark rounded-lg text-sm font-bold shadow-lg shadow-primary/20 transition-all flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">save</span>
+              <span data-i18n="save_update">Save Update</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="lg:col-span-4">
+        <div class="sticky top-24 space-y-6">
+          <div class="bg-gradient-to-br from-[#DEB887] to-[#CD853F] rounded-2xl p-6 border border-primary/30 shadow-2xl overflow-hidden relative">
+            <div class="flex items-center justify-between mb-8 relative z-10">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">auto_awesome</span>
+                <span class="text-xs font-black uppercase tracking-widest text-primary/80" data-i18n="ai_realtime">AI Real-time Insights</span>
+              </div>
+              <span class="bg-primary/20 text-primary px-2 py-0.5 rounded text-[10px] font-bold">LIVE</span>
+            </div>
+            <div class="text-center mb-10">
+              <p class="text-slate-400 text-xs font-medium uppercase tracking-tighter mb-1" data-i18n="potential_milk_production">Potential Milk Production</p>
+              <div class="flex items-baseline justify-center gap-1">
+                <span class="text-5xl font-black text-black tracking-tighter">{{ prediction.predicted_milk_liters|default:24.8|floatformat:1 }}</span>
+                <span class="text-xl font-bold text-primary" data-i18n="liters">Liters</span>
+              </div>
+            </div>
+            <div class="space-y-4 mb-8">
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-medium mb-1">
+                  <span class="text-slate-400" data-i18n="feed_efficiency_score">Feed Efficiency Score</span>
+                  <span class="text-black">{{ prediction.feed_efficiency|default:88 }}%</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: {{ prediction.feed_efficiency|default:88 }}%"></div></div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-xs font-medium mb-1">
+                  <span class="text-slate-400" data-i18n="nutrient_absorption">Nutrient Absorption</span>
+                  <span class="text-black">{{ prediction.nutrient_absorption|default:94 }}%</span>
+                </div>
+                <div class="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: {{ prediction.nutrient_absorption|default:94 }}%"></div></div>
+              </div>
+            </div>
+            <div class="p-4 bg-primary/5 rounded-xl border border-primary/20 border-dashed">
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-primary text-lg">lightbulb</span>
+                <p class="text-xs text-slate-300 leading-relaxed italic">{{ prediction.suggestion|default:"Increasing Silage by 1.5kg while maintaining current Concentrate levels could boost yield by another 5% in the next 48 hours." }}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-panel-dark rounded-xl p-4 shadow-sm border border-slate-200 dark:border-primary/10">
+            <h4 class="text-sm font-bold dark:text-black mb-1" id="selectedCattleTitle">Cattle</h4>
+            <p class="text-xs text-slate-500" id="selectedCattleBreed">-</p>
+            <div class="flex items-center gap-3 mt-1">
+              <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px] text-slate-400">egg_alt</span><span id="selectedCattleAge" class="text-[10px] text-slate-400 font-bold">-</span></div>
+              <div class="flex items-center gap-1"><span class="material-symbols-outlined text-[12px] text-slate-400">monitor_weight</span><span class="text-[10px] text-slate-400 font-bold">N/A</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-background-dark border-t border-primary/20 p-4 flex items-center justify-between z-40">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-primary">auto_awesome</span>
+      <span class="text-sm font-bold text-black">Yield: {{ prediction.predicted_milk_liters|default:24.8|floatformat:1 }}L</span>
+    </div>
+    <button form="feedingForm" type="submit" class="bg-primary px-4 py-2 rounded-lg text-background-dark text-sm font-bold" data-i18n="save_status">Save Status</button>
+  </div>
+</div>
+
+<script>
+const csrfToken = "{{ csrf_token }}";
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return "";
+}
+
+const i18n = {
+  en: { page_title: "Feeding Status Update & AI Prediction", dashboard: "Dashboard", cattle: "Cattle", feeding: "Feeding", health: "Health", management: "Management", update_status: "Update Status", feeding_status_update: "Feeding Status Update", feeding_subtitle: "Log feeding data and get instant production forecasts powered by AI.", general_information: "General Information", cattle_id_rfid: "Cattle ID / RFID", select_cattle: "Select cattle...", status_healthy: "Status: Healthy", status_prefix: "Status", feeding_time: "Feeding Time", feed_composition: "Feed Composition", feed_type: "Feed Type", select_type: "Select Type...", quantity: "Quantity", special_diet: "Special Diet / Sick Cow Requirements", administering_medication: "Administering Medication", quarantine_feed: "Quarantine Feed Protocols", observation_notes: "Observation Notes", notes_placeholder: "Describe symptoms or specific feeding instructions...", cancel: "Cancel", save_update: "Save Update", ai_realtime: "AI Real-time Insights", potential_milk_production: "Potential Milk Production", liters: "Liters", feed_efficiency_score: "Feed Efficiency Score", nutrient_absorption: "Nutrient Absorption", save_status: "Save Status", saved_success: "Feeding status saved successfully." },
+  hi: { page_title: "फीडिंग स्थिति अपडेट और AI पूर्वानुमान", dashboard: "डैशबोर्ड", cattle: "पशु", feeding: "फीडिंग", health: "स्वास्थ्य", management: "प्रबंधन", update_status: "स्थिति अपडेट", feeding_status_update: "फीडिंग स्थिति अपडेट", feeding_subtitle: "फीडिंग डेटा दर्ज करें और AI आधारित तुरंत उत्पादन पूर्वानुमान पाएँ।", general_information: "सामान्य जानकारी", cattle_id_rfid: "पशु आईडी / RFID", select_cattle: "पशु चुनें...", status_healthy: "स्थिति: स्वस्थ", status_prefix: "स्थिति", feeding_time: "फीडिंग समय", feed_composition: "फ़ीड संरचना", feed_type: "फ़ीड प्रकार", select_type: "प्रकार चुनें...", quantity: "मात्रा", special_diet: "विशेष आहार / बीमार पशु आवश्यकताएँ", administering_medication: "दवा दी जा रही है", quarantine_feed: "क्वारंटीन फ़ीड प्रोटोकॉल", observation_notes: "अवलोकन नोट्स", notes_placeholder: "लक्षण या विशेष फीडिंग निर्देश लिखें...", cancel: "रद्द करें", save_update: "अपडेट सहेजें", ai_realtime: "AI रियल-टाइम इनसाइट्स", potential_milk_production: "संभावित दूध उत्पादन", liters: "लीटर", feed_efficiency_score: "फ़ीड दक्षता स्कोर", nutrient_absorption: "पोषक अवशोषण", save_status: "स्थिति सहेजें", saved_success: "फीडिंग स्थिति सफलतापूर्वक सहेजी गई।" },
+  ml: { page_title: "തീറ്റ നില അപ്ഡേറ്റ് & AI പ്രവചനം", dashboard: "ഡാഷ്ബോർഡ്", cattle: "കന്നുകാലി", feeding: "തീറ്റ", health: "ആരോഗ്യം", management: "മാനേജ്മെന്റ്", update_status: "സ്ഥിതി അപ്ഡേറ്റ്", feeding_status_update: "തീറ്റ നില അപ്ഡേറ്റ്", feeding_subtitle: "തീറ്റ വിവരങ്ങൾ രേഖപ്പെടുത്തി AI അടിസ്ഥാനത്തിലുള്ള ഉടൻ ഉൽപ്പാദന പ്രവചനം നേടൂ.", general_information: "പൊതു വിവരം", cattle_id_rfid: "കന്നുകാലി ഐഡി / RFID", select_cattle: "കന്നുകാലി തിരഞ്ഞെടുക്കുക...", status_healthy: "സ്ഥിതി: ആരോഗ്യമുള്ളത്", status_prefix: "സ്ഥിതി", feeding_time: "തീറ്റ സമയം", feed_composition: "തീറ്റ ഘടന", feed_type: "തീറ്റ തരം", select_type: "തരം തിരഞ്ഞെടുക്കുക...", quantity: "അളവ്", special_diet: "പ്രത്യേക തീറ്റ / അസുഖമുള്ള പശു ആവശ്യകതകൾ", administering_medication: "മരുന്ന് നൽകുന്നു", quarantine_feed: "ക്വാറന്റൈൻ തീറ്റ പ്രോട്ടോക്കോൾ", observation_notes: "നിരീക്ഷണ കുറിപ്പുകൾ", notes_placeholder: "ലക്ഷണങ്ങളോ പ്രത്യേക തീറ്റ നിർദ്ദേശങ്ങളോ എഴുതുക...", cancel: "റദ്ദാക്കുക", save_update: "അപ്ഡേറ്റ് സേവ് ചെയ്യുക", ai_realtime: "AI തത്സമയ ഇൻസൈറ്റുകൾ", potential_milk_production: "സാധ്യമായ പാൽ ഉൽപ്പാദനം", liters: "ലിറ്റർ", feed_efficiency_score: "തീറ്റ കാര്യക്ഷമത സ്കോർ", nutrient_absorption: "പോഷക ആഗിരണം", save_status: "സ്ഥിതി സേവ് ചെയ്യുക", saved_success: "തീറ്റ നില വിജയകരമായി സേവ് ചെയ്തു." },
+  ur: { page_title: "فیڈنگ اسٹیٹس اپڈیٹ اور AI پیش گوئی", dashboard: "ڈیش بورڈ", cattle: "مویشی", feeding: "فیڈنگ", health: "صحت", management: "مینجمنٹ", update_status: "اسٹیٹس اپڈیٹ", feeding_status_update: "فیڈنگ اسٹیٹس اپڈیٹ", feeding_subtitle: "فیڈنگ ڈیٹا درج کریں اور AI سے فوری پیداوار کی پیش گوئی حاصل کریں۔", general_information: "عمومی معلومات", cattle_id_rfid: "مویشی آئی ڈی / RFID", select_cattle: "مویشی منتخب کریں...", status_healthy: "حالت: صحت مند", status_prefix: "حالت", feeding_time: "فیڈنگ وقت", feed_composition: "فیڈ کی ترکیب", feed_type: "فیڈ کی قسم", select_type: "قسم منتخب کریں...", quantity: "مقدار", special_diet: "خصوصی خوراک / بیمار گائے کی ضروریات", administering_medication: "ادویات دی جا رہی ہیں", quarantine_feed: "قرنطینہ فیڈ پروٹوکول", observation_notes: "مشاہداتی نوٹس", notes_placeholder: "علامات یا مخصوص فیڈنگ ہدایات لکھیں...", cancel: "منسوخ کریں", save_update: "اپڈیٹ محفوظ کریں", ai_realtime: "AI ریئل ٹائم بصیرت", potential_milk_production: "ممکنہ دودھ کی پیداوار", liters: "لیٹر", feed_efficiency_score: "فیڈ کارکردگی اسکور", nutrient_absorption: "غذائی جذب", save_status: "اسٹیٹس محفوظ کریں", saved_success: "فیڈنگ اسٹیٹس کامیابی سے محفوظ ہو گیا۔" },
+  ta: { page_title: "உணவு நிலை புதுப்பிப்பு & AI கணிப்பு", dashboard: "டாஷ்போர்டு", cattle: "கால்நடை", feeding: "உணவு", health: "ஆரோக்கியம்", management: "மேலாண்மை", update_status: "நிலை புதுப்பிப்பு", feeding_status_update: "உணவு நிலை புதுப்பிப்பு", feeding_subtitle: "உணவு தரவை பதிவு செய்து AI மூலம் உடனடி உற்பத்தி கணிப்பைப் பெறுங்கள்.", general_information: "பொது தகவல்", cattle_id_rfid: "கால்நடை ஐடி / RFID", select_cattle: "கால்நடை தேர்வு செய்யவும்...", status_healthy: "நிலை: ஆரோக்கியம்", status_prefix: "நிலை", feeding_time: "உணவு நேரம்", feed_composition: "உணவு அமைப்பு", feed_type: "உணவு வகை", select_type: "வகையைத் தேர்வு செய்க...", quantity: "அளவு", special_diet: "சிறப்பு உணவு / நோயுற்ற மாட்டு தேவைகள்", administering_medication: "மருந்தளித்தல்", quarantine_feed: "தனிமைப்படுத்தல் உணவு நடைமுறை", observation_notes: "கண்காணிப்பு குறிப்புகள்", notes_placeholder: "அறிகுறிகள் அல்லது சிறப்பு உணவு வழிமுறைகளை எழுதவும்...", cancel: "ரத்து செய்", save_update: "புதுப்பிப்பை சேமி", ai_realtime: "AI நேரடி பார்வைகள்", potential_milk_production: "சாத்தியமான பால் உற்பத்தி", liters: "லிட்டர்", feed_efficiency_score: "உணவு செயல்திறன் மதிப்பு", nutrient_absorption: "சத்து உறிஞ்சல்", save_status: "நிலையை சேமி", saved_success: "உணவு நிலை வெற்றிகரமாக சேமிக்கப்பட்டது." }
+};
+
+function applyLanguage(code) {
+  const lang = i18n[code] ? code : "en";
+  const dict = i18n[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === "ur" ? "rtl" : "ltr";
+  localStorage.setItem("workerPreferredLanguage", lang);
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-placeholder");
+    if (dict[key]) el.setAttribute("placeholder", dict[key]);
+  });
+  const selector = document.getElementById("languageSelectorHeader");
+  if (selector) selector.value = lang;
+  syncCattleCard();
+}
+
+async function saveLanguageToServer(lang) {
+  const payload = new URLSearchParams();
+  payload.append("language", lang);
+  await fetch("{% url 'set_worker_language' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "X-CSRFToken": csrfToken && csrfToken !== "NOTPROVIDED" ? csrfToken : getCookie("csrftoken")
+    },
+    body: payload.toString()
+  });
+}
+
+function syncCattleCard() {
+  const select = document.getElementById("cattleSelect");
+  if (!select || select.selectedIndex < 0) return;
+  const option = select.options[select.selectedIndex];
+  const tag = option.value || "-";
+  const breed = option.getAttribute("data-breed") || "-";
+  const age = option.getAttribute("data-age") || "-";
+  const health = option.getAttribute("data-health") || "";
+
+  document.getElementById("selectedCattleTitle").textContent = tag === "-" ? "Cattle" : `Cattle #${tag}`;
+  document.getElementById("selectedCattleBreed").textContent = breed;
+  document.getElementById("selectedCattleAge").textContent = age !== "-" ? `${age} yr` : "-";
+  const lang = document.documentElement.lang in i18n ? document.documentElement.lang : "en";
+  const prefix = i18n[lang].status_prefix || "Status";
+  document.getElementById("healthStatusText").textContent = health ? `${prefix}: ${health}` : (i18n[lang].status_healthy || "Status: Healthy");
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const supported = ["en", "hi", "ml", "ur", "ta"];
+  const serverLang = "{{ request.LANGUAGE_CODE|default:'en'|slice:':2' }}";
+  const savedLang = localStorage.getItem("workerPreferredLanguage");
+  const initialLang = supported.includes(savedLang) ? savedLang : (supported.includes(serverLang) ? serverLang : "en");
+  applyLanguage(initialLang);
+
+  const selector = document.getElementById("languageSelectorHeader");
+  if (selector) {
+    selector.addEventListener("change", async (event) => {
+      const lang = event.target.value;
+      applyLanguage(lang);
+      try {
+        await saveLanguageToServer(lang);
+      } catch (error) {
+        console.error("Language save failed", error);
+      }
+    });
+  }
+
+  const cattleSelect = document.getElementById("cattleSelect");
+  if (cattleSelect) {
+    cattleSelect.addEventListener("change", syncCattleCard);
+    if (cattleSelect.options.length > 1 && cattleSelect.value === "") {
+      cattleSelect.selectedIndex = 1;
+    }
+    syncCattleCard();
+  }
+});
+</script>
+</body>
+</html>
